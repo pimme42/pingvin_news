@@ -16,4 +16,8 @@ class Constants {
   );
 
   static String title = 'Pingvin News';
+
+  static String dataURL = "desktop.rorstam.se:5002";
+
+  static String dataEntry = "/news";
 }

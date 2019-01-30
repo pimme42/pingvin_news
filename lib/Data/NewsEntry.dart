@@ -17,6 +17,16 @@ class NewsEntry {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+        'rowid': this.rowId,
+        'id': this.id,
+        'nid': this.nid,
+        'published': this.publishedTimestamp,
+        'link': this.link,
+        'title': this.title,
+        'summary': this.summary,
+      };
+
   get summary => _summary;
 
   get title => _title;
