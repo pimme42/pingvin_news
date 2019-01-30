@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 const TIMEOUT = const Duration(seconds: 2);
 
@@ -48,10 +49,77 @@ class MyApp extends StatelessWidget {
           body1: TextStyle(fontSize: 15.0, fontFamily: 'Hind'),
         ),
       ),
-      home: new Splash(),
+      routes: {
+        '/': (_) => new Splash(),
+        '/widget': (_) => new WebViewPage("http://www.pingvin.nu"),
+      },
     );
   }
 }
+
+class WebViewPage extends StatefulWidget {
+  final String _url;
+  WebViewPage(this._url);
+
+  @override
+  _WebViewState createState() => new _WebViewState(this._url);
+}
+
+class _WebViewState extends State<WebViewPage> {
+  final String _url;
+  final flutterWebViewPlugin = FlutterWebviewPlugin();
+
+  _WebViewState(this._url);
+
+  @override
+  Widget build(BuildContext context) {
+    return WebviewScaffold(
+      url: this._url,
+      appBar: AppBar(
+        title: Text(Constants.title),
+        actions: <Widget>[
+          Constants.logoAction,
+        ],
+      ),
+      withZoom: true,
+      withLocalStorage: true,
+      hidden: true,
+      initialChild: Container(
+//        color: Colors.redAccent,
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                flutterWebViewPlugin.goBack();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward),
+              onPressed: () {
+                flutterWebViewPlugin.goForward();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.autorenew),
+              onPressed: () {
+                flutterWebViewPlugin.reload();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+
+  }
+}
+
 
 final GlobalKey<AsyncLoaderState> _asyncLoaderState =
     new GlobalKey<AsyncLoaderState>();
@@ -69,7 +137,9 @@ class LoaderIndicator extends StatelessWidget {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(Constants.title),
-        leading: Constants.logo,
+        actions: <Widget>[
+          Constants.logoAction,
+        ],
       ),
       body: new Stack(
         children: <Widget>[
@@ -125,7 +195,10 @@ class _NewsPageState extends State<NewsPage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(Constants.title),
-        leading: Constants.logo,
+        actions: <Widget>[
+          Constants.logoAction,
+        ],
+//        leading:
       ),
       body: ListView.builder(
         itemCount: this._entries.length,
@@ -134,7 +207,16 @@ class _NewsPageState extends State<NewsPage> {
             child: ExpansionTile(
               leading: IconButton(
                 icon: Icon(Icons.link),
-                onPressed: () => _LaunchBrowser(this._entries[index].link),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WebViewPage(this._entries[index].link),
+                    ),
+                  );
+                },
+//                onPressed: () => Navigator.of(context).pushNamed('/widget/${this._entries[index].link}'),
+//                onPressed: () => _LaunchBrowser(this._entries[index].link),
               ),
               title: Text(this._entries[index].title),
               children: <Widget>[

@@ -10,7 +10,10 @@ class Constants {
     ),
   );
 
+  static Widget logoAction = new Padding(
+    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+    child: Constants.logo,
+  );
+
   static String title = 'Pingvin News';
-
-
 }
