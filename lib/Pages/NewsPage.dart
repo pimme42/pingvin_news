@@ -7,57 +7,69 @@ import 'package:pingvin_news/Store/NewsStore.dart';
 import 'package:pingvin_news/Data/NewsEntry.dart';
 
 import 'package:pingvin_news/Pages/WebViewPage.dart';
-import 'package:pingvin_news/Pages/LoadWidget.dart';
+import 'package:pingvin_news/Pages/LoadIndicator.dart';
+
+import 'package:progress_indicators/progress_indicators.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:meta/meta.dart';
 import 'package:redux/redux.dart';
-import 'dart:async';
 
 class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: new AppBar(
-        title: new Text(Constants.title),
-        automaticallyImplyLeading: true,
-        actions: <Widget>[
-          Constants.logoAction,
-        ],
-      ),
-      body: StoreConnector<NewsStore, _ViewModel>(
-          onInit: (store) => store.dispatch(ReadNewsAction()),
-          converter: (Store<NewsStore> store) => _ViewModel.create(store),
-          builder: (BuildContext context, _ViewModel viewModel) {
-            if(viewModel.items.length == 0) {
-              return LoadWidget();
-            }
-            return new IconTheme(
-              data: new IconThemeData(color: Theme.of(context).accentColor),
+    return StoreConnector<NewsStore, _ViewModel>(
+      onInit: (store) {
+        store.dispatch(ReadNewsFromFileAction());
+//            store.dispatch(ReadNewsFromRESTAction());
+      },
+      converter: (Store<NewsStore> store) => _ViewModel.create(store),
+      builder: (BuildContext context, _ViewModel viewModel) {
+        return Scaffold(
+          appBar: new AppBar(
+            title: new Text(Constants.title),
+            automaticallyImplyLeading: true,
+            actions: <Widget>[
+              viewModel.loading ? LoadIndicator() : Container(),
+              Constants.logoAction,
+            ],
+          ),
+          body: new IconTheme(
+            data: new IconThemeData(color: Theme.of(context).accentColor),
+            child: RefreshIndicator(
+              onRefresh: viewModel.onRefresh,
               child: ListView(
                   padding: EdgeInsets.all(5.0),
-                  children: viewModel.items
+                  children: viewModel.items.reversed
                       .map((_NewsItemViewModel item) =>
                           _createListItemWidget(item, context))
                       .toList()),
-            );
-          }),
+            ),
+          ),
+        );
+      },
     );
   }
 
   Widget _createListItemWidget(_NewsItemViewModel item, BuildContext context) =>
       Card(
         child: ExpansionTile(
+          key: ObjectKey(item.summary),
+          onExpansionChanged: (bool opening) =>
+              item.selectNews(context, opening),
+          initiallyExpanded: item.selected,
           leading: IconButton(
             icon: item.leadingIcon,
             onPressed: () => item.onPressed(context),
           ),
           title: Text(item.title),
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(5.0),
-              child: Text(item.summary),
+            Container(
+              child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: Text(item.summary),
+              ),
             ),
           ],
         ),
@@ -66,16 +78,17 @@ class NewsPage extends StatelessWidget {
 
 class _ViewModel {
   final List<_NewsItemViewModel> items;
+  final Function() onRefresh;
+  final bool loading;
 
-  _ViewModel(this.items);
+  _ViewModel(this.items, this.onRefresh, this.loading);
 
   factory _ViewModel.create(Store<NewsStore> store) {
     List<_NewsItemViewModel> items = store.state.paper.entries
         .map(
           (NewsEntry item) => _NewsItemViewModel(
-                Icon(Icons.link),
+                Icon(Icons.web),
                 (BuildContext context) {
-                  print("Building");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -85,11 +98,20 @@ class _ViewModel {
                 },
                 item.title,
                 item.summary,
+                (BuildContext context, bool opening) {
+                  if (opening)
+                    store.dispatch(SelectNewsItemAction(item.nid));
+                  else
+                    store.dispatch(DeSelectNewsItemAction(item.nid));
+                },
+                store.state.status.newsItemSelected(item.nid),
               ),
         )
         .toList();
     return _ViewModel(
       items,
+      () async => store.dispatch(ReadNewsFromRESTAction()),
+      store.state.status.loading,
     );
   }
 }
@@ -100,73 +122,9 @@ class _NewsItemViewModel {
   final Function(BuildContext) onPressed;
   final String title;
   final String summary;
+  final Function(BuildContext, bool) selectNews;
+  final bool selected;
 
-  _NewsItemViewModel(
-      this.leadingIcon, this.onPressed, this.title, this.summary);
+  _NewsItemViewModel(this.leadingIcon, this.onPressed, this.title, this.summary,
+      this.selectNews, this.selected);
 }
-
-/*
-
-import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Data/NewsEntry.dart';
-import 'package:pingvin_news/Pages/WebViewPage.dart';
-import 'package:pingvin_news/Data/FileHandler.dart';
-
-import 'package:flutter/material.dart';
-import 'dart:convert';
-
-
-class NewsPage extends StatefulWidget {
-  NewsPage();
-
-  @override
-  _NewsPageState createState() => new _NewsPageState();
-}
-
-class _NewsPageState extends State<NewsPage> {
-  List<NewsEntry> _entries;
-  FileHandler fh = new FileHandler();
-
-  _NewsPageState() {
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(Constants.title),
-        actions: <Widget>[
-          Constants.logoAction,
-        ],
-//        leading:
-      ),
-      body: ListView.builder(
-        itemCount: this._entries.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ExpansionTile(
-              leading: IconButton(
-                icon: Icon(Icons.link),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          WebViewPage(this._entries[index].link),
-                    ),
-                  );
-                },
-              ),
-              initiallyExpanded: index == 0 ? true : false,
-              title: Text(this._entries[index].title),
-              children: <Widget>[
-                Text(this._entries[index].summary),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-*/

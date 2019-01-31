@@ -19,8 +19,8 @@ class NewsEntry {
 
   Map<String, dynamic> toJson() => {
         'rowid': this.rowId,
-        'id': this.id,
-        'nid': this.nid,
+        'id': this.id.toString(),
+        'nid': this.nid.toString(),
         'published': this.publishedTimestamp,
         'link': this.link,
         'title': this.title,

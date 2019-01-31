@@ -1,5 +1,7 @@
 import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Data/NewsEntry.dart';
+import 'package:pingvin_news/Data/NewsPaper.dart';
 
 import 'dart:async';
 import 'dart:io';
@@ -14,26 +16,36 @@ class RESTHandler {
   }
 
   RESTHandler._internal() {
-    this._timeout = const Duration(seconds: 5);
+    this._timeout = const Duration(seconds: 10);
   }
 
-  Future<List<NewsEntry>> readNews() async {
-    var response = await _getUserApi();
+  Future<NewsPaper> readNews() async {
+    String response = await _getNewsApi();
+    if(response == null)
+      return NewsPaper.empty();
+
     List responseList = jsonDecode(response)['News'];
     List<NewsEntry> entries = List<NewsEntry>();
     responseList.forEach((dynamic map) {
       entries.add(NewsEntry.fromJson(map));
     });
-    return entries;
+    return NewsPaper(entries);
   }
 
-  _getUserApi() async {
-    await Future.delayed(_timeout);
-    var httpClient = new HttpClient();
-    var uri = new Uri.http(Constants.dataURL, Constants.dataEntry);
-    var request = await httpClient.getUrl(uri);
-    var response = await request.close();
-    var responseBody = await response.transform(utf8.decoder).join();
-    return responseBody;
+  Future<String> _getNewsApi() async {
+    try {
+      await Future.delayed(_timeout);
+      Log.doLog("Times up in _getNewsApi", logLevel.DEBUG);
+      var httpClient = new HttpClient();
+      var uri = new Uri.http(Constants.dataURL, Constants.dataEntry);
+      var request = await httpClient.getUrl(uri);
+      var response = await request.close();
+      var responseBody = await response.transform(utf8.decoder).join();
+      return responseBody;
+    } catch (e) {
+      // If we encounter an error, return 0
+      Log.doLog("Error RESTHandler._getNewsApi: ${e.toString()}", logLevel.ERROR);
+      return null;
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:pingvin_news/Data/NewsEntry.dart';
+import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 
 import 'dart:async';
@@ -40,29 +41,31 @@ class FileHandler {
     }
   }
 
-  Future<File> writeNews(List<NewsEntry> entries) async {
+  Future<File> writeNews(NewsPaper paper) async {
     //    print("Skriver " + pm.toString());
     //    print("Skriver till fil");
     final file = await _localFile;
 
-    String tmp = json.encode(entries);
+    String tmp = json.encode(paper);
     file.writeAsString(tmp, flush: true);
     return file;
   }
 
-  Future<List<NewsEntry>> readNews() async {
+  Future<NewsPaper> readNews() async {
     try {
       //      print("Läser in data");
-//      await new Future.delayed(new Duration(seconds: 1));
+//      await new Future.delayed(new Duration(seconds: 10));
+//      Log.doLog("Times up in readNews", logLevel.DEBUG);
       final file = await _localFile;
       //      print("Fil: " + file.toString());
 
       // Read the file
       String contents = await file.readAsString();
-      //      print("Contents: " + contents);
-      List entries = json.decode(contents);
-      //      print("Returning pm!" + pm.toString());
-      return entries;
+
+      Map decode = jsonDecode(contents);
+      NewsPaper paper = NewsPaper.fromJson(decode);
+
+      return paper;
     } catch (e) {
       // If we encounter an error, return 0
       Log.doLog("Error Filehandler.readNews: ${e.toString()}", logLevel.ERROR);

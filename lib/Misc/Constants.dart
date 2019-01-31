@@ -6,7 +6,7 @@ class Constants {
   static Widget logo = new Padding(
     padding: EdgeInsets.all(5.0),
     child: new Image(
-      image: new AssetImage('images/pingvinlogo.png'),
+      image: new AssetImage(Constants.logoPath),
     ),
   );
 

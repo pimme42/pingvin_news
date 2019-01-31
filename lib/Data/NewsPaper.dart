@@ -4,20 +4,20 @@ const String _prefix = "NewsEntry_";
 
 class NewsPaper {
   final List<NewsEntry> entries;
-  final bool loaded;
 
-  NewsPaper(this.entries, this.loaded);
+  NewsPaper(this.entries);
 
-  factory NewsPaper.empty() => NewsPaper(List<NewsEntry>(), false);
+  factory NewsPaper.empty() => NewsPaper(List<NewsEntry>());
 
   factory NewsPaper.fromJson(Map<String, dynamic> json) {
-    List data = new List();
-    for (var i = 0; i < json['length']; ++i) {
-      NewsEntry ne = new NewsEntry.fromJson((json[_prefix + i.toString()]));
+    List<NewsEntry> data = new List();
+    int len = json['length'];
+    for (int i = 0; i < len-1; ++i) {
+      String key = "$_prefix${i.toString()}";
+      NewsEntry ne = NewsEntry.fromJson((json[key]));
       data.add(ne);
     }
-    if (json['length'] > 0) return NewsPaper(data, true);
-    return NewsPaper(data, false);
+    return NewsPaper(data);
   }
 
   Map<String, dynamic> toJson() {
