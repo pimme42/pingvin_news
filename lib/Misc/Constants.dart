@@ -6,7 +6,7 @@ class Constants {
   static Widget logo = new Padding(
     padding: EdgeInsets.all(5.0),
     child: new Image(
-      image: new AssetImage('images/pingvinlogo.png'),
+      image: new AssetImage(Constants.logoPath),
     ),
   );
 
@@ -16,4 +16,12 @@ class Constants {
   );
 
   static String title = 'Pingvin News';
+
+  static String dataURL = "desktop.rorstam.se:5002";
+
+  static String dataEntry = "/news";
+
+  static Duration errorMessageDuration = Duration(seconds: 2);
+
+  static String emptyString = "";
 }
