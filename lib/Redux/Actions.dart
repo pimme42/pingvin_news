@@ -43,3 +43,10 @@ class CouldNotReadRESTAction extends ShowErrorMessageAction {
 }
 
 class ErrorMessageShownAction {}
+
+class SelectUrlToShowAction {
+  final String url;
+  SelectUrlToShowAction(this.url);
+}
+
+class CloseWebViewAction {}

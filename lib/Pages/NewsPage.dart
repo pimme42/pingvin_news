@@ -20,33 +20,16 @@ class NewsPage extends StatelessWidget {
     return StoreConnector<NewsStore, _ViewModel>(
       onInit: (store) {
         store.dispatch(ReadNewsFromFileAction());
-//        store.dispatch(ReadNewsFromRESTAction());
+        store.dispatch(ReadNewsFromRESTAction());
       },
       converter: (Store<NewsStore> store) => _ViewModel.create(store),
-/*
-      onDidChange: (_ViewModel viewModel) async {
-        if (viewModel.errorMsg != Constants.noErrorMsg) {
-          viewModel.errorMsgShowing();
-          Log.doLog("Showing Errors! >${viewModel.errorMsg}<", logLevel.DEBUG);
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(viewModel.errorMsg),
-            duration: Constants.timeOfErrorMessage,
-          ));
-        }
-      },
-*/
       builder: (BuildContext context, _ViewModel viewModel) {
         return Scaffold(
           appBar: new AppBar(
             title: new Text(Constants.title),
             automaticallyImplyLeading: true,
-            actions: <Widget>[
-              Padding(
-                child: viewModel.loading ? LoadIndicator() : Container(),
-                padding: EdgeInsets.all(5.0),
-              ),
-              Constants.logoAction,
-            ],
+            leading: _displayLeading(context, viewModel),
+            actions: _displayAppBarActions(context, viewModel),
           ),
           body: new IconTheme(
             data: new IconThemeData(color: Theme.of(context).accentColor),
@@ -54,13 +37,10 @@ class NewsPage extends StatelessWidget {
               onRefresh: viewModel.onRefresh,
               child: Stack(
                 children: <Widget>[
-                  ListView(
-                      padding: EdgeInsets.all(5.0),
-                      children: viewModel.items.reversed
-                          .map((_NewsItemViewModel item) =>
-                              _createListItemWidget(item, context))
-                          .toList()),
-                  displayErrorMessage(context, viewModel),
+                  viewModel.showWebView
+                      ? _displayWebPage(context, viewModel)
+                      : _displayListView(context, viewModel),
+                  _displayErrorMessage(context, viewModel),
                 ],
               ),
             ),
@@ -70,24 +50,55 @@ class NewsPage extends StatelessWidget {
     );
   }
 
-  Widget displayErrorMessage(BuildContext context, _ViewModel viewModel) {
-    if(viewModel.errorMsg != Constants.noErrorMsg) {
+  Widget _displayListView(BuildContext context, _ViewModel viewModel) {
+    return ListView(
+        padding: EdgeInsets.all(5.0),
+        children: viewModel.items.reversed
+            .map((_NewsItemViewModel item) =>
+                _createListItemWidget(item, context))
+            .toList());
+  }
+
+  Widget _displayWebPage(BuildContext context, _ViewModel viewModel) {
+    return WebViewPage(viewModel.urlToShow);
+  }
+
+  Widget _displayLeading(BuildContext context, _ViewModel viewModel) {
+    if (viewModel.showWebView)
+      return IconButton(
+        icon: Icon(Icons.close),
+        onPressed: () => viewModel.closeWebView(),
+      );
+    return Container();
+  }
+
+  List<Widget> _displayAppBarActions(BuildContext context, _ViewModel viewModel) {
+    return <Widget>[
+      Padding(
+        child: viewModel.loading ? LoadIndicator() : Container(),
+        padding: EdgeInsets.all(5.0),
+      ),
+      Constants.logoAction,
+    ];
+  }
+
+  Widget _displayErrorMessage(BuildContext context, _ViewModel viewModel) {
+    if (viewModel.errorMsg != Constants.emptyString) {
       return Positioned(
-        width: MediaQuery.of(context).size.width,
         child: Center(
             child: Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.black54,
-              ),
-              child: Text(
-                viewModel.errorMsg,
-
-                style: TextStyle(color: Colors.white),
-              ),
-            )),
-        bottom: 50,
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            color: Colors.black54,
+          ),
+          child: Text(
+            viewModel.errorMsg,
+            style: TextStyle(color: Colors.white),
+          ),
+        )),
+        width: MediaQuery.of(context).size.width,
+        bottom: 5,
       );
     }
     return Container();
@@ -106,11 +117,14 @@ class NewsPage extends StatelessWidget {
           ),
           title: Text(item.title),
           children: <Widget>[
-            Container(
-              child: Padding(
-                padding: EdgeInsets.all(5.0),
-                child: Text(item.summary),
+            InkWell(
+              child: Container(
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: Text(item.summary),
+                ),
               ),
+              onTap: () => item.onPressed(context),
             ),
           ],
         ),
@@ -123,8 +137,12 @@ class _ViewModel {
   final Function() onRefresh;
   final bool loading;
   final String errorMsg;
+  final bool showWebView;
+  final String urlToShow;
+  final Function() closeWebView;
 
-  _ViewModel(this.items, this.onRefresh, this.loading, this.errorMsg);
+  _ViewModel(this.items, this.onRefresh, this.loading, this.errorMsg,
+      this.showWebView, this.urlToShow, this.closeWebView);
 
   factory _ViewModel.create(Store<NewsStore> store) {
     List<_NewsItemViewModel> items = store.state.paper.entries
@@ -132,12 +150,7 @@ class _ViewModel {
           (NewsEntry item) => _NewsItemViewModel(
                 Icon(Icons.web),
                 (BuildContext context) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => WebViewPage(item.link),
-                    ),
-                  );
+                  store.dispatch(SelectUrlToShowAction(item.link));
                 },
                 item.title,
                 item.summary,
@@ -158,6 +171,9 @@ class _ViewModel {
       },
       store.state.status.loading,
       store.state.status.errorMsg,
+      store.state.status.urlToShow != Constants.emptyString,
+      store.state.status.urlToShow,
+      () => store.dispatch(CloseWebViewAction()),
     );
   }
 }

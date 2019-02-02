@@ -21,7 +21,7 @@ class Constants {
 
   static String dataEntry = "/news";
 
-  static Duration timeOfErrorMessage = Duration(seconds: 3);
+  static Duration errorMessageDuration = Duration(seconds: 2);
 
-  static String noErrorMsg = "";
+  static String emptyString = "";
 }

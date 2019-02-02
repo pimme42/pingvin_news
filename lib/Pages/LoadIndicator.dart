@@ -18,7 +18,7 @@ class _LoadIndicatorState extends State<LoadIndicator>
   void initState() {
     super.initState();
     _controller = new AnimationController(
-        vsync: this, duration: new Duration(seconds: 1));
+        vsync: this, duration: new Duration(milliseconds: 750));
 
     _animation = new Tween<double>(begin: 0.0, end: 1.0).animate(_controller)
       ..addListener(() {
@@ -53,7 +53,7 @@ class _LoadIndicatorState extends State<LoadIndicator>
     return new Center(
         child: new InkWell(
           child: new Transform.rotate(
-            child: new Icon(Icons.refresh,),
+            child: new Icon(Icons.autorenew,),
 //            child: new Icon(Icons.refresh,),
             angle: 2 * _animation.value * pi,
           ),

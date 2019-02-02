@@ -30,27 +30,38 @@ final Reducer<Status> statusReducer = combineReducers([
   TypedReducer<Status, StopLoadingAction>(_stopLoading),
   TypedReducer<Status, CouldNotReadRESTAction>(_noRESTData),
   TypedReducer<Status, ErrorMessageShownAction>(_errorMsgShown),
+  TypedReducer<Status, SelectUrlToShowAction>(_displayWebView),
+  TypedReducer<Status, CloseWebViewAction>(_closeWebView),
 ]);
 
 Status _addShowingNewsItem(Status status, SelectNewsItemAction action) => Status(
     List.unmodifiable(List.from(status.openedNewsItems)..add(action.newsId)),
     status.loading,
-    status.errorMsg);
+    status.errorMsg, status.urlToShow);
 
 Status _removeShowingNewsItem(Status status, DeSelectNewsItemAction action) => Status(
     List.unmodifiable(List.from(status.openedNewsItems)..remove(action.newsId)),
     status.loading,
-    status.errorMsg);
+    status.errorMsg, status.urlToShow);
 
 Status _startLoading(Status status, StartLoadingAction action) =>
-    Status(status.openedNewsItems, true, status.errorMsg);
+    Status(status.openedNewsItems, true, status.errorMsg, status.urlToShow);
 
 Status _stopLoading(Status status, StopLoadingAction action) =>
-    Status(status.openedNewsItems, false, status.errorMsg);
+    Status(status.openedNewsItems, false, status.errorMsg, status.urlToShow);
 
 Status _noRESTData(Status status, CouldNotReadRESTAction action) =>
-    Status(status.openedNewsItems, status.loading, action.msg);
+    Status(status.openedNewsItems, status.loading, action.msg, status.urlToShow);
 
 Status _errorMsgShown(Status status, ErrorMessageShownAction action) {
-  return Status(status.openedNewsItems, status.loading, Constants.noErrorMsg);
+  return Status(status.openedNewsItems, status.loading, Constants.emptyString, status.urlToShow);
 }
+
+Status _displayWebView(Status status, SelectUrlToShowAction action) {
+  return Status(status.openedNewsItems, status.loading, status.errorMsg, action.url);
+}
+
+Status _closeWebView(Status status, CloseWebViewAction action) {
+  return Status(status.openedNewsItems, status.loading, status.errorMsg, Constants.emptyString);
+}
+

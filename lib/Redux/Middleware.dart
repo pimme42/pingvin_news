@@ -58,6 +58,6 @@ Future _showErrorMessage(Store<NewsStore> store, ShowErrorMessageAction action,
     NextDispatcher next) async {
   Log.doLog("_showErrorMessage", logLevel.DEBUG);
   next(action);
-  await new Future.delayed(Constants.timeOfErrorMessage);
+  await new Future.delayed(Constants.errorMessageDuration);
   store.dispatch(ErrorMessageShownAction());
 }

@@ -1,4 +1,3 @@
-import 'package:pingvin_news/Misc/Constants.dart';
 
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:flutter/material.dart';
@@ -13,25 +12,20 @@ class WebViewPage extends StatefulWidget {
 
 class _WebViewState extends State<WebViewPage> {
   final String _url;
-  final flutterWebViewPlugin = FlutterWebviewPlugin();
+  final flutterWebViewPlugin;
 
-  _WebViewState(this._url);
+  _WebViewState(this._url) : this.flutterWebViewPlugin = FlutterWebviewPlugin();
 
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
       url: this._url,
-      appBar: AppBar(
-        title: Text(Constants.title),
-        actions: <Widget>[
-          Constants.logoAction,
-        ],
-      ),
       withZoom: true,
-      withLocalStorage: true,
-      hidden: true,
+      withLocalStorage: false,
+      primary: false,
+      allowFileURLs: false,
+      withJavascript: false,
       initialChild: Container(
-//        color: Colors.redAccent,
         child: const Center(
           child: CircularProgressIndicator(),
         ),
@@ -63,5 +57,13 @@ class _WebViewState extends State<WebViewPage> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    flutterWebViewPlugin.dispose();
+    super.dispose();
+  }
+
+
 }
 
