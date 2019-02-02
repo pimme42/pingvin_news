@@ -17,9 +17,6 @@ class ReadNewsFromFileAction {}
 
 class ReadNewsFromRESTAction {}
 
-class CouldNotReadRESTAction {}
-
-
 // Actions on Status
 
 class SelectNewsItemAction {
@@ -36,3 +33,13 @@ class StartLoadingAction {}
 
 class StopLoadingAction {}
 
+abstract class ShowErrorMessageAction{
+  final String msg;
+  ShowErrorMessageAction(this.msg);
+}
+
+class CouldNotReadRESTAction extends ShowErrorMessageAction {
+  CouldNotReadRESTAction(String msg) : super(msg);
+}
+
+class ErrorMessageShownAction {}

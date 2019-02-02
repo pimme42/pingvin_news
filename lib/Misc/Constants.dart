@@ -20,4 +20,8 @@ class Constants {
   static String dataURL = "desktop.rorstam.se:5002";
 
   static String dataEntry = "/news";
+
+  static Duration timeOfErrorMessage = Duration(seconds: 3);
+
+  static String noErrorMsg = null;
 }

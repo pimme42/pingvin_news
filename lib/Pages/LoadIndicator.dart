@@ -25,15 +25,12 @@ class _LoadIndicatorState extends State<LoadIndicator>
       ..addListener(() {
         this.setState(() {});
       })
+      /* Så att animationen fortsätter, och inte stannar efter en rotation */
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _controller.forward(from: 0.0);
         }
       });
-    /* _animation = new CurvedAnimation( parent: _controller, curve: Curves.easeIn)..addListener((){
-        this.setState((){
-        });
-      });*/
 
     _controller.forward();
   }
@@ -54,17 +51,15 @@ class _LoadIndicatorState extends State<LoadIndicator>
 
   @override
   Widget build(BuildContext context) {
-    return new Material(
-      child: new Center(
+    return new Center(
         child: new InkWell(
           child: new Transform.rotate(
-            child: new ImageIcon(ExactAssetImage(Constants.logoPath),),
+            child: new Icon(Icons.refresh,),
 //            child: new Icon(Icons.refresh,),
             angle: 2 * _animation.value * pi,
           ),
           onTap: _onTap,
         ),
-      ),
     );
   }
 }

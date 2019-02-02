@@ -17,7 +17,6 @@ class MyApp extends StatelessWidget {
     newsReducer,
     initialState: NewsStore.initial(),
     middleware: createStoreMiddleware(),
-
   );
 
   @override
@@ -48,7 +47,8 @@ class MyApp extends StatelessWidget {
 //        '/PartPage': (BuildContext context) => PartPage(),
           },
           navigatorKey: navigatorKey,
-          home: NewsPage(),
+          home: Scaffold( body: NewsPage(),),
+
         ),
       );
 }

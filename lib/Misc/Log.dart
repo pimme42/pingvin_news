@@ -1,4 +1,4 @@
-enum logLevel {ALL, DEBUG, ERROR, VERBOSE, DEFAULT}
+enum logLevel {DEBUG, ERROR}
 
 class Log {
   static doLog(String text, logLevel level) {

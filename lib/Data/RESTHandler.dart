@@ -16,13 +16,11 @@ class RESTHandler {
   }
 
   RESTHandler._internal() {
-    this._timeout = const Duration(seconds: 10);
+    this._timeout = const Duration(seconds: 1);
   }
 
   Future<NewsPaper> readNews() async {
     String response = await _getNewsApi();
-    if(response == null)
-      return NewsPaper.empty();
 
     List responseList = jsonDecode(response)['News'];
     List<NewsEntry> entries = List<NewsEntry>();
@@ -45,7 +43,7 @@ class RESTHandler {
     } catch (e) {
       // If we encounter an error, return 0
       Log.doLog("Error RESTHandler._getNewsApi: ${e.toString()}", logLevel.ERROR);
-      return null;
+      throw HttpException("Could not fetch data from server");
     }
   }
 }
