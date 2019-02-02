@@ -2,10 +2,8 @@ import 'Actions.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Store/NewsStore.dart';
-import 'package:pingvin_news/Data/NewsEntry.dart';
 import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Data/NewsHandler.dart';
-import 'package:pingvin_news/Data/FileHandler.dart';
 import 'dart:async';
 import 'package:redux/redux.dart';
 

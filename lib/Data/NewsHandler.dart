@@ -1,8 +1,6 @@
-import 'package:pingvin_news/Misc/Log.dart';
 
 import 'package:pingvin_news/Data/FileHandler.dart';
 import 'package:pingvin_news/Data/RESTHandler.dart';
-import 'package:pingvin_news/Data/NewsEntry.dart';
 import 'package:pingvin_news/Data/NewsPaper.dart';
 
 class NewsHandler {

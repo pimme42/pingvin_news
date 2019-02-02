@@ -2,7 +2,6 @@ import 'package:pingvin_news/Redux/Actions.dart';
 import 'package:pingvin_news/Store/NewsStore.dart';
 import 'package:pingvin_news/Store/Status.dart';
 import 'package:pingvin_news/Data/NewsPaper.dart';
-import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 
 import 'package:redux/redux.dart';

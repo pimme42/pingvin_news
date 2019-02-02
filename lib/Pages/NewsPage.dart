@@ -1,5 +1,4 @@
 import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Misc/Log.dart';
 
 import 'package:pingvin_news/Redux/Actions.dart';
 
@@ -10,7 +9,6 @@ import 'package:pingvin_news/Data/NewsEntry.dart';
 import 'package:pingvin_news/Pages/WebViewPage.dart';
 import 'package:pingvin_news/Pages/LoadIndicator.dart';
 
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:meta/meta.dart';
@@ -62,7 +60,7 @@ class NewsPage extends StatelessWidget {
                           .map((_NewsItemViewModel item) =>
                               _createListItemWidget(item, context))
                           .toList()),
-                  ErrorMessage(context, viewModel),
+                  displayErrorMessage(context, viewModel),
                 ],
               ),
             ),
@@ -72,7 +70,7 @@ class NewsPage extends StatelessWidget {
     );
   }
 
-  Widget ErrorMessage(BuildContext context, _ViewModel viewModel) {
+  Widget displayErrorMessage(BuildContext context, _ViewModel viewModel) {
     if(viewModel.errorMsg != Constants.noErrorMsg) {
       return Positioned(
         width: MediaQuery.of(context).size.width,
@@ -85,6 +83,7 @@ class NewsPage extends StatelessWidget {
               ),
               child: Text(
                 viewModel.errorMsg,
+
                 style: TextStyle(color: Colors.white),
               ),
             )),
@@ -116,24 +115,6 @@ class NewsPage extends StatelessWidget {
           ],
         ),
       );
-}
-
-class _ListView extends StatefulWidget {
-  final _ViewModel _viewModel;
-  _ListView(this._viewModel);
-
-  @override
-  _ListViewState createState() => _ListViewState(this._viewModel);
-}
-
-class _ListViewState extends State<_ListView> {
-  _ViewModel _viewModel;
-
-  _ListViewState(this._viewModel);
-  @override
-  Widget build(BuildContext context) {
-    print(this._viewModel.items.toString());
-  }
 }
 
 @immutable

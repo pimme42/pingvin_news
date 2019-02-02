@@ -23,5 +23,5 @@ class Constants {
 
   static Duration timeOfErrorMessage = Duration(seconds: 3);
 
-  static String noErrorMsg = null;
+  static String noErrorMsg = "";
 }
