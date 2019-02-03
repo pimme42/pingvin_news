@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static String logoPath = "images/pingvinlogo.png";
+  static String logoPath = "images/pingvinlogo_transp.png";
 
   static Widget logo = new Padding(
     padding: EdgeInsets.all(5.0),
@@ -21,7 +21,7 @@ class Constants {
 
   static String dataEntry = "/news";
 
-  static Duration errorMessageDuration = Duration(seconds: 2);
+  static Duration floatingMessageDuration = Duration(seconds: 2);
 
   static String emptyString = "";
 }

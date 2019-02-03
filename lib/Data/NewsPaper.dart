@@ -12,7 +12,7 @@ class NewsPaper {
   factory NewsPaper.fromJson(Map<String, dynamic> json) {
     List<NewsEntry> data = new List();
     int len = json['length'];
-    for (int i = 0; i < len-1; ++i) {
+    for (int i = 0; i < len; ++i) {
       String key = "$_prefix${i.toString()}";
       NewsEntry ne = NewsEntry.fromJson((json[key]));
       data.add(ne);

@@ -33,16 +33,20 @@ class StartLoadingAction {}
 
 class StopLoadingAction {}
 
-abstract class ShowErrorMessageAction{
+abstract class ShowFloatingMessageAction{
   final String msg;
-  ShowErrorMessageAction(this.msg);
+  ShowFloatingMessageAction(this.msg);
 }
 
-class CouldNotReadRESTAction extends ShowErrorMessageAction {
+class CouldNotReadRESTAction extends ShowFloatingMessageAction {
   CouldNotReadRESTAction(String msg) : super(msg);
 }
 
-class ErrorMessageShownAction {}
+class NewNewsItemNotificationAction extends ShowFloatingMessageAction {
+  NewNewsItemNotificationAction(String msg) : super(msg);
+}
+
+class FloatMessageShownAction {}
 
 class SelectUrlToShowAction {
   final String url;

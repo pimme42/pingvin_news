@@ -16,8 +16,8 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_core: ^0.3.0  # add dependency for Firebase Core
-  firebase_messaging: ^2.2.0
-  async_loader: ^0.1.2
+  firebase_messaging: ^3.0.0
+#  async_loader: ^0.1.2
   flutter_webview_plugin: ^0.3.0+2
   path_provider: ^0.5.0
   redux: ^3.0.0
@@ -35,9 +35,11 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  ios: true
-  image_path: "images/pingvinlogo.png"
-  adaptive_icon_background: #ffffff
+  ios: false
+  image_path: "images/Icons/pingvinlogo.png"
+  adaptive_icon_foreground: "images/Icons/pingvinlogo_launcher.png"
+  adaptive_icon_background: "images/Icons/icon_background_white.png"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
@@ -56,7 +58,8 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
-    - images/pingvinlogo.png
+  - images/pingvinlogo.png
+  - images/pingvinlogo_transp.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

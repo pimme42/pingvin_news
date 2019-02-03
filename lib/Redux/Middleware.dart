@@ -11,7 +11,7 @@ List<Middleware<NewsStore>> createStoreMiddleware() => [
       TypedMiddleware<NewsStore, ReadNewsFromFileAction>(_readNewsFromFile),
       TypedMiddleware<NewsStore, ReadNewsFromRESTAction>(_readNewsFromREST),
       TypedMiddleware<NewsStore, SaveNewsAction>(_saveNews),
-      TypedMiddleware<NewsStore, ShowErrorMessageAction>(_showErrorMessage),
+      TypedMiddleware<NewsStore, ShowFloatingMessageAction>(_showFloatingMessage),
     ];
 
 Future _readNewsFromFile(Store<NewsStore> store, ReadNewsFromFileAction action,
@@ -54,10 +54,10 @@ Future _saveNews(
   nh.saveNews(action.paper);
 }
 
-Future _showErrorMessage(Store<NewsStore> store, ShowErrorMessageAction action,
+Future _showFloatingMessage(Store<NewsStore> store, ShowFloatingMessageAction action,
     NextDispatcher next) async {
-  Log.doLog("_showErrorMessage", logLevel.DEBUG);
+  Log.doLog("_showFloatingMessage", logLevel.DEBUG);
   next(action);
-  await new Future.delayed(Constants.errorMessageDuration);
-  store.dispatch(ErrorMessageShownAction());
+  await new Future.delayed(Constants.floatingMessageDuration);
+  store.dispatch(FloatMessageShownAction());
 }

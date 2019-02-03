@@ -1,4 +1,7 @@
 import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Misc/Firebase.dart';
+import 'package:pingvin_news/Misc/Log.dart';
+import 'package:pingvin_news/Misc/NotificationDecoder.dart';
 
 import 'package:pingvin_news/Redux/Actions.dart';
 
@@ -21,6 +24,27 @@ class NewsPage extends StatelessWidget {
       onInit: (store) {
         store.dispatch(ReadNewsFromFileAction());
         store.dispatch(ReadNewsFromRESTAction());
+        FirebaseHandler((Map<String, dynamic> message) {
+          Log.doLog("onMessage: $message", logLevel.DEBUG);
+          Map<String, dynamic> json =
+              NotificationDecoder.decodeOnMessage(message);
+          store.dispatch(ReadNewsFromRESTAction());
+          store.dispatch(SelectNewsItemAction(json['nid']));
+          store.dispatch(NewNewsItemNotificationAction(
+              "Pingvin har publicerat en nyhet!"));
+        }, (Map<String, dynamic> message) {
+          Log.doLog("onResume: $message", logLevel.DEBUG);
+          Map<String, dynamic> json =
+              NotificationDecoder.decodeOnResume(message);
+          store.dispatch(ReadNewsFromRESTAction());
+          store.dispatch(SelectNewsItemAction(json['nid']));
+        }, (Map<String, dynamic> message) {
+          Log.doLog("onMessage: $message", logLevel.DEBUG);
+          Map<String, dynamic> json =
+              NotificationDecoder.decodeOnResume(message);
+          store.dispatch(ReadNewsFromRESTAction());
+          store.dispatch(SelectNewsItemAction(json['nid']));
+        });
       },
       converter: (Store<NewsStore> store) => _ViewModel.create(store),
       builder: (BuildContext context, _ViewModel viewModel) {
@@ -35,12 +59,14 @@ class NewsPage extends StatelessWidget {
             data: new IconThemeData(color: Theme.of(context).accentColor),
             child: RefreshIndicator(
               onRefresh: viewModel.onRefresh,
+              displacement: 50.0,
+              color: Colors.black,
               child: Stack(
                 children: <Widget>[
                   viewModel.showWebView
                       ? _displayWebPage(context, viewModel)
                       : _displayListView(context, viewModel),
-                  _displayErrorMessage(context, viewModel),
+                  _displayFloatingMessage(context, viewModel),
                 ],
               ),
             ),
@@ -51,12 +77,32 @@ class NewsPage extends StatelessWidget {
   }
 
   Widget _displayListView(BuildContext context, _ViewModel viewModel) {
-    return ListView(
-        padding: EdgeInsets.all(5.0),
-        children: viewModel.items.reversed
-            .map((_NewsItemViewModel item) =>
-                _createListItemWidget(item, context))
-            .toList());
+    if (viewModel.items.length > 0) {
+      return ListView(
+          padding: EdgeInsets.all(5.0),
+          children: viewModel.items.reversed
+              .map((_NewsItemViewModel item) =>
+                  _createListItemWidget(item, context))
+              .toList());
+    } else {
+      return Positioned(
+        child: ListView(
+          children: <Widget>[
+            Card(
+              child: ListTile(
+                title: Text("Inga nyheter laddade"),
+                subtitle: Text("Tryck här för att ladda nyheter"),
+                leading: IconButton(
+                    icon: Icon(Icons.autorenew),
+                    onPressed: viewModel.onRefresh),
+                onTap: viewModel.onRefresh,
+              ),
+            )
+          ],
+        ),
+//        child: Center(child: Text("Dra ner för att ladda nyheter!")),
+      );
+    }
   }
 
   Widget _displayWebPage(BuildContext context, _ViewModel viewModel) {
@@ -72,7 +118,8 @@ class NewsPage extends StatelessWidget {
     return Container();
   }
 
-  List<Widget> _displayAppBarActions(BuildContext context, _ViewModel viewModel) {
+  List<Widget> _displayAppBarActions(
+      BuildContext context, _ViewModel viewModel) {
     return <Widget>[
       Padding(
         child: viewModel.loading ? LoadIndicator() : Container(),
@@ -82,8 +129,8 @@ class NewsPage extends StatelessWidget {
     ];
   }
 
-  Widget _displayErrorMessage(BuildContext context, _ViewModel viewModel) {
-    if (viewModel.errorMsg != Constants.emptyString) {
+  Widget _displayFloatingMessage(BuildContext context, _ViewModel viewModel) {
+    if (viewModel.floatingMsg != Constants.emptyString) {
       return Positioned(
         child: Center(
             child: Container(
@@ -93,12 +140,12 @@ class NewsPage extends StatelessWidget {
             color: Colors.black54,
           ),
           child: Text(
-            viewModel.errorMsg,
+            viewModel.floatingMsg,
             style: TextStyle(color: Colors.white),
           ),
         )),
         width: MediaQuery.of(context).size.width,
-        bottom: 5,
+        bottom: 50,
       );
     }
     return Container();
@@ -136,12 +183,12 @@ class _ViewModel {
   final List<_NewsItemViewModel> items;
   final Function() onRefresh;
   final bool loading;
-  final String errorMsg;
+  final String floatingMsg;
   final bool showWebView;
   final String urlToShow;
   final Function() closeWebView;
 
-  _ViewModel(this.items, this.onRefresh, this.loading, this.errorMsg,
+  _ViewModel(this.items, this.onRefresh, this.loading, this.floatingMsg,
       this.showWebView, this.urlToShow, this.closeWebView);
 
   factory _ViewModel.create(Store<NewsStore> store) {
@@ -170,7 +217,7 @@ class _ViewModel {
         store.dispatch(ReadNewsFromRESTAction());
       },
       store.state.status.loading,
-      store.state.status.errorMsg,
+      store.state.status.floatMsg,
       store.state.status.urlToShow != Constants.emptyString,
       store.state.status.urlToShow,
       () => store.dispatch(CloseWebViewAction()),

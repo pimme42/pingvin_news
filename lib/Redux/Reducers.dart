@@ -29,7 +29,8 @@ final Reducer<Status> statusReducer = combineReducers([
   TypedReducer<Status, StartLoadingAction>(_startLoading),
   TypedReducer<Status, StopLoadingAction>(_stopLoading),
   TypedReducer<Status, CouldNotReadRESTAction>(_noRESTData),
-  TypedReducer<Status, ErrorMessageShownAction>(_errorMsgShown),
+  TypedReducer<Status, NewNewsItemNotificationAction>(_newNewsItem),
+  TypedReducer<Status, FloatMessageShownAction>(_floatMsgShown),
   TypedReducer<Status, SelectUrlToShowAction>(_displayWebView),
   TypedReducer<Status, CloseWebViewAction>(_closeWebView),
 ]);
@@ -37,31 +38,34 @@ final Reducer<Status> statusReducer = combineReducers([
 Status _addShowingNewsItem(Status status, SelectNewsItemAction action) => Status(
     List.unmodifiable(List.from(status.openedNewsItems)..add(action.newsId)),
     status.loading,
-    status.errorMsg, status.urlToShow);
+    status.floatMsg, status.urlToShow);
 
 Status _removeShowingNewsItem(Status status, DeSelectNewsItemAction action) => Status(
     List.unmodifiable(List.from(status.openedNewsItems)..remove(action.newsId)),
     status.loading,
-    status.errorMsg, status.urlToShow);
+    status.floatMsg, status.urlToShow);
 
 Status _startLoading(Status status, StartLoadingAction action) =>
-    Status(status.openedNewsItems, true, status.errorMsg, status.urlToShow);
+    Status(status.openedNewsItems, true, status.floatMsg, status.urlToShow);
 
 Status _stopLoading(Status status, StopLoadingAction action) =>
-    Status(status.openedNewsItems, false, status.errorMsg, status.urlToShow);
+    Status(status.openedNewsItems, false, status.floatMsg, status.urlToShow);
 
 Status _noRESTData(Status status, CouldNotReadRESTAction action) =>
     Status(status.openedNewsItems, status.loading, action.msg, status.urlToShow);
 
-Status _errorMsgShown(Status status, ErrorMessageShownAction action) {
+Status _newNewsItem(Status status, NewNewsItemNotificationAction action) =>
+    Status(status.openedNewsItems, status.loading, action.msg, status.urlToShow);
+
+Status _floatMsgShown(Status status, FloatMessageShownAction action) {
   return Status(status.openedNewsItems, status.loading, Constants.emptyString, status.urlToShow);
 }
 
 Status _displayWebView(Status status, SelectUrlToShowAction action) {
-  return Status(status.openedNewsItems, status.loading, status.errorMsg, action.url);
+  return Status(status.openedNewsItems, status.loading, status.floatMsg, action.url);
 }
 
 Status _closeWebView(Status status, CloseWebViewAction action) {
-  return Status(status.openedNewsItems, status.loading, status.errorMsg, Constants.emptyString);
+  return Status(status.openedNewsItems, status.loading, status.floatMsg, Constants.emptyString);
 }
 
