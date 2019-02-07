@@ -6,12 +6,18 @@ import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Data/NewsHandler.dart';
 import 'dart:async';
 import 'package:redux/redux.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<Middleware<NewsStore>> createStoreMiddleware() => [
       TypedMiddleware<NewsStore, ReadNewsFromFileAction>(_readNewsFromFile),
       TypedMiddleware<NewsStore, ReadNewsFromRESTAction>(_readNewsFromREST),
       TypedMiddleware<NewsStore, SaveNewsAction>(_saveNews),
-      TypedMiddleware<NewsStore, ShowFloatingMessageAction>(_showFloatingMessage),
+      TypedMiddleware<NewsStore, ShowFloatingMessageAction>(
+          _showFloatingMessage),
+      TypedMiddleware<NewsStore, ReadSubscriptionsFromPrefsAction>(
+          _readSubscriptionsPrefs),
+      TypedMiddleware<NewsStore, SaveSubscriptionsToPrefsAction>(
+          _saveSubscriptionsPrefs),
     ];
 
 Future _readNewsFromFile(Store<NewsStore> store, ReadNewsFromFileAction action,
@@ -54,10 +60,28 @@ Future _saveNews(
   nh.saveNews(action.paper);
 }
 
-Future _showFloatingMessage(Store<NewsStore> store, ShowFloatingMessageAction action,
-    NextDispatcher next) async {
+Future _showFloatingMessage(Store<NewsStore> store,
+    ShowFloatingMessageAction action, NextDispatcher next) async {
   Log.doLog("_showFloatingMessage", logLevel.DEBUG);
   next(action);
   await new Future.delayed(Constants.floatingMessageDuration);
   store.dispatch(FloatMessageShownAction());
+}
+
+Future _readSubscriptionsPrefs(Store<NewsStore> store,
+    ReadSubscriptionsFromPrefsAction action, NextDispatcher next) async {
+  Log.doLog("_readSubscriptionsPrefs in Middleware", logLevel.DEBUG);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  store.dispatch(SubscribeToNewsNotificationsAction(prefs.getBool('News') ?? false));
+  store.dispatch(SubscribeToMensNotificationsAction(prefs.getBool('MensScore') ?? false));
+  store.dispatch(SubscribeToWomensNotificationsAction(prefs.getBool('WomensScore') ?? false));
+}
+
+Future _saveSubscriptionsPrefs(Store<NewsStore> store,
+    SaveSubscriptionsToPrefsAction action, NextDispatcher next) async {
+  Log.doLog("_saveSubscriptionsPrefs in Middleware", logLevel.DEBUG);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('News', store.state.subManager.news);
+  await prefs.setBool('MensScore', store.state.subManager.mensScores);
+  await prefs.setBool('WomensScore', store.state.subManager.womensScores);
 }

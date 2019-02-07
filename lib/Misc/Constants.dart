@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constants {
   static String logoPath = "images/pingvinlogo_transp.png";
+  static String logoPathEllipse = "images/pingvinlogo_transp_with_ellipse.png";
 
   static Widget logo = new Padding(
     padding: EdgeInsets.all(5.0),
@@ -10,12 +11,7 @@ class Constants {
     ),
   );
 
-  static Widget logoAction = new Padding(
-    padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-    child: Constants.logo,
-  );
-
-  static String title = 'Pingvin News';
+  static String title = 'Pingvin Rugby Club';
 
   static String dataURL = "desktop.rorstam.se:5002";
 

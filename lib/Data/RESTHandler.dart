@@ -16,7 +16,7 @@ class RESTHandler {
   }
 
   RESTHandler._internal() {
-    this._timeout = const Duration(seconds: 1);
+    this._timeout = const Duration(seconds: 2);
   }
 
   Future<NewsPaper> readNews() async {
@@ -32,13 +32,13 @@ class RESTHandler {
 
   Future<String> _getNewsApi() async {
     try {
-      await Future.delayed(_timeout);
       Log.doLog("Times up in _getNewsApi", logLevel.DEBUG);
       var httpClient = new HttpClient();
       var uri = new Uri.http(Constants.dataURL, Constants.dataEntry);
       var request = await httpClient.getUrl(uri);
       var response = await request.close();
       var responseBody = await response.transform(utf8.decoder).join();
+      await Future.delayed(_timeout);
       return responseBody;
     } catch (e) {
       // If we encounter an error, return 0
