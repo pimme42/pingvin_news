@@ -142,7 +142,7 @@ class NewsPage extends StatelessWidget {
             : Transform(
                 origin: Offset(IconTheme.of(context).size / 2,
                     IconTheme.of(context).size / 2),
-                transform: Matrix4.skewX(-0.2),
+                transform: Matrix4.skewX(-0.0),
                 child: ImageIcon(
                   ExactAssetImage(Constants.logoPathEllipse),
                 ),

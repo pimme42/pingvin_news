@@ -4,6 +4,8 @@ import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Store/NewsStore.dart';
 import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Data/NewsHandler.dart';
+
+import 'dart:io';
 import 'dart:async';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,8 +46,11 @@ Future _readNewsFromREST(Store<NewsStore> store, ReadNewsFromRESTAction action,
     NewsPaper paperFromREST = await nh.getNewsFromREST();
     store.dispatch(SetNewsAction(paperFromREST));
     store.dispatch(SaveNewsAction(paperFromREST));
+  } on HttpException {
+    store.dispatch(
+        CouldNotReadRESTAction("Kunde inte hämta nyheter från servern"));
   } catch (e) {
-    store.dispatch(CouldNotReadRESTAction(e.toString()));
+    Log.doLog("Error in _readNewsFromRest: ${e.toString()}", logLevel.ERROR);
   } finally {
     store.dispatch(StopLoadingAction());
   }
@@ -56,13 +61,15 @@ Future _saveNews(
     Store<NewsStore> store, SaveNewsAction action, NextDispatcher next) async {
 //  await new Future.delayed(new Duration(seconds: 1));
   Log.doLog("Saving in middleware", logLevel.DEBUG);
-  NewsHandler nh = new NewsHandler();
-  nh.saveNews(action.paper);
+  if (action.paper.length > 0) {
+    NewsHandler nh = new NewsHandler();
+    nh.saveNews(action.paper);
+  }
 }
 
 Future _showFloatingMessage(Store<NewsStore> store,
     ShowFloatingMessageAction action, NextDispatcher next) async {
-  Log.doLog("_showFloatingMessage", logLevel.DEBUG);
+  Log.doLog("_showFloatingMessage ${action.msg}", logLevel.DEBUG);
   next(action);
   await new Future.delayed(Constants.floatingMessageDuration);
   store.dispatch(FloatMessageShownAction());
@@ -72,9 +79,12 @@ Future _readSubscriptionsPrefs(Store<NewsStore> store,
     ReadSubscriptionsFromPrefsAction action, NextDispatcher next) async {
   Log.doLog("_readSubscriptionsPrefs in Middleware", logLevel.DEBUG);
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  store.dispatch(SubscribeToNewsNotificationsAction(prefs.getBool('News') ?? false));
-  store.dispatch(SubscribeToMensNotificationsAction(prefs.getBool('MensScore') ?? false));
-  store.dispatch(SubscribeToWomensNotificationsAction(prefs.getBool('WomensScore') ?? false));
+  store.dispatch(
+      SubscribeToNewsNotificationsAction(prefs.getBool('News') ?? false));
+  store.dispatch(
+      SubscribeToMensNotificationsAction(prefs.getBool('MensScore') ?? false));
+  store.dispatch(SubscribeToWomensNotificationsAction(
+      prefs.getBool('WomensScore') ?? false));
 }
 
 Future _saveSubscriptionsPrefs(Store<NewsStore> store,

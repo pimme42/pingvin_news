@@ -7,14 +7,30 @@ class NewsEntry {
 
   factory NewsEntry.fromJson(Map<String, dynamic> json) {
     return NewsEntry(
-      (json['rowid']),
-      int.parse(json['id']),
-      int.parse(json['nid']),
-      json['published'].round(),
+      _toInt(json['rowid']),
+      _toInt(json['id']),
+      _toInt(json['nid']),
+      _toInt(json['published']),
       json['link'],
       json['title'],
       json['summary'],
     );
+  }
+
+  static int _toInt(dynamic value) {
+//    print("_toInt: ${value.toString()} : ${value.runtimeType}");
+    if (value is String) {
+      if (value.contains('.') || value.contains(','))
+        value = double.parse(value);
+      else
+        value = int.parse(value);
+    }
+    if (value is int) {
+      return value;
+    } else if (value is double) {
+      return value.round();
+    }
+    return -1;
   }
 
   Map<String, dynamic> toJson() => {

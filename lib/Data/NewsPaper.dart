@@ -11,11 +11,13 @@ class NewsPaper {
 
   factory NewsPaper.fromJson(Map<String, dynamic> json) {
     List<NewsEntry> data = new List();
-    int len = json['length'];
-    for (int i = 0; i < len; ++i) {
-      String key = "$_prefix${i.toString()}";
-      NewsEntry ne = NewsEntry.fromJson((json[key]));
-      data.add(ne);
+    if(json != null) {
+      int len = json['length'];
+      for (int i = 0; i < len; ++i) {
+        String key = "$_prefix${i.toString()}";
+        NewsEntry ne = NewsEntry.fromJson((json[key]));
+        data.add(ne);
+      }
     }
     return NewsPaper(data);
   }
@@ -28,4 +30,6 @@ class NewsPaper {
     }
     return map;
   }
+
+  int get length => this.entries.length;
 }
