@@ -26,7 +26,7 @@ class RESTHandler {
     List<NewsEntry> entries = List<NewsEntry>();
     // responseList?.length blir null om responseList är null och isåfall
     //    använder vi 0 istället vid jämförelsen
-    if (responseList?.length ?? 0 > 0) {
+    if ((responseList?.length ?? 0) > 0) {
       responseList.forEach((dynamic map) {
         entries.add(NewsEntry.fromJson(map));
       });

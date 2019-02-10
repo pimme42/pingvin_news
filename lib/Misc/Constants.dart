@@ -13,9 +13,9 @@ class Constants {
 
   static String title = 'Pingvin Rugby Club';
 
-  static String dataURL = "desktop.rorstam.se:5002";
+  static String dataURL = "pingvin.rorstam.se";
 
-  static String dataEntry = "/news";
+  static String dataEntry = "/news/168643/";
 
   static Duration floatingMessageDuration = Duration(seconds: 2);
 

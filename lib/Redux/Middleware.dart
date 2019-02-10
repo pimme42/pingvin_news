@@ -61,7 +61,7 @@ Future _saveNews(
     Store<NewsStore> store, SaveNewsAction action, NextDispatcher next) async {
 //  await new Future.delayed(new Duration(seconds: 1));
   Log.doLog("Saving in middleware", logLevel.DEBUG);
-  if (action.paper.length > 0) {
+  if ((action.paper?.length ?? 0 )> 0) {
     NewsHandler nh = new NewsHandler();
     nh.saveNews(action.paper);
   }
