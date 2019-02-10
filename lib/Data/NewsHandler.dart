@@ -14,7 +14,7 @@ class NewsHandler {
   }
 
   NewsHandler._internal() {
-    this._fh = new FileHandler();
+//    this._fh = new FileHandler();
 //    this._fh.deleteFile();
     this._rh = new RESTHandler();
   }

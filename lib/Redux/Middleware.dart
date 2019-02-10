@@ -80,7 +80,7 @@ Future _readSubscriptionsPrefs(Store<NewsStore> store,
   Log.doLog("_readSubscriptionsPrefs in Middleware", logLevel.DEBUG);
   SharedPreferences prefs = await SharedPreferences.getInstance();
   store.dispatch(
-      SubscribeToNewsNotificationsAction(prefs.getBool('News') ?? false));
+      SubscribeToNewsNotificationsAction(prefs.getBool('News') ?? true));
   store.dispatch(
       SubscribeToMensNotificationsAction(prefs.getBool('MensScore') ?? false));
   store.dispatch(SubscribeToWomensNotificationsAction(
