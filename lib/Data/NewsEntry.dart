@@ -7,9 +7,9 @@ class NewsEntry {
 
   factory NewsEntry.fromJson(Map<String, dynamic> json) {
     return NewsEntry(
-      _toInt(json['rowid']),
       _toInt(json['id']),
-      _toInt(json['nid']),
+      _toInt(json['club_id']),
+      _toInt(json['news_id']),
       _toInt(json['published']),
       json['link'],
       json['title'],

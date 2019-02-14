@@ -13,11 +13,13 @@ class Constants {
 
   static String title = 'Pingvin Rugby Club';
 
-  static String dataURL = "pingvin.rorstam.se";
+  static String dataURL = "pingvinapi.rorstam.se";
 
   static String dataEntry = "/news/168643/";
 
   static Duration floatingMessageDuration = Duration(seconds: 2);
 
   static String emptyString = "";
+
+  static bool useHttps = true;
 }

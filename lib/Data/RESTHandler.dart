@@ -37,7 +37,11 @@ class RESTHandler {
   Future<String> _getNewsApi() async {
     try {
       var httpClient = new HttpClient();
-      var uri = new Uri.https(Constants.dataURL, Constants.dataEntry);
+      var uri;
+      if(Constants.useHttps)
+        uri = new Uri.https(Constants.dataURL, Constants.dataEntry);
+      else
+        uri = new Uri.http(Constants.dataURL, Constants.dataEntry);
       Log.doLog("Uri: ${uri.toString()}", logLevel.DEBUG);
       var request = await httpClient.getUrl(uri);
       var response = await request.close();
