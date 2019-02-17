@@ -1,6 +1,5 @@
 import 'package:pingvin_news/Data/NewsPaper.dart';
 
-
 // Actions on NewsStore
 
 class SetNewsAction {
@@ -33,16 +32,20 @@ class StartLoadingAction {}
 
 class StopLoadingAction {}
 
-abstract class ShowErrorMessageAction{
+abstract class ShowFloatingMessageAction {
   final String msg;
-  ShowErrorMessageAction(this.msg);
+  ShowFloatingMessageAction(this.msg);
 }
 
-class CouldNotReadRESTAction extends ShowErrorMessageAction {
+class CouldNotReadRESTAction extends ShowFloatingMessageAction {
   CouldNotReadRESTAction(String msg) : super(msg);
 }
 
-class ErrorMessageShownAction {}
+class NewNewsItemNotificationAction extends ShowFloatingMessageAction {
+  NewNewsItemNotificationAction(String msg) : super(msg);
+}
+
+class FloatMessageShownAction {}
 
 class SelectUrlToShowAction {
   final String url;
@@ -50,3 +53,26 @@ class SelectUrlToShowAction {
 }
 
 class CloseWebViewAction {}
+
+// Actions on SubscriptionsManager
+
+abstract class SubscribeToNotificationAction {
+  bool value;
+  SubscribeToNotificationAction(this.value);
+}
+
+class SubscribeToNewsNotificationsAction extends SubscribeToNotificationAction {
+  SubscribeToNewsNotificationsAction(bool value) : super(value);
+}
+
+class SubscribeToMensNotificationsAction extends SubscribeToNotificationAction {
+  SubscribeToMensNotificationsAction(bool value) : super(value);
+}
+
+class SubscribeToWomensNotificationsAction extends SubscribeToNotificationAction {
+  SubscribeToWomensNotificationsAction(bool value) : super(value);
+}
+
+class ReadSubscriptionsFromPrefsAction {}
+
+class SaveSubscriptionsToPrefsAction {}

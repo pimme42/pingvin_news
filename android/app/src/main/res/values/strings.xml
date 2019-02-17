@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Firebase Cloud Messaging</string>
+    <string name="default_notification_channel_id" translatable="false">rorstam.se.pingvinnews.NEWS</string>
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <string name="default_notification_channel_name" translatable="true">Nyheter</string>
+</resources>

@@ -4,14 +4,22 @@ import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Store/NewsStore.dart';
 import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Data/NewsHandler.dart';
+
+import 'dart:io';
 import 'dart:async';
 import 'package:redux/redux.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 List<Middleware<NewsStore>> createStoreMiddleware() => [
       TypedMiddleware<NewsStore, ReadNewsFromFileAction>(_readNewsFromFile),
       TypedMiddleware<NewsStore, ReadNewsFromRESTAction>(_readNewsFromREST),
       TypedMiddleware<NewsStore, SaveNewsAction>(_saveNews),
-      TypedMiddleware<NewsStore, ShowErrorMessageAction>(_showErrorMessage),
+      TypedMiddleware<NewsStore, ShowFloatingMessageAction>(
+          _showFloatingMessage),
+      TypedMiddleware<NewsStore, ReadSubscriptionsFromPrefsAction>(
+          _readSubscriptionsPrefs),
+      TypedMiddleware<NewsStore, SaveSubscriptionsToPrefsAction>(
+          _saveSubscriptionsPrefs),
     ];
 
 Future _readNewsFromFile(Store<NewsStore> store, ReadNewsFromFileAction action,
@@ -38,8 +46,11 @@ Future _readNewsFromREST(Store<NewsStore> store, ReadNewsFromRESTAction action,
     NewsPaper paperFromREST = await nh.getNewsFromREST();
     store.dispatch(SetNewsAction(paperFromREST));
     store.dispatch(SaveNewsAction(paperFromREST));
+  } on HttpException {
+    store.dispatch(
+        CouldNotReadRESTAction("Kunde inte hämta nyheter från servern"));
   } catch (e) {
-    store.dispatch(CouldNotReadRESTAction(e.toString()));
+    Log.doLog("Error in _readNewsFromRest: ${e.toString()}", logLevel.ERROR);
   } finally {
     store.dispatch(StopLoadingAction());
   }
@@ -50,14 +61,37 @@ Future _saveNews(
     Store<NewsStore> store, SaveNewsAction action, NextDispatcher next) async {
 //  await new Future.delayed(new Duration(seconds: 1));
   Log.doLog("Saving in middleware", logLevel.DEBUG);
-  NewsHandler nh = new NewsHandler();
-  nh.saveNews(action.paper);
+  if ((action.paper?.length ?? 0 )> 0) {
+    NewsHandler nh = new NewsHandler();
+    nh.saveNews(action.paper);
+  }
 }
 
-Future _showErrorMessage(Store<NewsStore> store, ShowErrorMessageAction action,
-    NextDispatcher next) async {
-  Log.doLog("_showErrorMessage", logLevel.DEBUG);
+Future _showFloatingMessage(Store<NewsStore> store,
+    ShowFloatingMessageAction action, NextDispatcher next) async {
+  Log.doLog("_showFloatingMessage ${action.msg}", logLevel.DEBUG);
   next(action);
-  await new Future.delayed(Constants.errorMessageDuration);
-  store.dispatch(ErrorMessageShownAction());
+  await new Future.delayed(Constants.floatingMessageDuration);
+  store.dispatch(FloatMessageShownAction());
+}
+
+Future _readSubscriptionsPrefs(Store<NewsStore> store,
+    ReadSubscriptionsFromPrefsAction action, NextDispatcher next) async {
+  Log.doLog("_readSubscriptionsPrefs in Middleware", logLevel.DEBUG);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  store.dispatch(
+      SubscribeToNewsNotificationsAction(prefs.getBool('News') ?? true));
+  store.dispatch(
+      SubscribeToMensNotificationsAction(prefs.getBool('MensScore') ?? false));
+  store.dispatch(SubscribeToWomensNotificationsAction(
+      prefs.getBool('WomensScore') ?? false));
+}
+
+Future _saveSubscriptionsPrefs(Store<NewsStore> store,
+    SaveSubscriptionsToPrefsAction action, NextDispatcher next) async {
+  Log.doLog("_saveSubscriptionsPrefs in Middleware", logLevel.DEBUG);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setBool('News', store.state.subManager.news);
+  await prefs.setBool('MensScore', store.state.subManager.mensScores);
+  await prefs.setBool('WomensScore', store.state.subManager.womensScores);
 }

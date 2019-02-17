@@ -19,11 +19,11 @@ class NewsHandler {
     this._rh = new RESTHandler();
   }
 
-  Future<NewsPaper> getNewsFromFile() async => this._fh.readNews();
+  Future<NewsPaper> getNewsFromFile() async => this._fh?.readNews();
 
-  Future<NewsPaper> getNewsFromREST() async => this._rh.readNews();
+  Future<NewsPaper> getNewsFromREST() async => this._rh?.readNews();
 
   void saveNews(NewsPaper paper) async {
-    this._fh.writeNews(paper);
+    this._fh?.writeNews(paper);
   }
 }
