@@ -2,7 +2,8 @@ import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Data/FirebaseHandler.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/NotificationDecoder.dart';
-
+import 'package:pingvin_news/Pages/Models/NewsPageModels.dart';
+import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
 import 'package:pingvin_news/Redux/Actions.dart';
 
 import 'package:pingvin_news/Store/NewsStore.dart';
@@ -20,7 +21,7 @@ import 'package:redux/redux.dart';
 class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<NewsStore, _ViewModel>(
+    return StoreConnector<NewsStore, NewsPageViewModel>(
       onInit: (store) {
         store.dispatch(ReadSubscriptionsFromPrefsAction());
         store.dispatch(ReadNewsFromFileAction());
@@ -51,8 +52,8 @@ class NewsPage extends StatelessWidget {
           },
         );
       },
-      converter: (Store<NewsStore> store) => _ViewModel.create(store),
-      builder: (BuildContext context, _ViewModel viewModel) {
+      converter: (Store<NewsStore> store) => NewsPageViewModel.create(store),
+      builder: (BuildContext context, NewsPageViewModel viewModel) {
         return WillPopScope(
           //Gör att vi kan ändra tillbaka-knappens beteende
           onWillPop: () async {
@@ -69,7 +70,7 @@ class NewsPage extends StatelessWidget {
               leading: _displayLeading(context, viewModel),
               actions: _displayAppBarActions(context, viewModel),
             ),
-            drawer: _displayDrawer(context, viewModel),
+            drawer: viewModel.drawer,
             body: new IconTheme(
               data: new IconThemeData(color: Theme.of(context).accentColor),
               child: RefreshIndicator(
@@ -92,12 +93,12 @@ class NewsPage extends StatelessWidget {
     );
   }
 
-  Widget _displayListView(BuildContext context, _ViewModel viewModel) {
+  Widget _displayListView(BuildContext context, NewsPageViewModel viewModel) {
     if (viewModel.items.length > 0) {
       return ListView(
           padding: EdgeInsets.all(5.0),
           children: viewModel.items.reversed
-              .map((_NewsItemViewModel item) =>
+              .map((NewsPageItemViewModel item) =>
                   _createListItemWidget(item, context))
               .toList());
     } else {
@@ -120,11 +121,11 @@ class NewsPage extends StatelessWidget {
     }
   }
 
-  Widget _displayWebPage(BuildContext context, _ViewModel viewModel) {
+  Widget _displayWebPage(BuildContext context, NewsPageViewModel viewModel) {
     return WebViewPage(viewModel.urlToShow);
   }
 
-  Widget _displayLeading(BuildContext context, _ViewModel viewModel) {
+  Widget _displayLeading(BuildContext context, NewsPageViewModel viewModel) {
     if (viewModel.showWebView)
       return IconButton(
         icon: Icon(Icons.close),
@@ -134,7 +135,7 @@ class NewsPage extends StatelessWidget {
   }
 
   List<Widget> _displayAppBarActions(
-      BuildContext context, _ViewModel viewModel) {
+      BuildContext context, NewsPageViewModel viewModel) {
     return <Widget>[
       Padding(
         child: viewModel.loading
@@ -152,7 +153,7 @@ class NewsPage extends StatelessWidget {
     ];
   }
 
-  Widget _displayFloatingMessage(BuildContext context, _ViewModel viewModel) {
+  Widget _displayFloatingMessage(BuildContext context, NewsPageViewModel viewModel) {
     if (viewModel.floatingMsg != Constants.emptyString) {
       return Positioned(
         child: Center(
@@ -174,52 +175,7 @@ class NewsPage extends StatelessWidget {
     return Container();
   }
 
-  Widget _displayDrawer(BuildContext context, _ViewModel viewModel) {
-    return Drawer(
-      child: ListView(
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: ExactAssetImage("images/drawer_background2.jpg")),
-            ),
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    Constants.title,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          SwitchListTile(
-            value: viewModel.subscribingToNews,
-            onChanged: (bool value) => viewModel.subscribeToNews(value),
-            title: Text(
-              "Prenumerera på nyheter",
-              style: TextStyle(fontSize: 12.0),
-            ),
-            secondary: Icon(Icons.notifications),
-            inactiveThumbImage: ExactAssetImage(Constants.logoPath),
-            inactiveTrackColor: Colors.black26,
-            inactiveThumbColor: Colors.black12,
-            activeThumbImage: ExactAssetImage(Constants.logoPath),
-            activeTrackColor: Colors.green[800],
-            activeColor: Colors.white,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _createListItemWidget(_NewsItemViewModel item, BuildContext context) =>
+  Widget _createListItemWidget(NewsPageItemViewModel item, BuildContext context) =>
       Card(
         child: ExpansionTile(
           key: ObjectKey(item.summary),
@@ -244,79 +200,4 @@ class NewsPage extends StatelessWidget {
           ],
         ),
       );
-}
-
-@immutable
-class _ViewModel {
-  final List<_NewsItemViewModel> items;
-  final Function() onRefresh;
-  final bool loading;
-  final String floatingMsg;
-  final bool showWebView;
-  final String urlToShow;
-  final Function() closeWebView;
-  final bool subscribingToNews;
-  final Function(bool) subscribeToNews;
-
-  _ViewModel(
-      this.items,
-      this.onRefresh,
-      this.loading,
-      this.floatingMsg,
-      this.showWebView,
-      this.urlToShow,
-      this.closeWebView,
-      this.subscribingToNews,
-      this.subscribeToNews);
-
-  factory _ViewModel.create(Store<NewsStore> store) {
-    List<_NewsItemViewModel> items = store.state.paper.entries
-        .map(
-          (NewsEntry item) => _NewsItemViewModel(
-                Icon(Icons.web),
-                (BuildContext context) {
-                  store.dispatch(SelectUrlToShowAction(item.link));
-                },
-                item.title,
-                item.summary,
-                (BuildContext context, bool opening) {
-                  if (opening)
-                    store.dispatch(SelectNewsItemAction(item.nid));
-                  else
-                    store.dispatch(DeSelectNewsItemAction(item.nid));
-                },
-                store.state.status.isNewsItemSelected(item.nid),
-              ),
-        )
-        .toList();
-    return _ViewModel(
-      items,
-      () async {
-        store.dispatch(ReadNewsFromRESTAction());
-      },
-      store.state.status.loading,
-      store.state.status.floatMsg,
-      store.state.status.urlToShow != Constants.emptyString,
-      store.state.status.urlToShow,
-      () => store.dispatch(CloseWebViewAction()),
-      store.state.subManager.news,
-      (bool value) {
-        store.dispatch(SubscribeToNewsNotificationsAction(value));
-        store.dispatch(SaveSubscriptionsToPrefsAction());
-      },
-    );
-  }
-}
-
-@immutable
-class _NewsItemViewModel {
-  final Widget leadingIcon;
-  final Function(BuildContext) onPressed;
-  final String title;
-  final String summary;
-  final Function(BuildContext, bool) selectNews;
-  final bool selected;
-
-  _NewsItemViewModel(this.leadingIcon, this.onPressed, this.title, this.summary,
-      this.selectNews, this.selected);
 }

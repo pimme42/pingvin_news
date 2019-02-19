@@ -4,6 +4,7 @@ import 'package:pingvin_news/Store/SubscriptionsManager.dart';
 import 'package:pingvin_news/Store/Status.dart';
 import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Misc/Log.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:redux/redux.dart';
@@ -95,7 +96,9 @@ final Reducer<SubscriptionsManager> subscriptionsReducer = combineReducers([
 SubscriptionsManager _subscribeNewsNotif(
     SubscriptionsManager manager, SubscribeToNewsNotificationsAction action) {
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
-  if(action.value)
+  Log.doLog(
+      "_subscribeNewsNotif value: ${action.value.toString()}", logLevel.DEBUG);
+  if (action.value)
     _firebaseMessaging.subscribeToTopic('News');
   else
     _firebaseMessaging.unsubscribeFromTopic('News');
@@ -107,14 +110,12 @@ SubscriptionsManager _subscribeMensNotif(
     SubscriptionsManager manager, SubscribeToMensNotificationsAction action) {
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   _firebaseMessaging.subscribeToTopic('MensScores');
-  return SubscriptionsManager(
-      manager.news, action.value, manager.womensScores);
+  return SubscriptionsManager(manager.news, action.value, manager.womensScores);
 }
 
 SubscriptionsManager _subscribeWomensNotif(
     SubscriptionsManager manager, SubscribeToWomensNotificationsAction action) {
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   _firebaseMessaging.subscribeToTopic('WomensScores');
-  return SubscriptionsManager(
-      manager.news, manager.mensScores, action.value);
+  return SubscriptionsManager(manager.news, manager.mensScores, action.value);
 }
