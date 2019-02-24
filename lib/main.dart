@@ -1,57 +1,81 @@
-import 'package:pingvin_news/Store/NewsStore.dart';
-import 'package:pingvin_news/Redux/Middleware.dart';
-import 'package:pingvin_news/Redux/Reducers.dart';
+import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Redux/AppState/Middleware.dart';
+import 'package:pingvin_news/Redux/News/Middleware.dart';
+import 'package:pingvin_news/Redux/AppState/Reducers.dart';
 
 import 'package:pingvin_news/Pages/NewsPage.dart';
+import 'package:pingvin_news/Pages/TeamPage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
+//void navigationMiddleware(
+//  Store<int> store,
+//  dynamic action,
+//  NextDispatcher next,
+//) {
+//  next(action);
+//
+//  if (action is NavigateAction) {
+//    navigatorKey.currentState.push(new MaterialPageRoute(builder: (context) {
+//      return new Scaffold(
+//        appBar: new AppBar(
+//          title: new Text("New Route"),
+//        ),
+//      );
+//    }));
+//  }
+//}
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final Store<NewsStore> store = Store<NewsStore>(
-    newsReducer,
-    initialState: NewsStore.initial(),
-    middleware: createStoreMiddleware(),
-  );
+  final Store<AppStore> store = Store<AppStore>(appReducer,
+      initialState: AppStore.initial(),
+      middleware: [NavigationMiddleware<AppStore>()]
+        ..addAll(appStoreMiddleware())
+        ..addAll(newsStoreMiddleware()));
 
   @override
-  Widget build(BuildContext context) => StoreProvider(
-        store: this.store,
-        child: MaterialApp(
-          theme: ThemeData(
-            // Define the default Brightness and Colors
-            brightness: Brightness.light,
-            primaryColor: Colors.white,
-            accentColor: Colors.black,
+  Widget build(BuildContext context) => MaterialApp(
+        theme: ThemeData(
+          // Define the default Brightness and Colors
+          brightness: Brightness.light,
+          primaryColor: Colors.white,
+          accentColor: Colors.black,
 
-            // Define the default Font Family
-            fontFamily: 'Montserrat',
+          // Define the default Font Family
+          fontFamily: 'Montserrat',
 
-            iconTheme: IconThemeData(size: 30.0),
+          iconTheme: IconThemeData(size: 30.0),
 
-            // Define the default TextTheme. Use this to specify the default
-            // text styling for headlines, titles, bodies of text, and more.
-            textTheme: TextTheme(
-              headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-              title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-              display1: TextStyle(fontSize: 100.0, fontFamily: 'Hind'),
-              body2: TextStyle(fontSize: 10.0, fontFamily: 'Hind'),
-              body1: TextStyle(fontSize: 15.0, fontFamily: 'Hind'),
-            ),
-          ),
-          routes: <String, WidgetBuilder>{
-//        '/ProjectPage': (BuildContext context) => ProjectPage(),
-//        '/PartPage': (BuildContext context) => PartPage(),
-          },
-          navigatorKey: navigatorKey,
-          home: Scaffold(
-            body: NewsPage(),
+          // Define the default TextTheme. Use this to specify the default
+          // text styling for headlines, titles, bodies of text, and more.
+          textTheme: TextTheme(
+            headline: TextStyle(fontWeight: FontWeight.bold),
+            title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+            display1: TextStyle(fontSize: 30.0, fontFamily: 'Hind'),
+            body2: TextStyle(fontSize: 10.0, fontFamily: 'Hind'),
+            body1: TextStyle(fontSize: 15.0, fontFamily: 'Hind'),
           ),
         ),
+        initialRoute: '/',
+        routes: <String, WidgetBuilder>{
+          '/': (BuildContext context) => _makePage(NewsPage()),
+          '/TeamPage': (BuildContext context) => _makePage(TeamPage()),
+        },
+        navigatorKey: NavigatorHolder.navigatorKey,
+//        home: _makePage(NewsPage()),
       );
+
+  Widget _makePage(Widget Page) {
+    return StoreProvider(
+      store: this.store,
+      child: Page,
+    );
+  }
 }

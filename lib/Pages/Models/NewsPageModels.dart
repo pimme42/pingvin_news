@@ -1,7 +1,8 @@
-import 'package:pingvin_news/Store/NewsStore.dart';
-import 'package:pingvin_news/Pages/PingvinDrawer.dart';
+import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Store/News/NewsStore.dart';
+import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
-import 'package:pingvin_news/Redux/Actions.dart';
+import 'package:pingvin_news/Redux/News/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Data/NewsEntry.dart';
 
@@ -17,49 +18,42 @@ class NewsPageViewModel {
   final bool showWebView;
   final String urlToShow;
   final Function() closeWebView;
-  final PingvinDrawer drawer;
+  final AppDrawer drawer;
 
-  NewsPageViewModel(
-      this.items,
-      this.onRefresh,
-      this.loading,
-      this.floatingMsg,
-      this.showWebView,
-      this.urlToShow,
-      this.closeWebView,
-      this.drawer);
+  NewsPageViewModel(this.items, this.onRefresh, this.loading, this.floatingMsg,
+      this.showWebView, this.urlToShow, this.closeWebView, this.drawer);
 
-  factory NewsPageViewModel.create(Store<NewsStore> store) {
-    List<NewsPageItemViewModel> items = store.state.paper.entries
+  factory NewsPageViewModel.create(Store<AppStore> store) {
+    List<NewsPageItemViewModel> items = store.state.newsStore.paper.entries
         .map(
           (NewsEntry item) => NewsPageItemViewModel(
-        Icon(Icons.web),
-            (BuildContext context) {
-          store.dispatch(SelectUrlToShowAction(item.link));
-        },
-        item.title,
-        item.summary,
-            (BuildContext context, bool opening) {
-          if (opening)
-            store.dispatch(SelectNewsItemAction(item.nid));
-          else
-            store.dispatch(DeSelectNewsItemAction(item.nid));
-        },
-        store.state.status.isNewsItemSelected(item.nid),
-      ),
-    )
+                Icon(Icons.web),
+                (BuildContext context) {
+                  store.dispatch(SelectUrlToShowAction(item.link));
+                },
+                item.title,
+                item.summary,
+                (BuildContext context, bool opening) {
+                  if (opening)
+                    store.dispatch(SelectNewsItemAction(item.nid));
+                  else
+                    store.dispatch(DeSelectNewsItemAction(item.nid));
+                },
+                store.state.newsStore.newsStatus.isNewsItemSelected(item.nid),
+              ),
+        )
         .toList();
     return NewsPageViewModel(
       items,
-          () async {
+      () async {
         store.dispatch(ReadNewsFromRESTAction());
       },
       store.state.status.loading,
       store.state.status.floatMsg,
-      store.state.status.urlToShow != Constants.emptyString,
-      store.state.status.urlToShow,
-          () => store.dispatch(CloseWebViewAction()),
-      PingvinDrawer(DrawerViewModel.create(store)),
+      store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
+      store.state.newsStore.newsStatus.urlToShow,
+      () => store.dispatch(CloseWebViewAction()),
+      AppDrawer(DrawerViewModel.create(store)),
     );
   }
 }
@@ -73,6 +67,6 @@ class NewsPageItemViewModel {
   final Function(BuildContext, bool) selectNews;
   final bool selected;
 
-  NewsPageItemViewModel(this.leadingIcon, this.onPressed, this.title, this.summary,
-      this.selectNews, this.selected);
+  NewsPageItemViewModel(this.leadingIcon, this.onPressed, this.title,
+      this.summary, this.selectNews, this.selected);
 }

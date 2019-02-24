@@ -4,9 +4,10 @@ import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/NotificationDecoder.dart';
 import 'package:pingvin_news/Pages/Models/NewsPageModels.dart';
 import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
-import 'package:pingvin_news/Redux/Actions.dart';
+import 'package:pingvin_news/Redux/News/Actions.dart';
+import 'package:pingvin_news/Redux/AppState/Actions.dart';
 
-import 'package:pingvin_news/Store/NewsStore.dart';
+import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:pingvin_news/Data/NewsEntry.dart';
 
@@ -21,7 +22,7 @@ import 'package:redux/redux.dart';
 class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<NewsStore, NewsPageViewModel>(
+    return StoreConnector<AppStore, NewsPageViewModel>(
       onInit: (store) {
         store.dispatch(ReadSubscriptionsFromPrefsAction());
         store.dispatch(ReadNewsFromFileAction());
@@ -52,7 +53,7 @@ class NewsPage extends StatelessWidget {
           },
         );
       },
-      converter: (Store<NewsStore> store) => NewsPageViewModel.create(store),
+      converter: (Store<AppStore> store) => NewsPageViewModel.create(store),
       builder: (BuildContext context, NewsPageViewModel viewModel) {
         return WillPopScope(
           //Gör att vi kan ändra tillbaka-knappens beteende
@@ -153,7 +154,8 @@ class NewsPage extends StatelessWidget {
     ];
   }
 
-  Widget _displayFloatingMessage(BuildContext context, NewsPageViewModel viewModel) {
+  Widget _displayFloatingMessage(
+      BuildContext context, NewsPageViewModel viewModel) {
     if (viewModel.floatingMsg != Constants.emptyString) {
       return Positioned(
         child: Center(
@@ -175,7 +177,8 @@ class NewsPage extends StatelessWidget {
     return Container();
   }
 
-  Widget _createListItemWidget(NewsPageItemViewModel item, BuildContext context) =>
+  Widget _createListItemWidget(
+          NewsPageItemViewModel item, BuildContext context) =>
       Card(
         child: ExpansionTile(
           key: ObjectKey(item.summary),
