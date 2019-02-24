@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
   final Store<NewsStore> store = Store<NewsStore>(
     newsReducer,
     initialState: NewsStore.initial(),
-    middleware: createStoreMiddleware(),
+    middleware:
+        createStoreMiddleware(), // Lägger till bara för att testa nya git-repon
   );
 
   @override
@@ -49,8 +50,9 @@ class MyApp extends StatelessWidget {
 //        '/PartPage': (BuildContext context) => PartPage(),
           },
           navigatorKey: navigatorKey,
-          home: Scaffold( body: NewsPage(),),
-
+          home: Scaffold(
+            body: NewsPage(),
+          ),
         ),
       );
 }
