@@ -5,15 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 
-class PingvinDrawer extends StatefulWidget {
+class AppDrawer extends StatefulWidget {
   final DrawerViewModel model;
-  PingvinDrawer(this.model);
+  AppDrawer(this.model);
 
   @override
-  _PingvinDrawerState createState() => _PingvinDrawerState();
+  _AppDrawerState createState() => _AppDrawerState();
 }
 
-class _PingvinDrawerState extends State<PingvinDrawer> {
+class _AppDrawerState extends State<AppDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -37,6 +37,16 @@ class _PingvinDrawerState extends State<PingvinDrawer> {
                     ),
                   ),
                 )
+              ],
+            ),
+          ),
+          Card(
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  onTap: () => widget.model.showMensPage(),
+                  title: Text(widget.model.mensPage),
+                ),
               ],
             ),
           ),
@@ -83,7 +93,7 @@ class _PingvinDrawerState extends State<PingvinDrawer> {
               ),
               child: Text(widget.model.aboutText),
               icon: Icon(widget.model.aboutIcon),
-              applicationName: "PRC",
+              applicationName: widget.model.appName,
               aboutBoxChildren: _makeAboutBox(widget.model),
             ),
           ),
