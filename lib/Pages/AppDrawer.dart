@@ -44,8 +44,16 @@ class _AppDrawerState extends State<AppDrawer> {
             child: Column(
               children: <Widget>[
                 ListTile(
+                  onTap: () => widget.model.showNewsPage(),
+                  title: Text(widget.model.newsPage),
+                ),
+                ListTile(
                   onTap: () => widget.model.showMensPage(),
                   title: Text(widget.model.mensPage),
+                ),
+                ListTile(
+                  onTap: () => widget.model.showWomensPage(),
+                  title: Text(widget.model.womensPage),
                 ),
               ],
             ),

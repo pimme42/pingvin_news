@@ -24,8 +24,12 @@ class DrawerViewModel {
   final String aboutSubject;
   final IconData aboutIcon;
   final String aboutImage;
+  final String newsPage;
+  final Function() showNewsPage;
   final String mensPage;
   final Function() showMensPage;
+  final String womensPage;
+  final Function() showWomensPage;
 
   DrawerViewModel(
     this.headerImage,
@@ -43,8 +47,12 @@ class DrawerViewModel {
     this.aboutSubject,
     this.aboutIcon,
     this.aboutImage,
+    this.newsPage,
+    this.showNewsPage,
     this.mensPage,
     this.showMensPage,
+    this.womensPage,
+    this.showWomensPage,
   );
 
   factory DrawerViewModel.create(Store<AppStore> store) {
@@ -69,10 +77,17 @@ class DrawerViewModel {
       'Pingvin-appen',
       Icons.info,
       Constants.logoPath,
+      'Nyheter',
+      () {
+        store.dispatch(NavigateToAction.push('/'));
+      },
       'Herrar',
       () {
-        Log.doLog("Navigating to TeamPage", logLevel.DEBUG);
-        store.dispatch(NavigateToAction.push('/TeamPage'));
+        store.dispatch(NavigateToAction.push('/MensTeam'));
+      },
+      'Damer',
+      () {
+        store.dispatch(NavigateToAction.push('/WomensTeam'));
       },
     );
   }

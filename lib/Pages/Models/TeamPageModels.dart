@@ -1,0 +1,72 @@
+import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Store/News/NewsStore.dart';
+import 'package:pingvin_news/Pages/AppDrawer.dart';
+import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
+import 'package:pingvin_news/Redux/News/Actions.dart';
+import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Data/NewsEntry.dart';
+
+import 'package:redux/redux.dart';
+import 'package:flutter/material.dart';
+
+@immutable
+class TeamPageViewModel {
+  final List<TeamPageItemViewModel> items;
+  final Function() onRefresh;
+  final bool loading;
+  final String floatingMsg;
+  final bool showWebView;
+  final String urlToShow;
+  final Function() closeWebView;
+  final AppDrawer drawer;
+
+  TeamPageViewModel(this.items, this.onRefresh, this.loading, this.floatingMsg,
+      this.showWebView, this.urlToShow, this.closeWebView, this.drawer);
+
+  factory TeamPageViewModel.create(Store<AppStore> store) {
+    List<TeamPageItemViewModel> items = store.state.newsStore.paper.entries
+        .map(
+          (NewsEntry item) => TeamPageItemViewModel(
+                Icon(Icons.web),
+                (BuildContext context) {
+                  store.dispatch(SelectUrlToShowAction(item.link));
+                },
+                item.title,
+                item.summary,
+                (BuildContext context, bool opening) {
+                  if (opening)
+                    store.dispatch(SelectNewsItemAction(item.nid));
+                  else
+                    store.dispatch(DeSelectNewsItemAction(item.nid));
+                },
+                store.state.newsStore.newsStatus.isNewsItemSelected(item.nid),
+              ),
+        )
+        .toList();
+    return TeamPageViewModel(
+      items,
+      () async {
+        store.dispatch(ReadNewsFromRESTAction());
+      },
+      store.state.status.loading,
+      store.state.status.floatMsg,
+      store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
+      store.state.newsStore.newsStatus.urlToShow,
+      () => store.dispatch(CloseWebViewAction()),
+      AppDrawer(DrawerViewModel.create(store)),
+    );
+  }
+}
+
+@immutable
+class TeamPageItemViewModel {
+  final Widget leadingIcon;
+  final Function(BuildContext) onPressed;
+  final String title;
+  final String summary;
+  final Function(BuildContext, bool) selectNews;
+  final bool selected;
+
+  TeamPageItemViewModel(this.leadingIcon, this.onPressed, this.title,
+      this.summary, this.selectNews, this.selected);
+}

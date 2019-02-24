@@ -63,19 +63,39 @@ class MyApp extends StatelessWidget {
             body1: TextStyle(fontSize: 15.0, fontFamily: 'Hind'),
           ),
         ),
-        initialRoute: '/',
-        routes: <String, WidgetBuilder>{
-          '/': (BuildContext context) => _makePage(NewsPage()),
-          '/TeamPage': (BuildContext context) => _makePage(TeamPage()),
-        },
+//        initialRoute: '/',
+//        routes: <String, WidgetBuilder>{
+//          '/': (BuildContext context) => _makePage(NewsPage()),
+//          '/TeamPage': (BuildContext context) => _makePage(TeamPage()),
+//        },
+        onGenerateRoute: _getRoute,
         navigatorKey: NavigatorHolder.navigatorKey,
 //        home: _makePage(NewsPage()),
       );
+
+  Route _getRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return _buildRoute(settings, NewsPage());
+      case '/MensTeam':
+      case '/WomensTeam':
+        return _buildRoute(settings, TeamPage());
+      default:
+        return _buildRoute(settings, NewsPage());
+    }
+  }
 
   Widget _makePage(Widget Page) {
     return StoreProvider(
       store: this.store,
       child: Page,
+    );
+  }
+
+  MaterialPageRoute _buildRoute(RouteSettings settings, Widget builder) {
+    return new MaterialPageRoute(
+      settings: settings,
+      builder: (BuildContext context) => _makePage(builder),
     );
   }
 }
