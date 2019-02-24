@@ -16,8 +16,7 @@ class MyApp extends StatelessWidget {
   final Store<NewsStore> store = Store<NewsStore>(
     newsReducer,
     initialState: NewsStore.initial(),
-    middleware:
-        createStoreMiddleware(), // Lägger till bara för att testa nya git-repon
+    middleware: createStoreMiddleware(),
   );
 
   @override
