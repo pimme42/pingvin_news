@@ -38,7 +38,7 @@ class RESTHandler {
     try {
       var httpClient = new HttpClient();
       var uri;
-      if(Constants.useHttps)
+      if (Constants.useHttps)
         uri = new Uri.https(Constants.dataURL, Constants.dataEntry);
       else
         uri = new Uri.http(Constants.dataURL, Constants.dataEntry);

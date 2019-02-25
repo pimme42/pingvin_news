@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Constants {
-  static String logoPath = "images/pingvinlogo_transp.png";
-  static String logoPathEllipse = "images/pingvinlogo_transp_with_ellipse.png";
+  static const String logoPath = "images/pingvinlogo_transp.png";
+  static const String logoPathEllipse =
+      "images/pingvinlogo_transp_with_ellipse.png";
 
   static Widget logo = new Padding(
     padding: EdgeInsets.all(5.0),
@@ -11,15 +12,15 @@ class Constants {
     ),
   );
 
-  static String title = 'Pingvin Rugby Club';
+  static const String title = 'Pingvin Rugby Club';
 
-  static String dataURL = "pingvinapi.rorstam.se";
+  static const String dataURL = "pingvinapi.rorstam.se";
 
-  static String dataEntry = "/news/168643/";
+  static const String dataEntry = "/news/168643/";
 
-  static Duration floatingMessageDuration = Duration(seconds: 2);
+  static const Duration standardSnackBarDuration = Duration(seconds: 2);
 
-  static String emptyString = "";
+  static const String emptyString = "";
 
-  static bool useHttps = true;
+  static const bool useHttps = true;
 }

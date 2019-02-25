@@ -6,17 +6,13 @@ import 'package:pingvin_news/Misc/Log.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 @immutable
 class DrawerViewModel {
   final String headerImage;
   final String headerTitle;
-  final String notifHeader;
-  final Map<String, bool> subscribingTo;
-  final Map<String, Function(bool)> subscribeTo;
-  final Map<String, IconData> subscribeIcons; //Icons.notification
-  final Map<String, String> thumbImage; //Constants.logoPath
-  final Map<String, String> subscribeText;
+  final List<DrawerSubscribeItemView> subItems;
   final String appName;
   final String aboutText;
   final List<String> aboutBoxText;
@@ -24,22 +20,12 @@ class DrawerViewModel {
   final String aboutSubject;
   final IconData aboutIcon;
   final String aboutImage;
-  final String newsPage;
-  final Function() showNewsPage;
-  final String mensPage;
-  final Function() showMensPage;
-  final String womensPage;
-  final Function() showWomensPage;
+  final List<DrawerPageViewModel> pages;
 
   DrawerViewModel(
     this.headerImage,
     this.headerTitle,
-    this.notifHeader,
-    this.subscribingTo,
-    this.subscribeTo,
-    this.subscribeIcons,
-    this.thumbImage,
-    this.subscribeText,
+    this.subItems,
     this.appName,
     this.aboutText,
     this.aboutBoxText,
@@ -47,29 +33,25 @@ class DrawerViewModel {
     this.aboutSubject,
     this.aboutIcon,
     this.aboutImage,
-    this.newsPage,
-    this.showNewsPage,
-    this.mensPage,
-    this.showMensPage,
-    this.womensPage,
-    this.showWomensPage,
+    this.pages,
   );
 
   factory DrawerViewModel.create(Store<AppStore> store) {
     return DrawerViewModel(
       "images/drawer_background2.jpg",
       Constants.title,
-      'Notifikationer',
-      {'news': store.state.subManager.news},
-      {
-        'news': (bool value) {
-          store.dispatch(SubscribeToNewsNotificationsAction(value));
-          store.dispatch(SaveSubscriptionsToPrefsAction());
-        }
-      },
-      {'news': Icons.notifications},
-      {'news': Constants.logoPath},
-      {'news': "Prenumerera på nyheter"},
+      [
+        DrawerSubscribeItemView(
+          store.state.subManager.news,
+          (bool value) {
+            store.dispatch(SubscribeToNewsNotificationsAction(value));
+            store.dispatch(SaveSubscriptionsToPrefsAction());
+          },
+          Icons.notifications,
+          Constants.logoPath,
+          "Prenumerera på nyheter",
+        ),
+      ],
       Constants.title,
       'Om appen',
       ['Den här appen är skapad av Tobias Rörstam'],
@@ -77,18 +59,44 @@ class DrawerViewModel {
       'Pingvin-appen',
       Icons.info,
       Constants.logoPath,
-      'Nyheter',
-      () {
-        store.dispatch(NavigateToAction.push('/'));
-      },
-      'Herrar',
-      () {
-        store.dispatch(NavigateToAction.push('/MensTeam'));
-      },
-      'Damer',
-      () {
-        store.dispatch(NavigateToAction.push('/WomensTeam'));
-      },
+      [
+        DrawerPageViewModel(
+          'Nyheter',
+          () {
+            store.dispatch(NavigateToAction.replace('/'));
+          },
+        ),
+        DrawerPageViewModel(
+          'Herrar',
+          () {
+            store.dispatch(NavigateToAction.replace('/MensTeam'));
+          },
+        ),
+        DrawerPageViewModel(
+          'Damer',
+          () {
+            store.dispatch(NavigateToAction.replace('/WomensTeam'));
+          },
+        ),
+      ],
     );
   }
+}
+
+class DrawerPageViewModel {
+  final String text;
+  final Function() tap;
+
+  DrawerPageViewModel(this.text, this.tap);
+}
+
+class DrawerSubscribeItemView {
+  final bool subscribingTo;
+  final Function(bool) subscribeTo;
+  final IconData subscribeIcons; //Icons.notification
+  final String thumbImage; //Constants.logoPath
+  final String subscribeText;
+
+  DrawerSubscribeItemView(this.subscribingTo, this.subscribeTo,
+      this.subscribeIcons, this.thumbImage, this.subscribeText);
 }

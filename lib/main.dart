@@ -2,6 +2,7 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Redux/AppState/Middleware.dart';
 import 'package:pingvin_news/Redux/News/Middleware.dart';
 import 'package:pingvin_news/Redux/AppState/Reducers.dart';
+import 'package:pingvin_news/Redux/Teams/Middleware.dart';
 
 import 'package:pingvin_news/Pages/NewsPage.dart';
 import 'package:pingvin_news/Pages/TeamPage.dart';
@@ -34,11 +35,14 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final Store<AppStore> store = Store<AppStore>(appReducer,
-      initialState: AppStore.initial(),
-      middleware: [NavigationMiddleware<AppStore>()]
-        ..addAll(appStoreMiddleware())
-        ..addAll(newsStoreMiddleware()));
+  final Store<AppStore> store = Store<AppStore>(
+    appReducer,
+    initialState: AppStore.initial(),
+    middleware: [NavigationMiddleware<AppStore>()]
+      ..addAll(appStoreMiddleware())
+      ..addAll(newsStoreMiddleware())
+      ..addAll(teamStateMiddleware()),
+  );
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -88,7 +92,9 @@ class MyApp extends StatelessWidget {
   Widget _makePage(Widget Page) {
     return StoreProvider(
       store: this.store,
-      child: Page,
+      child: Scaffold(
+        body: Page,
+      ),
     );
   }
 

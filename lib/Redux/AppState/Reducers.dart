@@ -7,6 +7,7 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Misc/Log.dart';
+import 'package:pingvin_news/Redux/Teams/Reducers.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:redux/redux.dart';
@@ -17,6 +18,7 @@ AppStore appReducer(AppStore state, action) {
     newsStore: newsReducer(state.newsStore, action),
     status: statusReducer(state.status, action),
     subManager: subscriptionsReducer(state.subManager, action),
+    teamState: teamReducer(state.teamState, action),
   );
 }
 
@@ -31,24 +33,19 @@ final Reducer<Status> statusReducer = combineReducers([
   TypedReducer<Status, StopLoadingAction>(_stopLoading),
   TypedReducer<Status, CouldNotReadRESTAction>(_noRESTData),
   TypedReducer<Status, NewNewsItemNotificationAction>(_newNewsItem),
-  TypedReducer<Status, FloatMessageShownAction>(_floatMsgShown),
 ]);
 
 Status _startLoading(Status status, StartLoadingAction action) =>
-    Status(true, status.floatMsg);
+    Status(status.loading + 1, status.floatMsg);
 
 Status _stopLoading(Status status, StopLoadingAction action) =>
-    Status(false, status.floatMsg);
+    Status(status.loading - 1, status.floatMsg);
 
 Status _noRESTData(Status status, CouldNotReadRESTAction action) =>
     Status(status.loading, action.msg);
 
 Status _newNewsItem(Status status, NewNewsItemNotificationAction action) =>
     Status(status.loading, action.msg);
-
-Status _floatMsgShown(Status status, FloatMessageShownAction action) {
-  return Status(status.loading, Constants.emptyString);
-}
 
 final Reducer<SubscriptionsManager> subscriptionsReducer = combineReducers([
   TypedReducer<SubscriptionsManager, SubscribeToNewsNotificationsAction>(

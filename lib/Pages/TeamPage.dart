@@ -5,9 +5,11 @@ import 'package:pingvin_news/Misc/NotificationDecoder.dart';
 import 'package:pingvin_news/Pages/Models/NewsPageModels.dart';
 import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
 import 'package:pingvin_news/Redux/News/Actions.dart';
-import 'package:pingvin_news/Redux/AppState/Actions.dart';
+import 'package:pingvin_news/Redux/Teams/Actions.dart';
 
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+
+import 'package:pingvin_news/Pages/Models/TeamPageModels.dart';
 
 import 'package:pingvin_news/Data/NewsEntry.dart';
 
@@ -26,12 +28,24 @@ class TeamPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarPage(),
-      drawer: StoreConnector<AppStore, DrawerViewModel>(
-          converter: (Store<AppStore> store) => DrawerViewModel.create(store),
-          builder: (BuildContext context, DrawerViewModel viewModel) {
-            return AppDrawer(viewModel);
+      drawer: AppDrawer(),
+      body: StoreConnector<AppStore, TeamPageViewModel>(
+          onInit: (store) {
+            store.dispatch(ReadTeamFromFileAction());
+            store.dispatch(ReadTeamFromRESTAction());
+          },
+          converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
+          builder: (BuildContext context, TeamPageViewModel viewModel) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(viewModel.team),
+                  Text(viewModel.table),
+                ],
+              ),
+            );
           }),
-      body: Text("Go Team!"),
     );
   }
 }

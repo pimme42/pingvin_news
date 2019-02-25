@@ -24,7 +24,7 @@ class AppBarViewModel {
   factory AppBarViewModel.create(Store<AppStore> store) {
     return AppBarViewModel(
       title: Constants.title,
-      loading: store.state.status.loading,
+      loading: store.state.status.loading > 0,
       showWebView:
           store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
       closeWebView: () => store.dispatch(CloseWebViewAction()),

@@ -1,117 +1,116 @@
 import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Redux/AppState/Actions.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:async';
 
-class AppDrawer extends StatefulWidget {
-  final DrawerViewModel model;
-  AppDrawer(this.model);
-
-  @override
-  _AppDrawerState createState() => _AppDrawerState();
-}
-
-class _AppDrawerState extends State<AppDrawer> {
+class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  fit: BoxFit.fill,
-                  image: ExactAssetImage(widget.model.headerImage)),
-            ),
-            child: Stack(
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    widget.model.headerTitle,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                  onTap: () => widget.model.showNewsPage(),
-                  title: Text(widget.model.newsPage),
+    return StoreConnector<AppStore, DrawerViewModel>(
+      onInit: (store) => store.dispatch(ReadSubscriptionsFromPrefsAction()),
+      converter: (Store<AppStore> store) => DrawerViewModel.create(store),
+      builder: (BuildContext context, DrawerViewModel viewModel) {
+        return Drawer(
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: ExactAssetImage(viewModel.headerImage)),
                 ),
-                ListTile(
-                  onTap: () => widget.model.showMensPage(),
-                  title: Text(widget.model.mensPage),
+                child: Stack(
+                  children: <Widget>[
+                    Center(
+                      child: Text(
+                        viewModel.headerTitle,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-                ListTile(
-                  onTap: () => widget.model.showWomensPage(),
-                  title: Text(widget.model.womensPage),
-                ),
-              ],
-            ),
-          ),
-          Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  child: Text(
-                    widget.model.notifHeader,
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  padding: EdgeInsets.all(5.0),
-                ),
-                SwitchListTile(
-                  value: widget.model.subscribingTo['news'],
-                  onChanged: (bool value) =>
-                      widget.model.subscribeTo['news'](value),
-                  title: Text(
-                    widget.model.subscribeText['news'],
-                    style:
-                        TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
-                  ),
-                  secondary: Icon(widget.model.subscribeIcons['news']),
-                  inactiveThumbImage:
-                      ExactAssetImage(widget.model.thumbImage['news']),
-                  inactiveTrackColor: Colors.black26,
-                  inactiveThumbColor: Colors.black12,
-                  activeThumbImage:
-                      ExactAssetImage(widget.model.thumbImage['news']),
-                  activeTrackColor: Colors.green[800],
-                  activeColor: Colors.white,
-                ),
-              ],
-            ),
-          ),
-          Card(
-            child: AboutListTile(
-              applicationIcon: ImageIcon(
-                ExactAssetImage(widget.model.aboutImage),
               ),
-              child: Text(widget.model.aboutText),
-              icon: Icon(widget.model.aboutIcon),
-              applicationName: widget.model.appName,
-              aboutBoxChildren: _makeAboutBox(widget.model),
+              ListView(
+                  shrinkWrap: true,
+                  children: viewModel.pages
+                      .map((DrawerPageViewModel page) =>
+                          _createPageItemWidget(context, page))
+                      .toList()),
+              ListView(
+                  shrinkWrap: true,
+                  children: viewModel.subItems
+                      .map((DrawerSubscribeItemView item) =>
+                          _createSubscriptionWidget(context, item))
+                      .toList()),
+/*
+              Card(
+                child: AboutListTile(
+                  applicationIcon: ImageIcon(
+                    ExactAssetImage(viewModel.aboutImage),
+                  ),
+                  child: Text(viewModel.aboutText),
+                  icon: Icon(viewModel.aboutIcon),
+                  applicationName: viewModel.appName,
+                  aboutBoxChildren: _createAboutBox(viewModel),
+                ),
+              ),
+*/
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _createPageItemWidget(BuildContext context, DrawerPageViewModel page) {
+    return Card(
+      child: ListTile(
+        onTap: () => page.tap(),
+        title: Center(
+          child: Text(
+            page.text,
+            style: TextStyle(
+              fontSize: 16.0,
             ),
           ),
-        ],
+        ),
       ),
     );
   }
 
-  List<Widget> _makeAboutBox(DrawerViewModel model) {
-    List<Widget> widgets = _makeAboutBoxStrings(model.aboutBoxText);
+  Widget _createSubscriptionWidget(
+      BuildContext context, DrawerSubscribeItemView item) {
+    return Card(
+      child: SwitchListTile(
+        value: item.subscribingTo,
+        onChanged: (bool value) => item.subscribeTo(value),
+        title: Text(
+          item.subscribeText,
+          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+        ),
+        secondary: Icon(item.subscribeIcons),
+        inactiveThumbImage: ExactAssetImage(item.thumbImage),
+        inactiveTrackColor: Colors.black26,
+        inactiveThumbColor: Colors.black12,
+        activeThumbImage: ExactAssetImage(item.thumbImage),
+        activeTrackColor: Colors.green[800],
+        activeColor: Colors.white,
+      ),
+    );
+  }
+
+  List<Widget> _createAboutBox(DrawerViewModel model) {
+    List<Widget> widgets = _createAboutBoxStrings(model.aboutBoxText);
     widgets.add(
       InkWell(
         child: Text(
@@ -125,7 +124,7 @@ class _AppDrawerState extends State<AppDrawer> {
     return widgets;
   }
 
-  List<Widget> _makeAboutBoxStrings(List<String> texts) {
+  List<Widget> _createAboutBoxStrings(List<String> texts) {
     List<Widget> widgets = List();
     texts.forEach((String str) => widgets.add(Text(str)));
     return widgets;

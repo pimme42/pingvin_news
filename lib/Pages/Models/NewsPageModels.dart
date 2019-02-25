@@ -48,12 +48,12 @@ class NewsPageViewModel {
       () async {
         store.dispatch(ReadNewsFromRESTAction());
       },
-      store.state.status.loading,
+      store.state.status.loading > 0,
       store.state.status.floatMsg,
       store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
       store.state.newsStore.newsStatus.urlToShow,
       () => store.dispatch(CloseWebViewAction()),
-      AppDrawer(DrawerViewModel.create(store)),
+      AppDrawer(),
     );
   }
 }
