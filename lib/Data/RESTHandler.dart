@@ -39,9 +39,9 @@ class RESTHandler {
       var httpClient = new HttpClient();
       var uri;
       if (Constants.useHttps)
-        uri = new Uri.https(Constants.dataURL, Constants.dataEntry);
+        uri = new Uri.https(Constants.apiURL, Constants.newsEndPoint);
       else
-        uri = new Uri.http(Constants.dataURL, Constants.dataEntry);
+        uri = new Uri.http(Constants.apiURL, Constants.newsEndPoint);
       Log.doLog("Uri: ${uri.toString()}", logLevel.DEBUG);
       var request = await httpClient.getUrl(uri);
       var response = await request.close();
@@ -50,9 +50,30 @@ class RESTHandler {
       Log.doLog("Times up in _getNewsApi", logLevel.DEBUG);
       return responseBody;
     } catch (e) {
-      // If we encounter an error, return 0
       Log.doLog(
           "Error RESTHandler._getNewsApi: ${e.toString()}", logLevel.ERROR);
+      throw HttpException("Could not fetch data from server");
+    }
+  }
+
+  Future<String> getJsonFromApi(String url, String endPoint) async {
+    try {
+      var httpClient = new HttpClient();
+      var uri;
+      if (Constants.useHttps)
+        uri = new Uri.https(url, endPoint);
+      else
+        uri = new Uri.http(url, endPoint);
+      Log.doLog("Uri: ${uri.toString()}", logLevel.DEBUG);
+      var request = await httpClient.getUrl(uri);
+      var response = await request.close();
+      var responseBody = await response.transform(utf8.decoder).join();
+      await Future.delayed(_timeout);
+      Log.doLog("Times up in _getJsonFromApi", logLevel.DEBUG);
+      return responseBody;
+    } catch (e) {
+      Log.doLog(
+          "Error RESTHandler._getJsonFromApi: ${e.toString()}", logLevel.ERROR);
       throw HttpException("Could not fetch data from server");
     }
   }

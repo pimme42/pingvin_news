@@ -1,5 +1,6 @@
 import 'package:pingvin_news/Data/NewsPaper.dart';
 import 'package:pingvin_news/Misc/Log.dart';
+import 'package:pingvin_news/Misc/Constants.dart';
 
 import 'dart:async';
 import 'dart:convert';
@@ -26,14 +27,18 @@ class FileHandler {
   Future<File> get _localFile async {
     final path = await _localPath;
 //    print(path);
-    return File(path.path + "/news.json");
+    return File(path.path + Constants.newsFile);
+  }
+
+  Future<File> _file(String filename) async {
+    final path = await _localPath;
+    return File(path.path + filename);
   }
 
   deleteFile() async {
     try {
       final file = await _localFile;
-      if(await file.exists())
-        file.delete();
+      if (await file.exists()) file.delete();
     } catch (e) {
       Log.doLog(
           "Error Filehandler.deleteFile: ${e.toString()}", logLevel.ERROR);
@@ -66,8 +71,32 @@ class FileHandler {
 
       return paper;
     } catch (e) {
-      // If we encounter an error, return 0
       Log.doLog("Error Filehandler.readNews: ${e.toString()}", logLevel.ERROR);
+      return null;
+    }
+  }
+
+  Future<String> getJsonFromFile(String filePath) async {
+    try {
+      Log.doLog("filehandler/getJsonFromFile path: $filePath", logLevel.DEBUG);
+      final file = await _file(filePath);
+      String contents = await file.readAsString();
+      return contents;
+    } catch (e) {
+      Log.doLog(
+          "Error Filehandler.getJsonFromFile: ${e.toString()}", logLevel.ERROR);
+      return null;
+    }
+  }
+
+  Future<void> writeToFile(String filePath, String content) async {
+    try {
+      Log.doLog("filehandler/writeToFile path: $filePath", logLevel.DEBUG);
+      final file = await _file(filePath);
+      file.writeAsString(content, flush: true);
+    } catch (e) {
+      Log.doLog(
+          "Error Filehandler.writeToFile: ${e.toString()}", logLevel.ERROR);
       return null;
     }
   }

@@ -2,6 +2,7 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Misc/Log.dart';
+import 'package:pingvin_news/Redux/Teams/Actions.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
@@ -69,13 +70,15 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Herrar',
           () {
-            store.dispatch(NavigateToAction.replace('/MensTeam'));
+            store.dispatch(ViewTeamAction.mens());
+            store.dispatch(NavigateToAction.replace('/teamPage'));
           },
         ),
         DrawerPageViewModel(
           'Damer',
           () {
-            store.dispatch(NavigateToAction.replace('/WomensTeam'));
+            store.dispatch(ViewTeamAction.womens());
+            store.dispatch(NavigateToAction.replace('/teamPage'));
           },
         ),
       ],

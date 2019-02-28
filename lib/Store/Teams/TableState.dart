@@ -1,7 +1,11 @@
+import 'package:pingvin_news/Data/Teams/TeamTable.dart';
+
 class TableState {
-  final String table;
+  TeamTable teamTable;
 
-  TableState(this.table);
+  TableState({this.teamTable});
 
-  factory TableState.initial() => TableState("Tabell");
+  factory TableState.initial() => TableState(
+        teamTable: TeamTable.initial(),
+      );
 }

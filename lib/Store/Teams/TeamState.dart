@@ -1,6 +1,5 @@
 import 'package:pingvin_news/Store/Teams/TableState.dart';
-
-enum teams { MENS, WOMENS, NONE }
+import 'package:pingvin_news/Misc/Constants.dart';
 
 class TeamState {
   teams team;

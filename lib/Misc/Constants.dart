@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum teams { MENS, WOMENS, NONE }
+
 class Constants {
   static const String logoPath = "images/pingvinlogo_transp.png";
   static const String logoPathEllipse =
@@ -14,9 +16,21 @@ class Constants {
 
   static const String title = 'Pingvin Rugby Club';
 
-  static const String dataURL = "pingvinapi.rorstam.se";
+  static const String apiURL = "pingvinapi.rorstam.se";
 
-  static const String dataEntry = "/news/168643/";
+  static const String newsEndPoint = "/news/168643/";
+
+  static const String newsFile = '/news.json';
+
+  static const Map<teams, String> teamEndPoints = {
+    teams.MENS: '/tables/current/mens',
+    teams.WOMENS: '/tables/current/womens',
+  };
+
+  static const Map<teams, String> teamFiles = {
+    teams.MENS: '/mens.json',
+    teams.WOMENS: '/womens.json',
+  };
 
   static const Duration standardSnackBarDuration = Duration(seconds: 2);
 

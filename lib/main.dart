@@ -3,7 +3,7 @@ import 'package:pingvin_news/Redux/AppState/Middleware.dart';
 import 'package:pingvin_news/Redux/News/Middleware.dart';
 import 'package:pingvin_news/Redux/AppState/Reducers.dart';
 import 'package:pingvin_news/Redux/Teams/Middleware.dart';
-
+import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Pages/NewsPage.dart';
 import 'package:pingvin_news/Pages/TeamPage.dart';
 
@@ -81,8 +81,7 @@ class MyApp extends StatelessWidget {
     switch (settings.name) {
       case '/':
         return _buildRoute(settings, NewsPage());
-      case '/MensTeam':
-      case '/WomensTeam':
+      case '/teamPage':
         return _buildRoute(settings, TeamPage());
       default:
         return _buildRoute(settings, NewsPage());

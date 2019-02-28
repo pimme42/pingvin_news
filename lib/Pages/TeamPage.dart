@@ -31,21 +31,74 @@ class TeamPage extends StatelessWidget {
       drawer: AppDrawer(),
       body: StoreConnector<AppStore, TeamPageViewModel>(
           onInit: (store) {
-            store.dispatch(ReadTeamFromFileAction());
-            store.dispatch(ReadTeamFromRESTAction());
+            store.dispatch(ReadTeamFromFileAction(store.state.teamState.team));
+            store.dispatch(ReadTeamFromRESTAction(store.state.teamState.team));
           },
           converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
           builder: (BuildContext context, TeamPageViewModel viewModel) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(viewModel.team),
-                  Text(viewModel.table),
-                ],
+            return RefreshIndicator(
+              onRefresh: viewModel.onRefresh,
+              displacement: 50.0,
+              color: Colors.black,
+              child: Center(
+                child: Column(
+//                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+
+                  children: <Widget>[
+                    _buildTable(context, viewModel.tableRows),
+                  ],
+                ),
               ),
             );
           }),
+    );
+  }
+
+  Widget _buildTable(BuildContext context, List<TableRowItem> rows) {
+    TableRowItem topRow = rows.removeAt(0);
+    Widget ret = Column(
+      children: <Widget>[
+        _createTopRow(context, topRow),
+      ]..addAll(rows
+          .map<Widget>((TableRowItem row) => _createTableRow(context, row))),
+    );
+    return ret;
+  }
+
+  Widget _createTopRow(BuildContext context, TableRowItem row) {
+    return Row(
+      children: <Widget>[
+        _createRowItem(context, row.pos),
+        _createRowItem(context, row.team),
+        _createRowItem(context, row.played),
+        _createRowItem(context, row.W),
+        _createRowItem(context, row.D),
+        _createRowItem(context, row.L),
+        _createRowItem(context, row.pDiff),
+        _createRowItem(context, row.points),
+      ],
+    );
+  }
+
+  Widget _createTableRow(BuildContext context, TableRowItem row) {
+    return Row(
+      children: <Widget>[
+        _createRowItem(context, row.pos),
+        _createRowItem(context, row.team),
+        _createRowItem(context, row.played),
+        _createRowItem(context, row.W),
+        _createRowItem(context, row.D),
+        _createRowItem(context, row.L),
+        _createRowItem(context, row.pDiff),
+        _createRowItem(context, row.points),
+      ],
+    );
+  }
+
+  Widget _createRowItem(BuildContext context, String item) {
+    return Container(
+      child: Text(item),
     );
   }
 }
