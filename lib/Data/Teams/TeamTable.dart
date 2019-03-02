@@ -4,11 +4,11 @@ import 'package:pingvin_news/Data/DataHandler.dart';
 import 'dart:convert';
 
 class TeamTable {
-  TeamTableInfo _info;
-  List<TeamTableRow> _rows;
+  TeamTableInfo info;
+  List<TeamTableRow> rows;
 
   TeamTable.initial() {
-    this._rows = List();
+    this.rows = List();
   }
 
   factory TeamTable.fromRestApi(String apiResponse) {
@@ -17,11 +17,11 @@ class TeamTable {
 
       var responseList = jsonDecode(apiResponse);
 
-      teamTable._info = TeamTableInfo.fromJson(responseList['League']);
+      teamTable.info = TeamTableInfo.fromJson(responseList['League']);
 
       List tableList = responseList['Table'];
       tableList.forEach((dynamic json) {
-        teamTable._rows.add(TeamTableRow.fromJson(json));
+        teamTable.rows.add(TeamTableRow.fromJson(json));
       });
       return teamTable;
     }
@@ -38,23 +38,19 @@ class TeamTable {
 
   factory TeamTable.fromJson(Map<String, dynamic> json) {
     TeamTable tt = TeamTable.initial();
-    tt._info = TeamTableInfo.fromJson(jsonDecode(json['tableInfo']));
+    tt.info = TeamTableInfo.fromJson(jsonDecode(json['tableInfo']));
     List jsonRows = jsonDecode(json['tableRows']);
     jsonRows.forEach((dynamic rowJson) {
-      tt._rows.add(TeamTableRow.fromJson((rowJson)));
+      tt.rows.add(TeamTableRow.fromJson((rowJson)));
     });
     return tt;
   }
 
   Map<String, dynamic> toJson() => {
         'class': this.runtimeType.toString(),
-        'tableInfo': jsonEncode(this._info),
-        'tableRows': jsonEncode(this._rows),
+        'tableInfo': jsonEncode(this.info),
+        'tableRows': jsonEncode(this.rows),
       };
-
-  TeamTableInfo get info => _info;
-
-  List<TeamTableRow> get rows => _rows;
 }
 
 class TeamTableRow {

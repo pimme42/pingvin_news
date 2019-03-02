@@ -22,9 +22,9 @@ Future _viewTeam(
     Store<AppStore> store, ViewTeamAction action, NextDispatcher next) async {
   Log.doLog(
       "Teams/Middleware/_viewTeam ${action.team.toString()}", logLevel.DEBUG);
-  if (action.team != store.state.teamState.team) {
-    store.dispatch(ClearTeamDataAction());
-  }
+//  if (action.team != store.state.teamState.team) {
+//    store.dispatch(ClearTeamDataAction());
+//  }
   next(action);
 }
 
@@ -35,7 +35,7 @@ Future _readTeamFromFile(Store<AppStore> store, ReadTeamFromFileAction action,
   next(action);
   try {
     TeamTable tt = await TableHandler().getTableFromFile(action.team);
-    if (tt != null) store.dispatch(SetTeamData(tt));
+    if (tt != null) store.dispatch(SetTeamData(action.team, tt));
   } catch (e, s) {
     Log.doLog(
         "Error in Teams/Middleware/_readFromFile: ${e.toString()}\n${s.toString()}",
@@ -51,11 +51,10 @@ Future _readTeamFromREST(Store<AppStore> store, ReadTeamFromRESTAction action,
   store.dispatch(StartLoadingAction());
   next(action);
   try {
-    TeamTable tt =
-        await TableHandler().getTableFromREST(store.state.teamState.team);
+    TeamTable tt = await TableHandler().getTableFromREST(action.team);
     if (tt != null) {
-      store.dispatch(SetTeamData(tt));
-      store.dispatch(SaveTeamToFileAction(store.state.teamState.team));
+      store.dispatch(SetTeamData(action.team, tt));
+      store.dispatch(SaveTeamToFileAction(action.team));
     }
   } catch (e, s) {
     Log.doLog(
@@ -72,7 +71,7 @@ Future _saveTeamToFile(Store<AppStore> store, SaveTeamToFileAction action,
   next(action);
   try {
     await TableHandler().saveToFile(
-        store.state.teamState.team, store.state.teamState.table.teamTable);
+        action.team, store.state.teamState.table.teamTable[action.team]);
   } catch (e, s) {
     Log.doLog(
         "Error in Teams/Middleware/_saveToFile: ${e.toString()} \n${s.toString()}",
