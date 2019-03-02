@@ -1,13 +1,15 @@
 class DataHandler {
   static int parseInt(dynamic value) {
-//    print("_toInt: ${value.toString()} : ${value.runtimeType}");
+//    print("parseInt: ${value.toString()} : ${value.runtimeType}");
+    dynamic retVal = value;
     if (value is String) {
       if (value.contains('.') || value.contains(','))
-        value = double.parse(value).round();
+        retVal = double.parse(value).round();
       else
-        value = int.parse(value);
+        retVal = int.parse(value);
     }
-    if (value is int) return value;
-    throw FormatException("_ToInt expects an int");
+//    print("retVal: ${retVal.toString()} : ${retVal.runtimeType}");
+    if (retVal is int) return retVal;
+    throw FormatException("DataHandler.parseInt expects an int ($value)");
   }
 }

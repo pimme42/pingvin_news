@@ -4,7 +4,7 @@ import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
 import 'package:pingvin_news/Redux/News/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Data/NewsEntry.dart';
+import 'package:pingvin_news/Data/News/NewsEntry.dart';
 import 'package:pingvin_news/Data/Teams/TeamTable.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 

@@ -9,7 +9,7 @@ import 'package:pingvin_news/Redux/AppState/Actions.dart';
 
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
-import 'package:pingvin_news/Data/NewsEntry.dart';
+import 'package:pingvin_news/Data/News/NewsEntry.dart';
 
 import 'package:pingvin_news/Pages/WebViewPage.dart';
 import 'package:pingvin_news/Pages/LoadIndicator.dart';

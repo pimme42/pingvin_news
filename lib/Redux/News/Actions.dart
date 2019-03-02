@@ -1,4 +1,4 @@
-import 'package:pingvin_news/Data/NewsPaper.dart';
+import 'package:pingvin_news/Data/News/NewsPaper.dart';
 
 // Actions on NewsStore
 

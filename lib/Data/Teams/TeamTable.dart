@@ -38,8 +38,8 @@ class TeamTable {
 
   factory TeamTable.fromJson(Map<String, dynamic> json) {
     TeamTable tt = TeamTable.initial();
-    tt.info = TeamTableInfo.fromJson(jsonDecode(json['tableInfo']));
-    List jsonRows = jsonDecode(json['tableRows']);
+    tt.info = TeamTableInfo.fromJson((json['tableInfo']));
+    List jsonRows = (json['tableRows']);
     jsonRows.forEach((dynamic rowJson) {
       tt.rows.add(TeamTableRow.fromJson((rowJson)));
     });
@@ -48,8 +48,8 @@ class TeamTable {
 
   Map<String, dynamic> toJson() => {
         'class': this.runtimeType.toString(),
-        'tableInfo': jsonEncode(this.info),
-        'tableRows': jsonEncode(this.rows),
+        'tableInfo': this.info,
+        'tableRows': this.rows,
       };
 }
 
