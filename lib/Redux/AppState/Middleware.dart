@@ -8,20 +8,19 @@ import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<Middleware<AppStore>> appStoreMiddleware() => [
-      TypedMiddleware<AppStore, ShowFloatingMessageAction>(
-          _showFloatingMessage),
+      TypedMiddleware<AppStore, ShowSnackBarAction>(_showSnackBar),
       TypedMiddleware<AppStore, ReadSubscriptionsFromPrefsAction>(
           _readSubscriptionsPrefs),
       TypedMiddleware<AppStore, SaveSubscriptionsToPrefsAction>(
           _saveSubscriptionsPrefs),
     ];
 
-Future _showFloatingMessage(Store<AppStore> store,
-    ShowFloatingMessageAction action, NextDispatcher next) async {
-  Log.doLog("_showFloatingMessage ${action.msg}", logLevel.DEBUG);
+Future _showSnackBar(Store<AppStore> store, ShowSnackBarAction action,
+    NextDispatcher next) async {
+  Log.doLog("_showSnackBar ${action.msg}", logLevel.DEBUG);
   next(action);
-  await new Future.delayed(Constants.floatingMessageDuration);
-  store.dispatch(FloatMessageShownAction());
+  await new Future.delayed(Constants.standardSnackBarDuration);
+//  store.dispatch(FloatMessageShownAction());
 }
 
 Future _readSubscriptionsPrefs(Store<AppStore> store,

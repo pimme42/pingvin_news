@@ -1,21 +1,25 @@
+import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:flutter/material.dart';
+
 class StartLoadingAction {}
 
 class StopLoadingAction {}
 
-abstract class ShowFloatingMessageAction {
+abstract class ShowSnackBarAction {
   final String msg;
-  ShowFloatingMessageAction(this.msg);
+  final SnackBarAction action;
+  final Duration duration;
+  ShowSnackBarAction(this.msg,
+      {this.action = null, this.duration = Constants.standardSnackBarDuration});
 }
 
-class CouldNotReadRESTAction extends ShowFloatingMessageAction {
+class CouldNotReadRESTAction extends ShowSnackBarAction {
   CouldNotReadRESTAction(String msg) : super(msg);
 }
 
-class NewNewsItemNotificationAction extends ShowFloatingMessageAction {
+class NewNewsItemNotificationAction extends ShowSnackBarAction {
   NewNewsItemNotificationAction(String msg) : super(msg);
 }
-
-class FloatMessageShownAction {}
 
 // Actions on SubscriptionsManager
 

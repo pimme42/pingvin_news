@@ -23,8 +23,14 @@ class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, NewsPageViewModel>(
+      onInitialBuild: (NewsPageViewModel model) => model.floatingMsg.length > 0
+          ? Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text(model.floatingMsg),
+              ),
+            )
+          : null,
       onInit: (store) {
-        store.dispatch(ReadSubscriptionsFromPrefsAction());
         store.dispatch(ReadNewsFromFileAction());
         store.dispatch(ReadNewsFromRESTAction());
         FirebaseHandler(
@@ -83,7 +89,6 @@ class NewsPage extends StatelessWidget {
                     viewModel.showWebView
                         ? _displayWebPage(context, viewModel)
                         : _displayListView(context, viewModel),
-                    _displayFloatingMessage(context, viewModel),
                   ],
                 ),
               ),
@@ -152,29 +157,6 @@ class NewsPage extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
       ),
     ];
-  }
-
-  Widget _displayFloatingMessage(
-      BuildContext context, NewsPageViewModel viewModel) {
-    if (viewModel.floatingMsg != Constants.emptyString) {
-      return Positioned(
-        child: Center(
-            child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Colors.black54,
-          ),
-          child: Text(
-            viewModel.floatingMsg,
-            style: TextStyle(color: Colors.white),
-          ),
-        )),
-        width: MediaQuery.of(context).size.width,
-        bottom: 50,
-      );
-    }
-    return Container();
   }
 
   Widget _createListItemWidget(

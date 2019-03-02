@@ -2,7 +2,8 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Redux/AppState/Middleware.dart';
 import 'package:pingvin_news/Redux/News/Middleware.dart';
 import 'package:pingvin_news/Redux/AppState/Reducers.dart';
-
+import 'package:pingvin_news/Redux/Teams/Middleware.dart';
+import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Pages/NewsPage.dart';
 import 'package:pingvin_news/Pages/TeamPage.dart';
 
@@ -34,11 +35,14 @@ final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final Store<AppStore> store = Store<AppStore>(appReducer,
-      initialState: AppStore.initial(),
-      middleware: [NavigationMiddleware<AppStore>()]
-        ..addAll(appStoreMiddleware())
-        ..addAll(newsStoreMiddleware()));
+  final Store<AppStore> store = Store<AppStore>(
+    appReducer,
+    initialState: AppStore.initial(),
+    middleware: [NavigationMiddleware<AppStore>()]
+      ..addAll(appStoreMiddleware())
+      ..addAll(newsStoreMiddleware())
+      ..addAll(teamStateMiddleware()),
+  );
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -63,19 +67,40 @@ class MyApp extends StatelessWidget {
             body1: TextStyle(fontSize: 15.0, fontFamily: 'Hind'),
           ),
         ),
-        initialRoute: '/',
-        routes: <String, WidgetBuilder>{
-          '/': (BuildContext context) => _makePage(NewsPage()),
-          '/TeamPage': (BuildContext context) => _makePage(TeamPage()),
-        },
+//        initialRoute: '/',
+//        routes: <String, WidgetBuilder>{
+//          '/': (BuildContext context) => _makePage(NewsPage()),
+//          '/TeamPage': (BuildContext context) => _makePage(TeamPage()),
+//        },
+        onGenerateRoute: _getRoute,
         navigatorKey: NavigatorHolder.navigatorKey,
 //        home: _makePage(NewsPage()),
       );
 
+  Route _getRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case '/':
+        return _buildRoute(settings, NewsPage());
+      case '/teamPage':
+        return _buildRoute(settings, TeamPage());
+      default:
+        return _buildRoute(settings, NewsPage());
+    }
+  }
+
   Widget _makePage(Widget Page) {
     return StoreProvider(
       store: this.store,
-      child: Page,
+      child: Scaffold(
+        body: Page,
+      ),
+    );
+  }
+
+  MaterialPageRoute _buildRoute(RouteSettings settings, Widget builder) {
+    return new MaterialPageRoute(
+      settings: settings,
+      builder: (BuildContext context) => _makePage(builder),
     );
   }
 }
