@@ -29,10 +29,11 @@ class TeamPageViewModel {
   });
 
   factory TeamPageViewModel.create(Store<AppStore> store) {
+    int rowNum = 1;
     List<TableRowItem> rows = new List();
     rows.add(TableRowItem.header());
     store.state.teamState.table.teamTable.rows.forEach((TeamTableRow ttr) {
-      rows.add(TableRowItem.fromTableRow(ttr));
+      rows.add(TableRowItem.fromTableRow(rowNum++, ttr));
     });
     return TeamPageViewModel(
         team: store.state.teamState.team.toString(),
@@ -56,6 +57,7 @@ class TableInfo {
 
 @immutable
 class TableRowItem {
+  final int rowNum;
   final String pos;
   final String team;
   final String played;
@@ -65,13 +67,15 @@ class TableRowItem {
   final String pDiff;
   final String points;
 
-  TableRowItem(this.pos, this.team, this.played, this.W, this.D, this.L,
-      this.pDiff, this.points);
+  TableRowItem(this.rowNum, this.pos, this.team, this.played, this.W, this.D,
+      this.L, this.pDiff, this.points);
 
   factory TableRowItem.header() =>
-      TableRowItem("", "Lag", "Spelat", "V", "O", "F", "Mål", "Poäng");
+      TableRowItem(0, "Pos", "Lag", "S", "V", "O", "F", "Mål", "P");
 
-  factory TableRowItem.fromTableRow(TeamTableRow ttr) => TableRowItem(
+  factory TableRowItem.fromTableRow(int rowNum, TeamTableRow ttr) =>
+      TableRowItem(
+        rowNum,
         ttr.pos.toString(),
         ttr.team,
         ttr.played.toString(),
@@ -81,4 +85,9 @@ class TableRowItem {
         "${ttr.pFor.toString()} - ${ttr.pAgainst.toString()}",
         ttr.points.toString(),
       );
+
+  @override
+  String toString() {
+    return "($pos) $team $played $W $D $L $pDiff $points";
+  }
 }
