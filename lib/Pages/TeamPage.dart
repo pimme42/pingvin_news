@@ -27,16 +27,8 @@ class TeamPage extends StatelessWidget {
             color: Colors.black,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                    "Tabell för : ${viewModel.tableInfo.name} (${viewModel.tableInfo.year})"),
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: _buildTable(context, viewModel.tableRows),
-                  ),
-                ),
-              ],
+              children: _buildTable(
+                  context, viewModel.tableInfo, viewModel.tableRows),
             ),
           );
         },
@@ -44,23 +36,57 @@ class TeamPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTable(BuildContext context, List<TableRowItem> rows) {
-    return Table(
-      defaultColumnWidth: FlexColumnWidth(),
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: rows.map((TableRowItem item) => _createTableRow(item)).toList(),
-      border: TableBorder(horizontalInside: BorderSide(), bottom: BorderSide()),
-      textBaseline: TextBaseline.alphabetic,
-      columnWidths: {
-        0: FixedColumnWidth(30.0),
-        2: FixedColumnWidth(20.0),
-        3: FixedColumnWidth(20.0),
-        4: FixedColumnWidth(20.0),
-        5: FixedColumnWidth(20.0),
-        6: FixedColumnWidth(75.0),
-        7: FixedColumnWidth(50.0),
-      },
-    );
+  List<Widget> _buildTable(
+      BuildContext context, TableInfo tableInfo, List<TableRowItem> rows) {
+    List<Widget> retVals = List();
+    if (tableInfo.name != null) {
+      retVals = [
+        Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Text(
+            "Tabell för : ${tableInfo.name} (${tableInfo.year})",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+          ),
+        ),
+        Center(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Table(
+              defaultColumnWidth: FlexColumnWidth(),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: rows
+                  .map((TableRowItem item) => _createTableRow(item))
+                  .toList(),
+              border: TableBorder(
+                  horizontalInside: BorderSide(), bottom: BorderSide()),
+              textBaseline: TextBaseline.alphabetic,
+              columnWidths: {
+                0: FixedColumnWidth(30.0),
+                2: FixedColumnWidth(20.0),
+                3: FixedColumnWidth(20.0),
+                4: FixedColumnWidth(20.0),
+                5: FixedColumnWidth(20.0),
+                6: FixedColumnWidth(75.0),
+                7: FixedColumnWidth(50.0),
+              },
+            ),
+          ),
+        ),
+      ];
+    } else {
+      retVals = [
+        Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Center(
+            child: Text(
+              "Laddar tabeller",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            ),
+          ),
+        )
+      ];
+    }
+    return retVals;
   }
 
   TableRow _createTableRow(TableRowItem row) {

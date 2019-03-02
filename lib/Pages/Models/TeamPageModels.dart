@@ -40,9 +40,8 @@ class TeamPageViewModel {
     return TeamPageViewModel(
         team: team.toString(),
         tableInfo: TableInfo(
-          store.state.teamState.table.teamTable[team]?.info?.name ?? "",
-          store.state.teamState.table.teamTable[team]?.info?.year.toString() ??
-              "",
+          store.state.teamState.table.teamTable[team]?.info?.name,
+          store.state.teamState.table.teamTable[team]?.info?.year.toString(),
         ),
         tableRows: rows,
         onRefresh: () async => store.dispatch(ReadTeamFromRESTAction(team)));

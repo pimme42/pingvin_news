@@ -18,6 +18,7 @@ class TableHandler {
 
   TableHandler._internal() {
     this._fh = new FileHandler();
+//    this._fh.deleteFile(Constants.teamEndPoints[teams.MENS]);
     this._rh = new RESTHandler();
   }
 
