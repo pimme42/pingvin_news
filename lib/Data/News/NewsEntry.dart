@@ -1,3 +1,5 @@
+import 'package:pingvin_news/Data/DataHandler.dart';
+
 class NewsEntry {
   int _rowId, _id, _nid, _publishedTimestamp;
   String _link, _title, _summary;
@@ -7,39 +9,23 @@ class NewsEntry {
 
   factory NewsEntry.fromJson(Map<String, dynamic> json) {
     return NewsEntry(
-      _toInt(json['id']),
-      _toInt(json['club_id']),
-      _toInt(json['news_id']),
-      _toInt(json['published']),
+      DataHandler.parseInt(json['id']),
+      DataHandler.parseInt(json['club_id']),
+      DataHandler.parseInt(json['news_id']),
+      DataHandler.parseInt(json['published']),
       json['link'],
       json['title'],
       json['summary'],
     );
   }
 
-  static int _toInt(dynamic value) {
-//    print("_toInt: ${value.toString()} : ${value.runtimeType}");
-    if (value is String) {
-      if (value.contains('.') || value.contains(','))
-        value = double.parse(value);
-      else
-        value = int.parse(value);
-    }
-    if (value is int) {
-      return value;
-    } else if (value is double) {
-      return value.round();
-    }
-    return -1;
-  }
-
   Map<String, dynamic> toJson() => {
-        'rowid': this.rowId,
-        'id': this.id.toString(),
-        'nid': this.nid.toString(),
+        'id': this.rowId,
+        'club_id': this.id,
+        'news_id': this.nid,
         'published': this.publishedTimestamp,
-        'link': this.link,
         'title': this.title,
+        'link': this.link,
         'summary': this.summary,
       };
 

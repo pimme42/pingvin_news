@@ -3,7 +3,7 @@ import 'package:pingvin_news/Store/News/NewsStore.dart';
 import 'package:pingvin_news/Store/News/NewsStatus.dart';
 import 'package:pingvin_news/Store/AppState/SubscriptionsManager.dart';
 import 'package:pingvin_news/Store/AppState/Status.dart';
-import 'package:pingvin_news/Data/NewsPaper.dart';
+import 'package:pingvin_news/Data/News/NewsPaper.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 

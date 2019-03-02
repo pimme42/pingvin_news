@@ -21,8 +21,6 @@ class TableHandler {
     this._rh = new RESTHandler();
   }
 
-//  Future<TeamTable> getTableFromFile() async => this._fh?.readNews();
-
   Future<TeamTable> getTableFromREST(teams team) async => TeamTable.fromRestApi(
         await this
             ._rh
