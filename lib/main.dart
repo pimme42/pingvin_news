@@ -2,10 +2,12 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Redux/AppState/Middleware.dart';
 import 'package:pingvin_news/Redux/News/Middleware.dart';
 import 'package:pingvin_news/Redux/AppState/Reducers.dart';
+import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Redux/Teams/Middleware.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Pages/NewsPage.dart';
 import 'package:pingvin_news/Pages/TeamPage.dart';
+import 'package:pingvin_news/Pages/AboutPage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -13,24 +15,6 @@ import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
-
-//void navigationMiddleware(
-//  Store<int> store,
-//  dynamic action,
-//  NextDispatcher next,
-//) {
-//  next(action);
-//
-//  if (action is NavigateAction) {
-//    navigatorKey.currentState.push(new MaterialPageRoute(builder: (context) {
-//      return new Scaffold(
-//        appBar: new AppBar(
-//          title: new Text("New Route"),
-//        ),
-//      );
-//    }));
-//  }
-//}
 
 void main() => runApp(MyApp());
 
@@ -42,7 +26,7 @@ class MyApp extends StatelessWidget {
       ..addAll(appStoreMiddleware())
       ..addAll(newsStoreMiddleware())
       ..addAll(teamStateMiddleware()),
-  );
+  )..dispatch(UpdateVersionInfoAction());
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -80,9 +64,12 @@ class MyApp extends StatelessWidget {
   Route _getRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
+//        return _buildRoute(settings, AboutPage());
         return _buildRoute(settings, NewsPage());
       case '/teamPage':
         return _buildRoute(settings, TeamPage());
+      case Constants.AboutPageRoute:
+        return _buildRoute(settings, AboutPage());
       default:
         return _buildRoute(settings, NewsPage());
     }

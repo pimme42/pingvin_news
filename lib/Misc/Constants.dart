@@ -37,4 +37,12 @@ class Constants {
   static const String emptyString = "";
 
   static const bool useHttps = true;
+
+  static const TextStyle drawerTextStyle =
+      TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold);
+
+  static const TextStyle drawerPageTextStyle =
+      TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold);
+
+  static const AboutPageRoute = '/AboutPage';
 }

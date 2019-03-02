@@ -22,6 +22,7 @@ class DrawerViewModel {
   final IconData aboutIcon;
   final String aboutImage;
   final List<DrawerPageViewModel> pages;
+  final AboutBoxViewModel aboutBoxViewModel;
 
   DrawerViewModel(
     this.headerImage,
@@ -35,6 +36,7 @@ class DrawerViewModel {
     this.aboutIcon,
     this.aboutImage,
     this.pages,
+    this.aboutBoxViewModel,
   );
 
   factory DrawerViewModel.create(Store<AppStore> store) {
@@ -48,9 +50,10 @@ class DrawerViewModel {
             store.dispatch(SubscribeToNewsNotificationsAction(value));
             store.dispatch(SaveSubscriptionsToPrefsAction());
           },
-          Icons.notifications,
+          Icons.notifications_none,
           Constants.logoPath,
           "Prenumerera på nyheter",
+          Constants.drawerTextStyle,
         ),
       ],
       Constants.title,
@@ -66,6 +69,7 @@ class DrawerViewModel {
           () {
             store.dispatch(NavigateToAction.replace('/'));
           },
+          Constants.drawerPageTextStyle,
         ),
         DrawerPageViewModel(
           'Herrar',
@@ -73,6 +77,7 @@ class DrawerViewModel {
             store.dispatch(ViewTeamAction.mens());
             store.dispatch(NavigateToAction.replace('/teamPage'));
           },
+          Constants.drawerPageTextStyle,
         ),
         DrawerPageViewModel(
           'Damer',
@@ -80,8 +85,18 @@ class DrawerViewModel {
             store.dispatch(ViewTeamAction.womens());
             store.dispatch(NavigateToAction.replace('/teamPage'));
           },
+          Constants.drawerPageTextStyle,
         ),
       ],
+      AboutBoxViewModel(
+        "Om Appen",
+        Icons.info_outline,
+        () {
+          store.dispatch(NavigateToAction.pop());
+          store.dispatch(NavigateToAction.push(Constants.AboutPageRoute));
+        },
+        Constants.drawerTextStyle,
+      ),
     );
   }
 }
@@ -89,8 +104,9 @@ class DrawerViewModel {
 class DrawerPageViewModel {
   final String text;
   final Function() tap;
+  final TextStyle style;
 
-  DrawerPageViewModel(this.text, this.tap);
+  DrawerPageViewModel(this.text, this.tap, this.style);
 }
 
 class DrawerSubscribeItemView {
@@ -99,7 +115,28 @@ class DrawerSubscribeItemView {
   final IconData subscribeIcons; //Icons.notification
   final String thumbImage; //Constants.logoPath
   final String subscribeText;
+  final TextStyle style;
 
-  DrawerSubscribeItemView(this.subscribingTo, this.subscribeTo,
-      this.subscribeIcons, this.thumbImage, this.subscribeText);
+  DrawerSubscribeItemView(
+    this.subscribingTo,
+    this.subscribeTo,
+    this.subscribeIcons,
+    this.thumbImage,
+    this.subscribeText,
+    this.style,
+  );
+}
+
+class AboutBoxViewModel {
+  final String cardTitle;
+  final IconData cardIcon;
+  final Function() onTap;
+  final TextStyle style;
+
+  AboutBoxViewModel(
+    this.cardTitle,
+    this.cardIcon,
+    this.onTap,
+    this.style,
+  );
 }

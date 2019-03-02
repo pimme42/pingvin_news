@@ -2,10 +2,12 @@ import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Store/AppState/VersionInfo.dart';
 
 import 'dart:async';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:package_info/package_info.dart';
 
 List<Middleware<AppStore>> appStoreMiddleware() => [
       TypedMiddleware<AppStore, ShowSnackBarAction>(_showSnackBar),
@@ -13,6 +15,7 @@ List<Middleware<AppStore>> appStoreMiddleware() => [
           _readSubscriptionsPrefs),
       TypedMiddleware<AppStore, SaveSubscriptionsToPrefsAction>(
           _saveSubscriptionsPrefs),
+      TypedMiddleware<AppStore, UpdateVersionInfoAction>(_updateVersionInfo),
     ];
 
 Future _showSnackBar(Store<AppStore> store, ShowSnackBarAction action,
@@ -42,4 +45,17 @@ Future _saveSubscriptionsPrefs(Store<AppStore> store,
   await prefs.setBool('News', store.state.subManager.news);
   await prefs.setBool('MensScore', store.state.subManager.mensScores);
   await prefs.setBool('WomensScore', store.state.subManager.womensScores);
+}
+
+Future _updateVersionInfo(Store<AppStore> store, UpdateVersionInfoAction action,
+    NextDispatcher next) async {
+  Log.doLog("_updateVersionInfo in Middleware", logLevel.DEBUG);
+  PackageInfo.fromPlatform().then((PackageInfo packageInfo) {
+    store.dispatch(SetVersionInfoAction(
+      packageInfo.appName,
+      packageInfo.packageName,
+      packageInfo.version,
+      packageInfo.buildNumber,
+    ));
+  });
 }

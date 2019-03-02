@@ -24,7 +24,7 @@ class NewNewsItemNotificationAction extends ShowSnackBarAction {
 // Actions on SubscriptionsManager
 
 abstract class SubscribeToNotificationAction {
-  bool value;
+  final bool value;
   SubscribeToNotificationAction(this.value);
 }
 
@@ -44,3 +44,15 @@ class SubscribeToWomensNotificationsAction
 class ReadSubscriptionsFromPrefsAction {}
 
 class SaveSubscriptionsToPrefsAction {}
+
+class UpdateVersionInfoAction {}
+
+class SetVersionInfoAction {
+  final String appName;
+  final String packageName;
+  final String version;
+  final String buildNumber;
+
+  SetVersionInfoAction(
+      this.appName, this.packageName, this.version, this.buildNumber);
+}

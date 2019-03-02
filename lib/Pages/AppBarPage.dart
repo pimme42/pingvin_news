@@ -41,6 +41,11 @@ class _AppBarPageState extends State<AppBarPage> {
         icon: Icon(Icons.close),
         onPressed: () => viewModel.closeWebView(),
       );
+    if (viewModel.showPopButton)
+      return IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () => viewModel.pop(),
+      );
     return null;
   }
 

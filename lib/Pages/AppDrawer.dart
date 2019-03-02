@@ -40,19 +40,14 @@ class AppDrawer extends StatelessWidget {
                   ],
                 ),
               ),
-              ListView(
-                  shrinkWrap: true,
-                  children: viewModel.pages
-                      .map((DrawerPageViewModel page) =>
-                          _createPageItemWidget(context, page))
-                      .toList()),
-              ListView(
-                  shrinkWrap: true,
-                  children: viewModel.subItems
-                      .map((DrawerSubscribeItemView item) =>
-                          _createSubscriptionWidget(context, item))
-                      .toList()),
-            ],
+            ]
+              ..addAll(
+                viewModel.pages.map((DrawerPageViewModel page) =>
+                    _createPageItemWidget(context, page)),
+              )
+              ..addAll(viewModel.subItems.map((DrawerSubscribeItemView item) =>
+                  _createSubscriptionWidget(context, item)))
+              ..add(_createAboutCard(viewModel.aboutBoxViewModel)),
           ),
         );
       },
@@ -66,9 +61,7 @@ class AppDrawer extends StatelessWidget {
         title: Center(
           child: Text(
             page.text,
-            style: TextStyle(
-              fontSize: 16.0,
-            ),
+            style: page.style,
           ),
         ),
       ),
@@ -83,7 +76,7 @@ class AppDrawer extends StatelessWidget {
         onChanged: (bool value) => item.subscribeTo(value),
         title: Text(
           item.subscribeText,
-          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+          style: item.style,
         ),
         secondary: Icon(item.subscribeIcons),
         inactiveThumbImage: ExactAssetImage(item.thumbImage),
@@ -96,32 +89,18 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  List<Widget> _createAboutBox(DrawerViewModel model) {
-    List<Widget> widgets = _createAboutBoxStrings(model.aboutBoxText);
-    widgets.add(
-      InkWell(
-        child: Text(
-          model.aboutEmail,
-          style: TextStyle(color: Colors.blue),
+  Widget _createAboutCard(AboutBoxViewModel viewModel) {
+    return Card(
+      child: ListTile(
+        onTap: viewModel.onTap,
+        leading: Icon(
+          viewModel.cardIcon,
         ),
-        onTap: () => _launchUrl(
-            "mailto:${model.aboutEmail}?subject=${model.aboutSubject}"),
+        title: Text(
+          viewModel.cardTitle,
+          style: viewModel.style,
+        ),
       ),
     );
-    return widgets;
-  }
-
-  List<Widget> _createAboutBoxStrings(List<String> texts) {
-    List<Widget> widgets = List();
-    texts.forEach((String str) => widgets.add(Text(str)));
-    return widgets;
-  }
-
-  void _launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
   }
 }
