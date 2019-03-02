@@ -21,8 +21,6 @@ class NewsHandler {
     this._rh = new RESTHandler();
   }
 
-//  Future<NewsPaper> getNewsFromFile() async => this._fh?.readNews();
-
   Future<NewsPaper> getNewsFromREST() async => NewsPaper.fromRestApi(
         await this
             ._rh
@@ -32,8 +30,6 @@ class NewsHandler {
   Future<NewsPaper> getNewsFromFile() async => NewsPaper.fromFile(
         await this._fh?.getJsonFromFile(Constants.newsFile),
       );
-
-//  Future<NewsPaper> getNewsFromREST() async => this._rh?.readNews();
 
   void saveNews(NewsPaper paper) async {
 //    this._fh?.writeNews(paper);
