@@ -28,6 +28,8 @@ class TeamPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                Text(
+                    "Tabell för : ${viewModel.tableInfo.name} (${viewModel.tableInfo.year})"),
                 Center(
                   child: Padding(
                     padding: EdgeInsets.all(10.0),

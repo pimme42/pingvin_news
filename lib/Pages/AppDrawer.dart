@@ -52,19 +52,6 @@ class AppDrawer extends StatelessWidget {
                       .map((DrawerSubscribeItemView item) =>
                           _createSubscriptionWidget(context, item))
                       .toList()),
-/*
-              Card(
-                child: AboutListTile(
-                  applicationIcon: ImageIcon(
-                    ExactAssetImage(viewModel.aboutImage),
-                  ),
-                  child: Text(viewModel.aboutText),
-                  icon: Icon(viewModel.aboutIcon),
-                  applicationName: viewModel.appName,
-                  aboutBoxChildren: _createAboutBox(viewModel),
-                ),
-              ),
-*/
             ],
           ),
         );

@@ -11,23 +11,24 @@ class ViewTeamAction {
 }
 
 class ReadTeamFromFileAction {
-  teams team;
+  final teams team;
   ReadTeamFromFileAction(this.team);
 }
 
 class ReadTeamFromRESTAction {
-  teams team;
+  final teams team;
   ReadTeamFromRESTAction(this.team);
 }
 
 class SaveTeamToFileAction {
-  teams team;
+  final teams team;
   SaveTeamToFileAction(this.team);
 }
 
 class SetTeamData {
+  final teams team;
   final TeamTable teamTable;
-  SetTeamData(this.teamTable);
+  SetTeamData(this.team, this.teamTable);
 }
 
 class ClearTeamDataAction {}

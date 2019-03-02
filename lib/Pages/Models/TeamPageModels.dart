@@ -30,20 +30,22 @@ class TeamPageViewModel {
 
   factory TeamPageViewModel.create(Store<AppStore> store) {
     int rowNum = 1;
+    teams team = store.state.teamState.team;
     List<TableRowItem> rows = new List();
     rows.add(TableRowItem.header());
-    store.state.teamState.table.teamTable.rows.forEach((TeamTableRow ttr) {
+    store.state.teamState.table.teamTable[team]?.rows
+        ?.forEach((TeamTableRow ttr) {
       rows.add(TableRowItem.fromTableRow(rowNum++, ttr));
     });
     return TeamPageViewModel(
-        team: store.state.teamState.team.toString(),
+        team: team.toString(),
         tableInfo: TableInfo(
-          store.state.teamState.table.teamTable.info?.name ?? "",
-          store.state.teamState.table.teamTable.info?.year.toString() ?? "",
+          store.state.teamState.table.teamTable[team]?.info?.name ?? "",
+          store.state.teamState.table.teamTable[team]?.info?.year.toString() ??
+              "",
         ),
         tableRows: rows,
-        onRefresh: () async =>
-            store.dispatch(ReadTeamFromRESTAction(store.state.teamState.team)));
+        onRefresh: () async => store.dispatch(ReadTeamFromRESTAction(team)));
   }
 }
 

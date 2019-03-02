@@ -2,6 +2,7 @@ import 'package:pingvin_news/Data/FileHandler.dart';
 import 'package:pingvin_news/Data/RESTHandler.dart';
 import 'package:pingvin_news/Data/Teams/TeamTable.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Misc/Log.dart';
 
 import 'dart:convert';
 
@@ -33,6 +34,7 @@ class TableHandler {
       );
 
   void saveToFile(teams team, TeamTable tt) async {
+    Log.doLog("TableHandler/saveToFile: team: $team", logLevel.DEBUG);
     this._fh?.writeToFile(Constants.teamFiles[team], jsonEncode(tt.toJson()));
   }
 }
