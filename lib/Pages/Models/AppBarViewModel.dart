@@ -1,6 +1,4 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
-import 'package:pingvin_news/Store/News/NewsStore.dart';
-import 'package:pingvin_news/Store/News/NewsStatus.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/News/Actions.dart';
 

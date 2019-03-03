@@ -1,12 +1,9 @@
 import 'package:pingvin_news/Redux/News/Reducers.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
-import 'package:pingvin_news/Store/News/NewsStore.dart';
 import 'package:pingvin_news/Store/AppState/SubscriptionsManager.dart';
 import 'package:pingvin_news/Store/AppState/Status.dart';
 import 'package:pingvin_news/Store/AppState/VersionInfo.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
-import 'package:pingvin_news/Data/News/NewsPaper.dart';
-import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Redux/Teams/Reducers.dart';
 

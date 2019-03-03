@@ -1,13 +1,10 @@
 import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
-import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'dart:async';
 
 class AppDrawer extends StatelessWidget {
   @override

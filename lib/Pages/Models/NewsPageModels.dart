@@ -1,7 +1,4 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
-import 'package:pingvin_news/Store/News/NewsStore.dart';
-import 'package:pingvin_news/Pages/AppDrawer.dart';
-import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
 import 'package:pingvin_news/Redux/News/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Data/News/NewsEntry.dart';

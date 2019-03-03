@@ -1,8 +1,6 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutViewModel {
