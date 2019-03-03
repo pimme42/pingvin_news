@@ -1,5 +1,4 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
-import 'package:pingvin_news/Store/AppState/VersionInfo.dart';
 import 'package:pingvin_news/Pages/Models/AboutViewModel.dart';
 import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
@@ -19,72 +18,75 @@ class AboutPage extends StatelessWidget {
 //    onInit: (store) => store.dispatch(ReadSubscriptionsFromPrefsAction()),
         converter: (Store<AppStore> store) => AboutViewModel.create(store),
         builder: (BuildContext context, AboutViewModel viewModel) {
-          return Padding(
-            padding: EdgeInsets.all(5.0),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  viewModel.aboutText,
+          return ListView(
+            padding: EdgeInsets.all(10.0),
+            children: <Widget>[
+              Image.asset(
+                Constants.logoPath,
+                height: MediaQuery.of(context).size.width * 0.3,
+              ),
+              _createText(
+                viewModel.packageInfo['appName'],
+                TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(viewModel.contactText),
-                    InkWell(
-                      child: Text(
-                        viewModel.contactEmail,
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                      onTap: () => viewModel.contactOnTap(),
+              ),
+              _createText(
+                "Version ${viewModel.packageInfo['version']} (${viewModel.packageInfo['buildNumber']})",
+                TextStyle(color: Colors.black45),
+              ),
+              _createText(
+                "\u{00A9} Tobias Rörstam",
+                TextStyle(color: Colors.black45),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  _createText(
+                    viewModel.contactText,
+                    TextStyle(
+                      color: Colors.black45,
                     ),
-                  ],
-                ),
-                Container(
-                  height: 10.0,
-                ),
-                Table(
-                  border: TableBorder.all(),
-                  children: viewModel.packageInfo.entries
-                      .map((MapEntry<String, String> data) =>
-                          _createTableRow(data))
-                      .toList(),
-                ),
-                Container(
-                  height: 10.0,
-                ),
-                InkWell(
+                  ),
+                  InkWell(
+                    child: _createText(
+                      viewModel.contactEmail,
+                      TextStyle(color: Colors.blue),
+                    ),
+                    onTap: () => viewModel.contactOnTap(),
+                  ),
+                ],
+              ),
+              InkWell(
+                child: Center(
                   child: Text(
                     "Licenser",
                     style: TextStyle(color: Colors.blue),
                   ),
-                  onTap: () => showLicensePage(
-                        context: context,
-                        applicationName: viewModel.packageInfo['appName'],
-                        applicationVersion: viewModel.packageInfo['version'],
-                        applicationLegalese: viewModel.legalese,
-                        applicationIcon: Constants.logo,
-                      ),
                 ),
-              ],
-            ),
+                onTap: () => showLicensePage(
+                      context: context,
+                      applicationName: viewModel.packageInfo['appName'],
+                      applicationVersion: viewModel.packageInfo['version'],
+                      applicationLegalese: viewModel.legalese,
+                      applicationIcon: Constants.logo,
+                    ),
+              ),
+            ],
           );
         },
       ),
     );
   }
 
-  TableRow _createTableRow(MapEntry data) {
-    return TableRow(
-      children: [
-        Padding(
-          child: Text(data.key),
-          padding: EdgeInsets.all(5.0),
+  Widget _createText(String text, TextStyle style) => Center(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0, 5.0, 0, 5.0),
+          child: Text(
+            text,
+            style: style,
+          ),
         ),
-        Padding(
-          child: Text(data.value),
-          padding: EdgeInsets.all(5.0),
-        ),
-      ],
-    );
-  }
+      );
 }

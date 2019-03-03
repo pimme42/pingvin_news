@@ -79,7 +79,7 @@ class TeamPage extends StatelessWidget {
           padding: EdgeInsets.all(10.0),
           child: Center(
             child: Text(
-              "Laddar tabeller",
+              "Laddar tabell",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
             ),
           ),

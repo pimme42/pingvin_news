@@ -41,12 +41,26 @@ class AppDrawer extends StatelessWidget {
                 ),
               ),
             ]
+              ..add(
+                _createHeader(
+                  context,
+                  "Sidor",
+                ),
+              )
               ..addAll(
                 viewModel.pages.map((DrawerPageViewModel page) =>
                     _createPageItemWidget(context, page)),
               )
+              ..add(_createDivider(context))
+              ..add(
+                _createHeader(
+                  context,
+                  "Notifikationer",
+                ),
+              )
               ..addAll(viewModel.subItems.map((DrawerSubscribeItemView item) =>
                   _createSubscriptionWidget(context, item)))
+              ..add(_createDivider(context))
               ..add(_createAboutCard(viewModel.aboutBoxViewModel)),
           ),
         );
@@ -55,22 +69,38 @@ class AppDrawer extends StatelessWidget {
   }
 
   Widget _createPageItemWidget(BuildContext context, DrawerPageViewModel page) {
-    return Card(
+    return Container(
       child: ListTile(
+        leading: _createPageItemIcon(context, page.icon),
         onTap: () => page.tap(),
-        title: Center(
-          child: Text(
-            page.text,
-            style: page.style,
-          ),
+        title: Text(
+          page.text,
+          style: page.style,
         ),
       ),
     );
   }
 
+  Widget _createPageItemIcon(BuildContext context, dynamic icon) {
+    Widget retVal;
+    if (icon is String) {
+      retVal = Text(
+        icon,
+        style: TextStyle(
+          fontSize: IconTheme.of(context).size,
+          fontWeight: FontWeight.bold,
+          color: Colors.black45,
+        ),
+      );
+    } else {
+      retVal = icon;
+    }
+    return retVal;
+  }
+
   Widget _createSubscriptionWidget(
       BuildContext context, DrawerSubscribeItemView item) {
-    return Card(
+    return Container(
       child: SwitchListTile(
         value: item.subscribingTo,
         onChanged: (bool value) => item.subscribeTo(value),
@@ -90,7 +120,7 @@ class AppDrawer extends StatelessWidget {
   }
 
   Widget _createAboutCard(AboutBoxViewModel viewModel) {
-    return Card(
+    return Container(
       child: ListTile(
         onTap: viewModel.onTap,
         leading: Icon(
@@ -103,4 +133,21 @@ class AppDrawer extends StatelessWidget {
       ),
     );
   }
+
+  Widget _createHeader(BuildContext context, String text) => Padding(
+        padding: EdgeInsets.all(5.0),
+        child: Text(
+          text,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black45),
+        ),
+      );
+
+  Widget _createDivider(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          color: Colors.black26,
+        ),
+        child: Container(
+          height: 1.5,
+        ),
+      );
 }

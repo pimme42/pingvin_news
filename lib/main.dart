@@ -75,11 +75,11 @@ class MyApp extends StatelessWidget {
     }
   }
 
-  Widget _makePage(Widget Page) {
+  Widget _makePage(Widget page) {
     return StoreProvider(
       store: this.store,
       child: Scaffold(
-        body: Page,
+        body: page,
       ),
     );
   }

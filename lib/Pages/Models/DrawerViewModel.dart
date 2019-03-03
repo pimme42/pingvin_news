@@ -70,6 +70,7 @@ class DrawerViewModel {
             store.dispatch(NavigateToAction.replace('/'));
           },
           Constants.drawerPageTextStyle,
+          ImageIcon(ExactAssetImage('images/Icons/news-48.png')),
         ),
         DrawerPageViewModel(
           'Herrar',
@@ -78,6 +79,7 @@ class DrawerViewModel {
             store.dispatch(NavigateToAction.replace('/teamPage'));
           },
           Constants.drawerPageTextStyle,
+          "\u{2642}",
         ),
         DrawerPageViewModel(
           'Damer',
@@ -86,6 +88,7 @@ class DrawerViewModel {
             store.dispatch(NavigateToAction.replace('/teamPage'));
           },
           Constants.drawerPageTextStyle,
+          "\u{2640}",
         ),
       ],
       AboutBoxViewModel(
@@ -105,8 +108,9 @@ class DrawerPageViewModel {
   final String text;
   final Function() tap;
   final TextStyle style;
+  final dynamic icon;
 
-  DrawerPageViewModel(this.text, this.tap, this.style);
+  DrawerPageViewModel(this.text, this.tap, this.style, this.icon);
 }
 
 class DrawerSubscribeItemView {

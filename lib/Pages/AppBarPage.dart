@@ -38,12 +38,12 @@ class _AppBarPageState extends State<AppBarPage> {
   Widget _displayLeading(BuildContext context, AppBarViewModel viewModel) {
     if (viewModel.showWebView)
       return IconButton(
-        icon: Icon(Icons.close),
+        icon: BackButtonIcon(),
         onPressed: () => viewModel.closeWebView(),
       );
     if (viewModel.showPopButton)
       return IconButton(
-        icon: Icon(Icons.arrow_back),
+        icon: BackButtonIcon(),
         onPressed: () => viewModel.pop(),
       );
     return null;
