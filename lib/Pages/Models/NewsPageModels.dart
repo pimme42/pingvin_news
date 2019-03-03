@@ -18,10 +18,9 @@ class NewsPageViewModel {
   final bool showWebView;
   final String urlToShow;
   final Function() closeWebView;
-  final AppDrawer drawer;
 
   NewsPageViewModel(this.items, this.onRefresh, this.loading, this.floatingMsg,
-      this.showWebView, this.urlToShow, this.closeWebView, this.drawer);
+      this.showWebView, this.urlToShow, this.closeWebView);
 
   factory NewsPageViewModel.create(Store<AppStore> store) {
     List<NewsPageItemViewModel> items = store.state.newsStore.paper.entries
@@ -53,7 +52,6 @@ class NewsPageViewModel {
       store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
       store.state.newsStore.newsStatus.urlToShow,
       () => store.dispatch(CloseWebViewAction()),
-      AppDrawer(),
     );
   }
 }

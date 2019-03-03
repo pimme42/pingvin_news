@@ -6,7 +6,8 @@ import 'package:pingvin_news/Pages/Models/NewsPageModels.dart';
 import 'package:pingvin_news/Pages/Models/DrawerViewModel.dart';
 import 'package:pingvin_news/Redux/News/Actions.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
-
+import 'package:pingvin_news/Pages/AppBarPage.dart';
+import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:pingvin_news/Data/News/NewsEntry.dart';
@@ -71,13 +72,8 @@ class NewsPage extends StatelessWidget {
             return true;
           },
           child: Scaffold(
-            appBar: new AppBar(
-              title: new Text(Constants.title),
-              automaticallyImplyLeading: true,
-              leading: _displayLeading(context, viewModel),
-              actions: _displayAppBarActions(context, viewModel),
-            ),
-            drawer: viewModel.drawer,
+            appBar: AppBarPage(),
+            drawer: AppDrawer(),
             body: new IconTheme(
               data: new IconThemeData(color: Theme.of(context).accentColor),
               child: RefreshIndicator(
@@ -86,7 +82,7 @@ class NewsPage extends StatelessWidget {
                 color: Colors.black,
                 child: viewModel.showWebView
                     ? _displayWebPage(context, viewModel)
-                    : _displayListView(context, viewModel),
+                    : _displayNewsList(context, viewModel),
               ),
             ),
           ),
@@ -95,7 +91,7 @@ class NewsPage extends StatelessWidget {
     );
   }
 
-  Widget _displayListView(BuildContext context, NewsPageViewModel viewModel) {
+  Widget _displayNewsList(BuildContext context, NewsPageViewModel viewModel) {
     if (viewModel.items.length > 0) {
       return ListView(
           padding: EdgeInsets.all(5.0),
@@ -122,34 +118,6 @@ class NewsPage extends StatelessWidget {
 
   Widget _displayWebPage(BuildContext context, NewsPageViewModel viewModel) {
     return WebViewPage(viewModel.urlToShow);
-  }
-
-  Widget _displayLeading(BuildContext context, NewsPageViewModel viewModel) {
-    if (viewModel.showWebView)
-      return IconButton(
-        icon: Icon(Icons.close),
-        onPressed: () => viewModel.closeWebView(),
-      );
-    return null;
-  }
-
-  List<Widget> _displayAppBarActions(
-      BuildContext context, NewsPageViewModel viewModel) {
-    return <Widget>[
-      Padding(
-        child: viewModel.loading
-            ? LoadIndicator()
-            : Transform(
-                origin: Offset(IconTheme.of(context).size / 2,
-                    IconTheme.of(context).size / 2),
-                transform: Matrix4.skewX(-0.0),
-                child: ImageIcon(
-                  ExactAssetImage(Constants.logoPathEllipse),
-                ),
-              ),
-        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-      ),
-    ];
   }
 
   Widget _createListItemWidget(
