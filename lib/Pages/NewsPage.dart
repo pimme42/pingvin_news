@@ -84,13 +84,9 @@ class NewsPage extends StatelessWidget {
                 onRefresh: viewModel.onRefresh,
                 displacement: 50.0,
                 color: Colors.black,
-                child: Stack(
-                  children: <Widget>[
-                    viewModel.showWebView
-                        ? _displayWebPage(context, viewModel)
-                        : _displayListView(context, viewModel),
-                  ],
-                ),
+                child: viewModel.showWebView
+                    ? _displayWebPage(context, viewModel)
+                    : _displayListView(context, viewModel),
               ),
             ),
           ),
@@ -108,21 +104,18 @@ class NewsPage extends StatelessWidget {
                   _createListItemWidget(item, context))
               .toList());
     } else {
-      return Positioned(
-        child: ListView(
-          children: <Widget>[
-            Card(
-              child: ListTile(
-                title: Text("Inga nyheter laddade"),
-                subtitle: Text("Tryck här för att ladda nyheter"),
-                leading: IconButton(
-                    icon: Icon(Icons.autorenew),
-                    onPressed: viewModel.onRefresh),
-                onTap: viewModel.onRefresh,
-              ),
-            )
-          ],
-        ),
+      return ListView(
+        children: <Widget>[
+          Card(
+            child: ListTile(
+              title: Text("Inga nyheter laddade"),
+              subtitle: Text("Tryck här för att ladda nyheter"),
+              leading: IconButton(
+                  icon: Icon(Icons.autorenew), onPressed: viewModel.onRefresh),
+              onTap: viewModel.onRefresh,
+            ),
+          )
+        ],
       );
     }
   }
