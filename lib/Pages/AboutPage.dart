@@ -68,7 +68,8 @@ class AboutPage extends StatelessWidget {
                 onTap: () => showLicensePage(
                       context: context,
                       applicationName: viewModel.packageInfo['appName'],
-                      applicationVersion: viewModel.packageInfo['version'],
+                      applicationVersion:
+                          "${viewModel.packageInfo['version']} (${viewModel.packageInfo['buildNumber']})",
                       applicationLegalese: viewModel.legalese,
                       applicationIcon: Constants.logo,
                     ),

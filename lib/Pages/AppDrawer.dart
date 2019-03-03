@@ -61,7 +61,8 @@ class AppDrawer extends StatelessWidget {
               ..addAll(viewModel.subItems.map((DrawerSubscribeItemView item) =>
                   _createSubscriptionWidget(context, item)))
               ..add(_createDivider(context))
-              ..add(_createAboutCard(viewModel.aboutBoxViewModel)),
+              ..add(_createAboutCard(context, viewModel.aboutBoxViewModel))
+              ..add(_createDivider(context)),
           ),
         );
       },
@@ -71,7 +72,7 @@ class AppDrawer extends StatelessWidget {
   Widget _createPageItemWidget(BuildContext context, DrawerPageViewModel page) {
     return Container(
       child: ListTile(
-        leading: _createPageItemIcon(context, page.icon),
+        leading: _createItemIcon(context, page.icon),
         onTap: () => page.tap(),
         title: Text(
           page.text,
@@ -81,10 +82,10 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _createPageItemIcon(BuildContext context, dynamic icon) {
-    Widget retVal;
+  Widget _createItemIcon(BuildContext context, dynamic icon) {
+    Widget child;
     if (icon is String) {
-      retVal = Text(
+      child = Text(
         icon,
         style: TextStyle(
           fontSize: IconTheme.of(context).size,
@@ -93,9 +94,15 @@ class AppDrawer extends StatelessWidget {
         ),
       );
     } else {
-      retVal = icon;
+      child = icon;
     }
-    return retVal;
+    return Container(
+      width: IconTheme.of(context).size + 10,
+//      decoration: BoxDecoration(border: Border.all()),
+      child: Center(
+        child: child,
+      ),
+    );
   }
 
   Widget _createSubscriptionWidget(
@@ -108,7 +115,7 @@ class AppDrawer extends StatelessWidget {
           item.subscribeText,
           style: item.style,
         ),
-        secondary: Icon(item.subscribeIcons),
+        secondary: _createItemIcon(context, Icon(item.subscribeIcons)),
         inactiveThumbImage: ExactAssetImage(item.thumbImage),
         inactiveTrackColor: Colors.black26,
         inactiveThumbColor: Colors.black12,
@@ -119,12 +126,15 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _createAboutCard(AboutBoxViewModel viewModel) {
+  Widget _createAboutCard(BuildContext context, AboutBoxViewModel viewModel) {
     return Container(
       child: ListTile(
         onTap: viewModel.onTap,
-        leading: Icon(
-          viewModel.cardIcon,
+        leading: _createItemIcon(
+          context,
+          Icon(
+            viewModel.cardIcon,
+          ),
         ),
         title: Text(
           viewModel.cardTitle,
@@ -143,6 +153,10 @@ class AppDrawer extends StatelessWidget {
       );
 
   Widget _createDivider(BuildContext context) => Container(
+        margin: EdgeInsets.only(
+          bottom: 5.0,
+          top: 5.0,
+        ),
         decoration: BoxDecoration(
           color: Colors.black26,
         ),

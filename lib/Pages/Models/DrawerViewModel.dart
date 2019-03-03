@@ -70,7 +70,7 @@ class DrawerViewModel {
             store.dispatch(NavigateToAction.replace('/'));
           },
           Constants.drawerPageTextStyle,
-          ImageIcon(ExactAssetImage('images/Icons/news-48.png')),
+          "\u{1F5DE}",
         ),
         DrawerPageViewModel(
           'Herrar',
