@@ -70,7 +70,7 @@ class AppDrawer extends StatelessWidget {
     return Container(
       child: ListTile(
         leading: _createItemIcon(context, page.icon),
-        onTap: () => page.tap(),
+        onTap: () => page.tap(context),
         title: Text(
           page.text,
           style: page.style,
@@ -123,18 +123,18 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _createAboutCard(BuildContext context, AboutBoxViewModel viewModel) {
+  Widget _createAboutCard(BuildContext context, DrawerPageViewModel viewModel) {
     return Container(
       child: ListTile(
-        onTap: viewModel.onTap,
+        onTap: () => viewModel.tap(context),
         leading: _createItemIcon(
           context,
           Icon(
-            viewModel.cardIcon,
+            viewModel.icon,
           ),
         ),
         title: Text(
-          viewModel.cardTitle,
+          viewModel.text,
           style: viewModel.style,
         ),
       ),

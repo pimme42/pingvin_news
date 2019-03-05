@@ -2,6 +2,7 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/News/Actions.dart';
 
+import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
@@ -33,7 +34,9 @@ class AppBarViewModel {
       closeWebView: () => store.dispatch(CloseWebViewAction()),
       showPopButton:
           NavigatorHolder?.state?.currentPath == Constants.AboutPageRoute,
-      pop: () => store.dispatch(NavigateToAction.pop()),
+      pop: () {
+        store.dispatch(NavigateToAction.pop());
+      },
     );
   }
 }
