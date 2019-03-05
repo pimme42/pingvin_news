@@ -62,7 +62,7 @@ class TeamPage extends StatelessWidget {
               textBaseline: TextBaseline.alphabetic,
               columnWidths: {
                 0: FixedColumnWidth(30.0),
-                1: MaxColumnWidth(FlexColumnWidth(), FixedColumnWidth(150.0)),
+                1: IntrinsicColumnWidth(),
                 2: FixedColumnWidth(20.0),
                 3: FixedColumnWidth(20.0),
                 4: FixedColumnWidth(20.0),
