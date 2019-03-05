@@ -20,7 +20,7 @@ class DrawerViewModel {
   final IconData aboutIcon;
   final String aboutImage;
   final List<DrawerPageViewModel> pages;
-  final AboutBoxViewModel aboutBoxViewModel;
+  final DrawerPageViewModel aboutBoxViewModel;
 
   DrawerViewModel(
     this.headerImage,
@@ -64,7 +64,7 @@ class DrawerViewModel {
       [
         DrawerPageViewModel(
           'Nyheter',
-          () {
+          (BuildContext context) {
             store.dispatch(NavigateToAction.replace('/'));
           },
           Constants.drawerPageTextStyle,
@@ -72,7 +72,7 @@ class DrawerViewModel {
         ),
         DrawerPageViewModel(
           'Herrar',
-          () {
+          (BuildContext context) {
             store.dispatch(ViewTeamAction.mens());
             store.dispatch(NavigateToAction.replace('/teamPage'));
           },
@@ -81,7 +81,7 @@ class DrawerViewModel {
         ),
         DrawerPageViewModel(
           'Damer',
-          () {
+          (BuildContext context) {
             store.dispatch(ViewTeamAction.womens());
             store.dispatch(NavigateToAction.replace('/teamPage'));
           },
@@ -89,14 +89,14 @@ class DrawerViewModel {
           "\u{2640}",
         ),
       ],
-      AboutBoxViewModel(
+      DrawerPageViewModel(
         "Om Appen",
-        Icons.info_outline,
-        () {
-          store.dispatch(NavigateToAction.pop());
+        (BuildContext context) {
+          Navigator.of(context).pop();
           store.dispatch(NavigateToAction.push(Constants.AboutPageRoute));
         },
         Constants.drawerTextStyle,
+        Icons.info_outline,
       ),
     );
   }
@@ -104,7 +104,7 @@ class DrawerViewModel {
 
 class DrawerPageViewModel {
   final String text;
-  final Function() tap;
+  final Function(BuildContext context) tap;
   final TextStyle style;
   final dynamic icon;
 
