@@ -23,8 +23,8 @@ class Constants {
   static const String newsFile = '/news.json';
 
   static const Map<teams, String> teamEndPoints = {
-    teams.MENS: '/tables/current/mens',
-    teams.WOMENS: '/tables/current/womens',
+    teams.MENS: '/tables/current/team/mens',
+    teams.WOMENS: '/tables/current/team/womens',
   };
 
   static const Map<teams, String> teamFiles = {
