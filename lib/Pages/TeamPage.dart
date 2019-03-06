@@ -7,7 +7,6 @@ import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:redux/redux.dart';
-import 'dart:math';
 
 class TeamPage extends StatelessWidget {
   @override
@@ -61,7 +60,9 @@ class TeamPage extends StatelessWidget {
                   .map((TableRowItem item) => _createTableRow(item))
                   .toList(),
               border: TableBorder(
-                  horizontalInside: BorderSide(), bottom: BorderSide()),
+                horizontalInside: BorderSide(),
+                bottom: BorderSide(),
+              ),
               textBaseline: TextBaseline.alphabetic,
               columnWidths: {
                 0: FixedColumnWidth(30.0),
