@@ -18,7 +18,7 @@ class Constants {
 
   static const String apiURL = "pingvinapi.rorstam.se";
 
-  static const String newsEndPoint = "/news/168643/";
+  static const String newsEndPoint = "/newss/168643/";
 
   static const String newsFile = '/news.json';
 

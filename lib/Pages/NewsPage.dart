@@ -18,10 +18,10 @@ class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, NewsPageViewModel>(
-      onInitialBuild: (NewsPageViewModel model) => model.floatingMsg.length > 0
+      onInitialBuild: (NewsPageViewModel model) => model.snackBarMsg.length > 0
           ? Scaffold.of(context).showSnackBar(
               SnackBar(
-                content: Text(model.floatingMsg),
+                content: Text(model.snackBarMsg),
               ),
             )
           : null,
@@ -35,8 +35,8 @@ class NewsPage extends StatelessWidget {
                 NotificationDecoder.decodeOnMessage(message);
             store.dispatch(SelectNewsItemAction(json['nid']));
             store.dispatch(ReadNewsFromRESTAction());
-            store.dispatch(NewNewsItemNotificationAction(
-                "Pingvin har publicerat en nyhet!"));
+            store.dispatch(
+                ShowSnackBarAction.message("Pingvin har publicerat en nyhet!"));
           },
           (Map<String, dynamic> message) {
             Log.doLog("onResume: $message", logLevel.DEBUG);

@@ -11,12 +11,12 @@ class NewsPageViewModel {
   final List<NewsPageItemViewModel> items;
   final Function() onRefresh;
   final bool loading;
-  final String floatingMsg;
+  final String snackBarMsg;
   final bool showWebView;
   final String urlToShow;
   final Function() closeWebView;
 
-  NewsPageViewModel(this.items, this.onRefresh, this.loading, this.floatingMsg,
+  NewsPageViewModel(this.items, this.onRefresh, this.loading, this.snackBarMsg,
       this.showWebView, this.urlToShow, this.closeWebView);
 
   factory NewsPageViewModel.create(Store<AppStore> store) {
@@ -45,7 +45,7 @@ class NewsPageViewModel {
         store.dispatch(ReadNewsFromRESTAction());
       },
       store.state.status.loading > 0,
-      store.state.status.floatMsg,
+      store.state.status.snackBar?.msg,
       store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
       store.state.newsStore.newsStatus.urlToShow,
       () => store.dispatch(CloseWebViewAction()),

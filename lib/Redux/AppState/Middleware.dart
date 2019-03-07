@@ -22,7 +22,7 @@ Future _showSnackBar(Store<AppStore> store, ShowSnackBarAction action,
     NextDispatcher next) async {
   Log.doLog("_showSnackBar ${action.msg}", logLevel.DEBUG);
   next(action);
-  await new Future.delayed(Constants.standardSnackBarDuration);
+//  await new Future.delayed(Constants.standardSnackBarDuration);
 //  store.dispatch(FloatMessageShownAction());
 }
 

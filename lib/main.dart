@@ -75,19 +75,19 @@ class MyApp extends StatelessWidget {
     }
   }
 
+  MaterialPageRoute _buildRoute(RouteSettings settings, Widget builder) {
+    return MaterialPageRoute(
+      settings: settings,
+      builder: (BuildContext context) => _makePage(builder),
+    );
+  }
+
   Widget _makePage(Widget page) {
     return StoreProvider(
       store: this.store,
       child: Scaffold(
         body: page,
       ),
-    );
-  }
-
-  MaterialPageRoute _buildRoute(RouteSettings settings, Widget builder) {
-    return new MaterialPageRoute(
-      settings: settings,
-      builder: (BuildContext context) => _makePage(builder),
     );
   }
 }

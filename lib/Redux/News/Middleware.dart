@@ -42,10 +42,9 @@ Future _readNewsFromREST(Store<AppStore> store, ReadNewsFromRESTAction action,
     NewsPaper paperFromREST = await nh.getNewsFromREST();
     store.dispatch(SetNewsAction(paperFromREST));
     store.dispatch(SaveNewsAction(paperFromREST));
-  } on HttpException {
-    store.dispatch(
-        CouldNotReadRESTAction("Kunde inte hämta nyheter från servern"));
   } catch (e) {
+    store.dispatch(
+        ShowSnackBarAction.message("Kunde inte hämta nyheter från servern"));
     Log.doLog("Error in _readNewsFromRest: ${e.toString()}", logLevel.ERROR);
   } finally {
     store.dispatch(StopLoadingAction());

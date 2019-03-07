@@ -5,21 +5,31 @@ class StartLoadingAction {}
 
 class StopLoadingAction {}
 
-abstract class ShowSnackBarAction {
+class ShowSnackBarAction {
   final String msg;
   final SnackBarAction action;
   final Duration duration;
-  ShowSnackBarAction(this.msg,
-      {this.action = null, this.duration = Constants.standardSnackBarDuration});
-}
 
-class CouldNotReadRESTAction extends ShowSnackBarAction {
-  CouldNotReadRESTAction(String msg) : super(msg);
-}
+  ShowSnackBarAction(
+    this.msg,
+    this.action,
+    this.duration,
+  );
 
-class NewNewsItemNotificationAction extends ShowSnackBarAction {
-  NewNewsItemNotificationAction(String msg) : super(msg);
+  factory ShowSnackBarAction.message(String msg) => ShowSnackBarAction(
+        msg,
+        null,
+        Constants.standardSnackBarDuration,
+      );
 }
+//
+//class CouldNotReadRESTAction extends ShowSnackBarAction {
+//  CouldNotReadRESTAction(String msg) : super(msg);
+//}
+//
+//class NewNewsItemNotificationAction extends ShowSnackBarAction {
+//  NewNewsItemNotificationAction(String msg) : super(msg);
+//}
 
 // Actions on SubscriptionsManager
 
