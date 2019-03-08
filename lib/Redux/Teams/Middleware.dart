@@ -55,11 +55,15 @@ Future _readTeamFromREST(Store<AppStore> store, ReadTeamFromRESTAction action,
     if (tt != null) {
       store.dispatch(SetTeamData(action.team, tt));
       store.dispatch(SaveTeamToFileAction(action.team));
+    } else {
+      throw Exception("Could not read table from REST-API");
     }
   } catch (e, s) {
     Log.doLog(
         "Error in Teams/Middleware/_readFromREST: ${e.toString()} \n${s.toString()}",
         logLevel.ERROR);
+    store.dispatch(
+        ShowSnackBarAction.message("Kunde inte hämta tabell från servern"));
   } finally {
     store.dispatch(StopLoadingAction());
   }

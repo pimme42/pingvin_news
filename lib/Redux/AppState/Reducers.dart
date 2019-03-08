@@ -9,6 +9,7 @@ import 'package:pingvin_news/Redux/Teams/Reducers.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:redux/redux.dart';
+import 'dart:async';
 
 // We create the State reducer by combining many smaller reducers into one!
 AppStore appReducer(AppStore state, action) {
@@ -30,18 +31,26 @@ AppStore appReducer(AppStore state, action) {
 final Reducer<Status> statusReducer = combineReducers([
   TypedReducer<Status, StartLoadingAction>(_startLoading),
   TypedReducer<Status, StopLoadingAction>(_stopLoading),
-  TypedReducer<Status, ShowSnackBarAction>(_showSnackBar),
+  TypedReducer<Status, ShowSnackBarAction>(_addSnackBarItem),
+//  TypedReducer<Status, ShowSnackBarAction>(_showSnackBar),
 //  TypedReducer<Status, NewNewsItemNotificationAction>(_newNewsItem),
 ]);
 
 Status _startLoading(Status status, StartLoadingAction action) =>
-    Status(status.loading + 1, status.snackBar);
+    Status(status.loading + 1, status.snackBar, status.snackBarItems);
 
 Status _stopLoading(Status status, StopLoadingAction action) =>
-    Status(status.loading - 1, status.snackBar);
+    Status(status.loading - 1, status.snackBar, status.snackBarItems);
 
-Status _showSnackBar(Status status, ShowSnackBarAction action) =>
-    Status(status.loading, action);
+//Status _showSnackBar(Status status, ShowSnackBarAction action) =>
+//    Status(status.loading, action, status.snackBarItems);
+
+Status _addSnackBarItem(Status status, ShowSnackBarAction action) => Status(
+      status.loading,
+      status.snackBar,
+      status.snackBarItems..add(action),
+    );
+//        status.snackBarItems.add(action))
 
 //Status _newNewsItem(Status status, NewNewsItemNotificationAction action) =>
 //    Status(status.loading, action.msg);

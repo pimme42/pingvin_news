@@ -93,6 +93,7 @@ class DrawerViewModel {
         "Om Appen",
         (BuildContext context) {
           Navigator.of(context).pop();
+          store.dispatch(UpdateVersionInfoAction());
           store.dispatch(NavigateToAction.push(Constants.AboutPageRoute));
         },
         Constants.drawerTextStyle,
