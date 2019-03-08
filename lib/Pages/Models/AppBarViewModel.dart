@@ -32,8 +32,7 @@ class AppBarViewModel {
       showWebView:
           store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
       closeWebView: () => store.dispatch(CloseWebViewAction()),
-      showPopButton:
-          NavigatorHolder?.state?.currentPath == Constants.AboutPageRoute,
+      showPopButton: false,
       pop: () {
         store.dispatch(NavigateToAction.pop());
       },

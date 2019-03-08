@@ -70,8 +70,6 @@ class MyApp extends StatelessWidget {
         return _buildRoute(settings, NewsPage());
       case '/teamPage':
         return _buildRoute(settings, TeamPage());
-      case Constants.AboutPageRoute:
-        return _buildRoute(settings, AboutPage());
       default:
         return _buildRoute(settings, NewsPage());
     }

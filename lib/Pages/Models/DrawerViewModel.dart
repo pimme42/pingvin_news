@@ -2,6 +2,7 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
+import 'package:pingvin_news/Pages/AboutPage.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
@@ -68,7 +69,7 @@ class DrawerViewModel {
             Navigator.of(context).pop(); //This pops the Drawer
             if (NavigatorHolder.state?.currentPath != '/' &&
                 NavigatorHolder.state?.currentPath != null) {
-              store.dispatch(NavigateToAction.push('/'));
+              store.dispatch(NavigateToAction.replace('/'));
             }
           },
           Constants.drawerPageTextStyle,
@@ -81,7 +82,7 @@ class DrawerViewModel {
             if (!(NavigatorHolder.state?.currentPath == '/teamPage' &&
                 store.state.teamState.team == teams.MENS)) {
               store.dispatch(ViewTeamAction.mens());
-              store.dispatch(NavigateToAction.push('/teamPage'));
+              store.dispatch(NavigateToAction.replace('/teamPage'));
             }
           },
           Constants.drawerPageTextStyle,
@@ -96,7 +97,7 @@ class DrawerViewModel {
             if (!(NavigatorHolder.state?.currentPath == '/teamPage' &&
                 store.state.teamState.team == teams.WOMENS)) {
               store.dispatch(ViewTeamAction.womens());
-              store.dispatch(NavigateToAction.push('/teamPage'));
+              store.dispatch(NavigateToAction.replace('/teamPage'));
             }
           },
           Constants.drawerPageTextStyle,
@@ -106,9 +107,10 @@ class DrawerViewModel {
       DrawerPageViewModel(
         "Om Appen",
         (BuildContext context) {
-          Navigator.of(context).pop();
-          store.dispatch(UpdateVersionInfoAction());
-          store.dispatch(NavigateToAction.push(Constants.AboutPageRoute));
+          showDialog(
+            context: context,
+            builder: (BuildContext context) => AboutPage(store),
+          );
         },
         Constants.drawerTextStyle,
         Icons.info_outline,
