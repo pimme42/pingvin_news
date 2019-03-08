@@ -61,6 +61,23 @@ class AboutPage extends StatelessWidget {
                 viewModel.aboutText,
                 TextStyle(color: Colors.black45),
               ),
+              SimpleDialogOption(
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      viewModel.codeText,
+                      style: TextStyle(color: Colors.black45),
+                    ),
+                    InkWell(
+                      child: Text(
+                        viewModel.codeLink,
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      onTap: () => viewModel.codeOnTap(),
+                    ),
+                  ],
+                ),
+              ),
               InkWell(
                 child: Center(
                   child: Text(
