@@ -1,10 +1,15 @@
-import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Redux/AppState/Actions.dart';
+
+import 'dart:async';
 
 class Status {
   final int loading;
-  final String floatMsg;
+  final StreamController<ShowSnackBarAction> snackBarItems;
 
-  Status(this.loading, this.floatMsg);
+  Status(this.loading, this.snackBarItems);
 
-  factory Status.initial() => Status(0, Constants.emptyString);
+  factory Status.initial() => Status(
+        0,
+        StreamController.broadcast(),
+      );
 }

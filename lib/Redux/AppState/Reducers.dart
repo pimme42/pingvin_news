@@ -21,30 +21,22 @@ AppStore appReducer(AppStore state, action) {
   );
 }
 
-//AppStore appReducer(AppStore state, action) => AppStore(
-//      newsReducer(state.newsStore, action),
-//      subscriptionsReducer(state.subManager, action),
-//      statusReducer(state.status, action),
-//    );
-
 final Reducer<Status> statusReducer = combineReducers([
   TypedReducer<Status, StartLoadingAction>(_startLoading),
   TypedReducer<Status, StopLoadingAction>(_stopLoading),
-  TypedReducer<Status, CouldNotReadRESTAction>(_noRESTData),
-  TypedReducer<Status, NewNewsItemNotificationAction>(_newNewsItem),
+  TypedReducer<Status, ShowSnackBarAction>(_addSnackBarItem),
 ]);
 
 Status _startLoading(Status status, StartLoadingAction action) =>
-    Status(status.loading + 1, status.floatMsg);
+    Status(status.loading + 1, status.snackBarItems);
 
 Status _stopLoading(Status status, StopLoadingAction action) =>
-    Status(status.loading - 1, status.floatMsg);
+    Status(status.loading - 1, status.snackBarItems);
 
-Status _noRESTData(Status status, CouldNotReadRESTAction action) =>
-    Status(status.loading, action.msg);
-
-Status _newNewsItem(Status status, NewNewsItemNotificationAction action) =>
-    Status(status.loading, action.msg);
+Status _addSnackBarItem(Status status, ShowSnackBarAction action) => Status(
+      status.loading,
+      status.snackBarItems..add(action),
+    );
 
 final Reducer<SubscriptionsManager> subscriptionsReducer = combineReducers([
   TypedReducer<SubscriptionsManager, SubscribeToNewsNotificationsAction>(

@@ -5,6 +5,7 @@ import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Pages/Models/TeamPageModels.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+
 import 'package:redux/redux.dart';
 
 class TeamPage extends StatelessWidget {
@@ -25,8 +26,7 @@ class TeamPage extends StatelessWidget {
             onRefresh: viewModel.onRefresh,
             displacement: 50.0,
             color: Colors.black,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: ListView(
               children: _buildTable(
                   context, viewModel.tableInfo, viewModel.tableRows),
             ),
@@ -41,11 +41,13 @@ class TeamPage extends StatelessWidget {
     List<Widget> retVals = List();
     if (tableInfo.name != null) {
       retVals = [
-        Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Text(
-            "Tabell för : ${tableInfo.name} (${tableInfo.year})",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+        Center(
+          child: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              "${tableInfo.name} (${tableInfo.year})",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+            ),
           ),
         ),
         Center(
@@ -58,11 +60,23 @@ class TeamPage extends StatelessWidget {
                   .map((TableRowItem item) => _createTableRow(item))
                   .toList(),
               border: TableBorder(
-                  horizontalInside: BorderSide(), bottom: BorderSide()),
+                horizontalInside: BorderSide(),
+                bottom: BorderSide(),
+              ),
               textBaseline: TextBaseline.alphabetic,
               columnWidths: {
                 0: FixedColumnWidth(30.0),
-                1: MaxColumnWidth(FlexColumnWidth(), FixedColumnWidth(150.0)),
+                /*
+                 Tar fram bredden för kolumnen med lagnamn. Det gör att tabellen
+                 inte tar upp hela bredden när man lägger telefonen/plattan ner. -20 i första
+                 argumentet är kopplat till att vi har padding: 10 på både höger och vänster sida.
+                */
+                1: MinColumnWidth(
+                  FixedColumnWidth(MediaQuery.of(context).size.width -
+                      (30 + 20 * 4 + 75 + 50) -
+                      20),
+                  FixedColumnWidth(225),
+                ),
                 2: FixedColumnWidth(20.0),
                 3: FixedColumnWidth(20.0),
                 4: FixedColumnWidth(20.0),
@@ -110,6 +124,8 @@ class TeamPage extends StatelessWidget {
   Widget _createTableCell(String item, bool topRow) {
     return TableCell(
       child: Container(
+        margin:
+            topRow ? null : EdgeInsets.symmetric(vertical: 5, horizontal: 0),
         child: Text(
           item,
           textAlign: TextAlign.center,

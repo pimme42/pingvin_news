@@ -5,6 +5,7 @@ import 'package:pingvin_news/Redux/Teams/Actions.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 @immutable
 class TeamPageViewModel {
@@ -12,12 +13,14 @@ class TeamPageViewModel {
   final TableInfo tableInfo;
   final List<TableRowItem> tableRows;
   final Function() onRefresh;
+  final Function() pop;
 
   TeamPageViewModel({
     this.team,
     this.tableInfo,
     this.tableRows,
     this.onRefresh,
+    this.pop,
   });
 
   factory TeamPageViewModel.create(Store<AppStore> store) {
@@ -30,13 +33,15 @@ class TeamPageViewModel {
       rows.add(TableRowItem.fromTableRow(rowNum++, ttr));
     });
     return TeamPageViewModel(
-        team: team.toString(),
-        tableInfo: TableInfo(
-          store.state.teamState.table.teamTable[team]?.info?.name,
-          store.state.teamState.table.teamTable[team]?.info?.year.toString(),
-        ),
-        tableRows: rows,
-        onRefresh: () async => store.dispatch(ReadTeamFromRESTAction(team)));
+      team: team.toString(),
+      tableInfo: TableInfo(
+        store.state.teamState.table.teamTable[team]?.info?.name,
+        store.state.teamState.table.teamTable[team]?.info?.year.toString(),
+      ),
+      tableRows: rows,
+      onRefresh: () async => store.dispatch(ReadTeamFromRESTAction(team)),
+      pop: () => store.dispatch(NavigateToAction.pop()),
+    );
   }
 }
 

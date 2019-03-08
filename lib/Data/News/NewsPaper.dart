@@ -1,8 +1,5 @@
 import 'package:pingvin_news/Data/News/NewsEntry.dart';
-import 'package:pingvin_news/Data/DataHandler.dart';
 import 'dart:convert';
-
-const String _prefix = "NewsEntry_";
 
 class NewsPaper {
   final List<NewsEntry> entries;

@@ -7,24 +7,18 @@ import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
-
 import 'package:pingvin_news/Pages/WebViewPage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
+//class NewsPage extends StatelessWidget {
 class NewsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, NewsPageViewModel>(
-      onInitialBuild: (NewsPageViewModel model) => model.floatingMsg.length > 0
-          ? Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text(model.floatingMsg),
-              ),
-            )
-          : null,
       onInit: (store) {
         store.dispatch(ReadNewsFromFileAction());
         store.dispatch(ReadNewsFromRESTAction());
@@ -35,8 +29,8 @@ class NewsPage extends StatelessWidget {
                 NotificationDecoder.decodeOnMessage(message);
             store.dispatch(SelectNewsItemAction(json['nid']));
             store.dispatch(ReadNewsFromRESTAction());
-            store.dispatch(NewNewsItemNotificationAction(
-                "Pingvin har publicerat en nyhet!"));
+            store.dispatch(
+                ShowSnackBarAction.message("Pingvin har publicerat en nyhet!"));
           },
           (Map<String, dynamic> message) {
             Log.doLog("onResume: $message", logLevel.DEBUG);
@@ -63,6 +57,9 @@ class NewsPage extends StatelessWidget {
               viewModel.closeWebView();
               return false;
             }
+//            viewModel.pop();
+            Log.doLog("PrevPath: ${NavigatorHolder.state.previousPath}",
+                logLevel.DEBUG);
             return true;
           },
           child: Scaffold(
