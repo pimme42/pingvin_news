@@ -1,9 +1,6 @@
-import 'package:pingvin_news/Data/News/NewsPaper.dart';
 import 'package:pingvin_news/Misc/Log.dart';
-import 'package:pingvin_news/Misc/Constants.dart';
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 

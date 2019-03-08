@@ -65,7 +65,11 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Nyheter',
           (BuildContext context) {
-            store.dispatch(NavigateToAction.replace('/'));
+            Navigator.of(context).pop(); //This pops the Drawer
+            if (NavigatorHolder.state?.currentPath != '/' &&
+                NavigatorHolder.state?.currentPath != null) {
+              store.dispatch(NavigateToAction.push('/'));
+            }
           },
           Constants.drawerPageTextStyle,
           "\u{1F5DE}",
@@ -73,8 +77,12 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Herrar',
           (BuildContext context) {
-            store.dispatch(ViewTeamAction.mens());
-            store.dispatch(NavigateToAction.replace('/teamPage'));
+            Navigator.of(context).pop();
+            if (!(NavigatorHolder.state?.currentPath == '/teamPage' &&
+                store.state.teamState.team == teams.MENS)) {
+              store.dispatch(ViewTeamAction.mens());
+              store.dispatch(NavigateToAction.push('/teamPage'));
+            }
           },
           Constants.drawerPageTextStyle,
           "\u{2642}",
@@ -82,8 +90,14 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Damer',
           (BuildContext context) {
-            store.dispatch(ViewTeamAction.womens());
-            store.dispatch(NavigateToAction.replace('/teamPage'));
+            Navigator.of(context).pop();
+            // This ensures that if we are on the page, we don't add the same page
+            // but instead we just close the drawer.
+            if (!(NavigatorHolder.state?.currentPath == '/teamPage' &&
+                store.state.teamState.team == teams.WOMENS)) {
+              store.dispatch(ViewTeamAction.womens());
+              store.dispatch(NavigateToAction.push('/teamPage'));
+            }
           },
           Constants.drawerPageTextStyle,
           "\u{2640}",

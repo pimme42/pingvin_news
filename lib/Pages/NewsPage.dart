@@ -7,13 +7,12 @@ import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
-import 'package:pingvin_news/Pages/SyncErrorProvider.dart';
 import 'package:pingvin_news/Pages/WebViewPage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'dart:async';
+import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 //class NewsPage extends StatelessWidget {
 class NewsPage extends StatelessWidget {
@@ -58,6 +57,9 @@ class NewsPage extends StatelessWidget {
               viewModel.closeWebView();
               return false;
             }
+//            viewModel.pop();
+            Log.doLog("PrevPath: ${NavigatorHolder.state.previousPath}",
+                logLevel.DEBUG);
             return true;
           },
           child: Scaffold(

@@ -1,8 +1,6 @@
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Log.dart';
-import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
-import 'package:pingvin_news/Store/AppState/VersionInfo.dart';
 
 import 'dart:async';
 import 'package:redux/redux.dart';

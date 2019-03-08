@@ -1,16 +1,12 @@
 import 'package:pingvin_news/Redux/News/Actions.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Log.dart';
-import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Store/News/NewsStore.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Data/News/NewsPaper.dart';
 import 'package:pingvin_news/Data/News/NewsHandler.dart';
 
-import 'dart:io';
 import 'dart:async';
 import 'package:redux/redux.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 List<Middleware<AppStore>> newsStoreMiddleware() => [
       TypedMiddleware<AppStore, ReadNewsFromFileAction>(_readNewsFromFile),

@@ -97,11 +97,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/**
- * _Page is a helper Class that allows us to display SnackBars.
- * It listens to a Stream of ShowSnackBarAction's and displays them as they
- * is added to the stream
- */
+/// _Page is a helper Class that allows us to display SnackBars.
+/// It listens to a Stream of ShowSnackBarAction's and displays them as they
+/// is added to the stream
 
 class _Page extends StatefulWidget {
   final Widget child;

@@ -1,5 +1,4 @@
 import 'package:pingvin_news/Store/News/NewsStatus.dart';
-import 'package:pingvin_news/Store/AppState/SubscriptionsManager.dart';
 import 'package:pingvin_news/Data/News/NewsPaper.dart';
 
 class NewsStore {

@@ -1,15 +1,12 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
-import 'package:pingvin_news/Store/Teams/TeamState.dart';
 import 'package:pingvin_news/Data/Teams/TableHandler.dart';
 import 'package:pingvin_news/Data/Teams/TeamTable.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
-import 'package:pingvin_news/Misc/Constants.dart';
 
 import 'dart:async';
 import 'package:redux/redux.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 List<Middleware<AppStore>> teamStateMiddleware() => [
       TypedMiddleware<AppStore, ViewTeamAction>(_viewTeam),
@@ -74,7 +71,7 @@ Future _saveTeamToFile(Store<AppStore> store, SaveTeamToFileAction action,
   Log.doLog("Teams/Middleware/_saveToFile", logLevel.DEBUG);
   next(action);
   try {
-    await TableHandler().saveToFile(
+    TableHandler().saveToFile(
         action.team, store.state.teamState.table.teamTable[action.team]);
   } catch (e, s) {
     Log.doLog(
