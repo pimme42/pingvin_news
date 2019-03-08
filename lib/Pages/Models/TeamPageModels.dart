@@ -5,7 +5,6 @@ import 'package:pingvin_news/Redux/Teams/Actions.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 @immutable
 class TeamPageViewModel {
@@ -14,6 +13,7 @@ class TeamPageViewModel {
   final List<TableRowItem> tableRows;
   final Function() onRefresh;
   final Function() pop;
+  final Function() dispose;
 
   TeamPageViewModel({
     this.team,
@@ -21,6 +21,7 @@ class TeamPageViewModel {
     this.tableRows,
     this.onRefresh,
     this.pop,
+    this.dispose,
   });
 
   factory TeamPageViewModel.create(Store<AppStore> store) {
@@ -40,7 +41,8 @@ class TeamPageViewModel {
       ),
       tableRows: rows,
       onRefresh: () async => store.dispatch(ReadTeamFromRESTAction(team)),
-      pop: () => store.dispatch(NavigateToAction.pop()),
+      pop: () {},
+      dispose: () => store.dispatch(ViewTeamAction.none()),
     );
   }
 }

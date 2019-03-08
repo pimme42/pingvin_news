@@ -1,5 +1,6 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Misc/Log.dart';
+import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Data/Teams/TableHandler.dart';
 import 'package:pingvin_news/Data/Teams/TeamTable.dart';
@@ -19,10 +20,11 @@ Future _viewTeam(
     Store<AppStore> store, ViewTeamAction action, NextDispatcher next) async {
   Log.doLog(
       "Teams/Middleware/_viewTeam ${action.team.toString()}", logLevel.DEBUG);
-//  if (action.team != store.state.teamState.team) {
-//    store.dispatch(ClearTeamDataAction());
-//  }
   next(action);
+  if (store.state.teamState.team != teams.NONE) {
+    store.dispatch(ReadTeamFromFileAction(store.state.teamState.team));
+    store.dispatch(ReadTeamFromRESTAction(store.state.teamState.team));
+  }
 }
 
 Future _readTeamFromFile(Store<AppStore> store, ReadTeamFromFileAction action,

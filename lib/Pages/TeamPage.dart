@@ -3,24 +3,36 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Pages/Models/TeamPageModels.dart';
-import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:redux/redux.dart';
 
-class TeamPage extends StatelessWidget {
+class TeamPage extends StatefulWidget {
+  @override
+  State createState() => _TeamPageState();
+}
+
+class _TeamPageState extends State<TeamPage> {
+  Function() _dispose;
+  @override
+  void dispose() {
+    this._dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarPage(),
       drawer: AppDrawer(),
       body: StoreConnector<AppStore, TeamPageViewModel>(
-        onInit: (store) {
-          store.dispatch(ReadTeamFromFileAction(store.state.teamState.team));
-          store.dispatch(ReadTeamFromRESTAction(store.state.teamState.team));
-        },
+//        onInit: (store) {
+//          store.dispatch(ReadTeamFromFileAction(store.state.teamState.team));
+//          store.dispatch(ReadTeamFromRESTAction(store.state.teamState.team));
+//        },
         converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
         builder: (BuildContext context, TeamPageViewModel viewModel) {
+          this._dispose = viewModel.dispose;
 //          return _buildTable(context, viewModel.tableRows);
           return RefreshIndicator(
             onRefresh: viewModel.onRefresh,
