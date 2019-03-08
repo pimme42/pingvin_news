@@ -1,16 +1,10 @@
 # pingvin_news
 
-An application to view news from pingvin.nu
+This application is dedicated to Pingvin Rugby Club of Trelleborg, Sweden (http://www.pingvin.nu).
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+My reason for creating this app is mainly to learn more about app developing. 
+I have also created a corresponding back-end providing the REST-API using Lumen. 
+The code for the back-end is available from https://gitlab.com/pingvin/pingvinapi. 
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+The code is released under the MIT-license. See LICENSE-file in the root directory for more information.
