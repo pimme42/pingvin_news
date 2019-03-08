@@ -18,12 +18,12 @@ class Constants {
 
   static const String apiURL = "pingvinapi.rorstam.se";
 
-  static const String newsEndPoint = "/newss/168643/";
+  static const String newsEndPoint = "/news/168643/";
 
   static const String newsFile = '/news.json';
 
   static const Map<teams, String> teamEndPoints = {
-    teams.MENS: '/tables/current/tesam/mens',
+    teams.MENS: '/tables/current/team/mens',
     teams.WOMENS: '/tables/current/team/womens',
   };
 
