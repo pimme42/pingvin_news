@@ -1,7 +1,5 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Pages/Models/AboutViewModel.dart';
-import 'package:pingvin_news/Pages/AppBarPage.dart';
-import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 

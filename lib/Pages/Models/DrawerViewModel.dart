@@ -5,7 +5,6 @@ import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Pages/AboutPage.dart';
 
 import 'package:redux/redux.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:flutter/material.dart';
 
 @immutable
@@ -66,11 +65,11 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Nyheter',
           (BuildContext context) {
-            Navigator.of(context).pop(); //This pops the Drawer
-            if (NavigatorHolder.state?.currentPath != '/' &&
-                NavigatorHolder.state?.currentPath != null) {
-              store.dispatch(NavigateToAction.replace('/'));
-            }
+            ///This pops the Drawer and navigates to the page
+            store.dispatch(ViewTeamAction.none());
+            Navigator.of(context).popAndPushNamed(
+              '/',
+            );
           },
           Constants.drawerPageTextStyle,
           "\u{1F5DE}",
@@ -78,12 +77,15 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Herrar',
           (BuildContext context) {
-            Navigator.of(context).pop();
-            if (!(NavigatorHolder.state?.currentPath == '/teamPage' &&
-                store.state.teamState.team == teams.MENS)) {
-              store.dispatch(ViewTeamAction.mens());
-              store.dispatch(NavigateToAction.replace('/teamPage'));
+            if (store.state.teamState.team != teams.MENS &&
+                store.state.teamState.team != teams.WOMENS) {
+              Navigator.of(context).popAndPushNamed(Constants.teamPageRoute);
+            } else if (store.state.teamState.team != teams.MENS) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).pop();
             }
+            store.dispatch(ViewTeamAction.mens());
           },
           Constants.drawerPageTextStyle,
           "\u{2642}",
@@ -91,14 +93,15 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Damer',
           (BuildContext context) {
-            Navigator.of(context).pop();
-            // This ensures that if we are on the page, we don't add the same page
-            // but instead we just close the drawer.
-            if (!(NavigatorHolder.state?.currentPath == '/teamPage' &&
-                store.state.teamState.team == teams.WOMENS)) {
-              store.dispatch(ViewTeamAction.womens());
-              store.dispatch(NavigateToAction.replace('/teamPage'));
+            if (store.state.teamState.team != teams.MENS &&
+                store.state.teamState.team != teams.WOMENS) {
+              Navigator.of(context).popAndPushNamed(Constants.teamPageRoute);
+            } else if (store.state.teamState.team != teams.WOMENS) {
+              Navigator.of(context).pop();
+            } else {
+              Navigator.of(context).pop();
             }
+            store.dispatch(ViewTeamAction.womens());
           },
           Constants.drawerPageTextStyle,
           "\u{2640}",

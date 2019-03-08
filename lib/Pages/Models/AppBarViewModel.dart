@@ -5,7 +5,6 @@ import 'package:pingvin_news/Redux/News/Actions.dart';
 import 'package:flutter/material.dart';
 import 'package:redux/redux.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 @immutable
 class AppBarViewModel {
@@ -33,9 +32,7 @@ class AppBarViewModel {
           store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
       closeWebView: () => store.dispatch(CloseWebViewAction()),
       showPopButton: false,
-      pop: () {
-        store.dispatch(NavigateToAction.pop());
-      },
+      pop: () {},
     );
   }
 }

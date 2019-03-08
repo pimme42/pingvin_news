@@ -3,6 +3,7 @@ import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/NotificationDecoder.dart';
 import 'package:pingvin_news/Pages/Models/NewsPageModels.dart';
 import 'package:pingvin_news/Redux/News/Actions.dart';
+import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
@@ -12,7 +13,6 @@ import 'package:pingvin_news/Pages/WebViewPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 //class NewsPage extends StatelessWidget {
 class NewsPage extends StatelessWidget {
@@ -20,6 +20,7 @@ class NewsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, NewsPageViewModel>(
       onInit: (store) {
+        store.dispatch(ViewTeamAction.none());
         store.dispatch(ReadNewsFromFileAction());
         store.dispatch(ReadNewsFromRESTAction());
         FirebaseHandler(
@@ -57,9 +58,6 @@ class NewsPage extends StatelessWidget {
               viewModel.closeWebView();
               return false;
             }
-//            viewModel.pop();
-            Log.doLog("PrevPath: ${NavigatorHolder.state.previousPath}",
-                logLevel.DEBUG);
             return true;
           },
           child: Scaffold(

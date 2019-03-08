@@ -7,12 +7,10 @@ import 'package:pingvin_news/Redux/Teams/Middleware.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Pages/NewsPage.dart';
 import 'package:pingvin_news/Pages/TeamPage.dart';
-import 'package:pingvin_news/Pages/AboutPage.dart';
 import 'package:pingvin_news/Pages/SyncErrorProvider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 import 'package:redux/redux.dart';
 import 'dart:async';
 
@@ -24,14 +22,14 @@ class MyApp extends StatelessWidget {
   final Store<AppStore> store = Store<AppStore>(
     appReducer,
     initialState: AppStore.initial(),
-    middleware: [NavigationMiddleware<AppStore>()]
-      ..addAll(appStoreMiddleware())
+    middleware: appStoreMiddleware()
       ..addAll(newsStoreMiddleware())
       ..addAll(teamStateMiddleware()),
   );
 
   @override
   Widget build(BuildContext context) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // Define the default Brightness and Colors
           brightness: Brightness.light,
@@ -59,7 +57,7 @@ class MyApp extends StatelessWidget {
 //          '/TeamPage': (BuildContext context) => _makePage(TeamPage()),
 //        },
         onGenerateRoute: _getRoute,
-        navigatorKey: NavigatorHolder.navigatorKey,
+//        navigatorKey: NavigatorHolder.navigatorKey,
 //        home: _makePage(NewsPage()),
       );
 
@@ -68,7 +66,7 @@ class MyApp extends StatelessWidget {
       case '/':
 //        return _buildRoute(settings, AboutPage());
         return _buildRoute(settings, NewsPage());
-      case '/teamPage':
+      case Constants.teamPageRoute:
         return _buildRoute(settings, TeamPage());
       default:
         return _buildRoute(settings, NewsPage());

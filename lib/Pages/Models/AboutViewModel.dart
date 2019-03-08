@@ -2,7 +2,6 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:redux/redux.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 class AboutViewModel {
   final Map<String, String> packageInfo;

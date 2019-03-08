@@ -5,7 +5,6 @@ import 'package:pingvin_news/Data/News/NewsEntry.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_redux_navigation/flutter_redux_navigation.dart';
 
 @immutable
 class NewsPageViewModel {
@@ -56,7 +55,7 @@ class NewsPageViewModel {
       store.state.newsStore.newsStatus.urlToShow != Constants.emptyString,
       store.state.newsStore.newsStatus.urlToShow,
       () => store.dispatch(CloseWebViewAction()),
-      () => store.dispatch(NavigateToAction.pop()),
+      () => {},
     );
   }
 }
