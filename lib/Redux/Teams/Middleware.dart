@@ -3,8 +3,9 @@ import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Data/Teams/TableHandler.dart';
-import 'package:pingvin_news/Data/Teams/TeamTable.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
+import 'package:pingvin_news/Data/Teams/TableInfo.dart';
+import 'package:pingvin_news/Data/Teams/TableData.dart';
 
 import 'dart:async';
 import 'package:redux/redux.dart';
@@ -13,6 +14,7 @@ List<Middleware<AppStore>> teamStateMiddleware() => [
       TypedMiddleware<AppStore, ViewTeamAction>(_viewTeam),
       TypedMiddleware<AppStore, ReadTeamFromFileAction>(_readTeamFromFile),
       TypedMiddleware<AppStore, ReadTeamFromRESTAction>(_readTeamFromREST),
+      TypedMiddleware<AppStore, SaveTableDataAction>(_saveTableInfoToFile),
       TypedMiddleware<AppStore, SaveTeamToFileAction>(_saveTeamToFile),
     ];
 //
@@ -33,8 +35,16 @@ Future _readTeamFromFile(Store<AppStore> store, ReadTeamFromFileAction action,
   store.dispatch(StartLoadingAction());
   next(action);
   try {
-    TeamTable tt = await TableHandler().getTableFromFile(action.team);
-    if (tt != null) store.dispatch(SetTeamData(action.team, tt));
+    List<TableInfo> tableInfos =
+        await TableHandler().getTableDataFromFile(action.team);
+    List<int> leagueIds = List();
+    if (tableInfos != null) {
+      tableInfos.forEach((TableInfo tableInfo) {
+        leagueIds.add(tableInfo.id);
+      });
+
+      store.dispatch(SetTableInfoAction(action.team, tableInfos));
+    }
   } catch (e, s) {
     Log.doLog(
         "Error in Teams/Middleware/_readFromFile: ${e.toString()}\n${s.toString()}",
@@ -50,16 +60,27 @@ Future _readTeamFromREST(Store<AppStore> store, ReadTeamFromRESTAction action,
   store.dispatch(StartLoadingAction());
   next(action);
   try {
-    TeamTable tt = await TableHandler().getTableFromREST(action.team);
-    if (tt != null) {
-      store.dispatch(SetTeamData(action.team, tt));
-      store.dispatch(SaveTeamToFileAction(action.team));
+    List<TableInfo> tableInfos =
+        await TableHandler().getTableInfoForTeamFromREST(action.team);
+    if (tableInfos != null) {
+      for (int i = 0; i < tableInfos.length; i++) {
+        TableInfo tableInfo = tableInfos[i];
+        TableData tableData =
+            await TableHandler().getTableDataFromREST(tableInfo.id);
+
+        TableInfo parent =
+            await TableHandler().getTableInfoFromREST(tableInfo.parentId);
+        tableInfos[i] =
+            TableInfo.copy(tableInfo, parent: parent, data: tableData);
+      }
+      store.dispatch(SetTableInfoAction(action.team, tableInfos));
+      store.dispatch(SaveTableDataAction(action.team, tableInfos));
     } else {
       throw Exception("Could not read table from REST-API");
     }
   } catch (e, s) {
     Log.doLog(
-        "Error in Teams/Middleware/_readFromREST: ${e.toString()} \n${s.toString()}",
+        "Error in Teams/Middleware/_readFromREST: ${e.toString()}, \n${s.toString()}",
         logLevel.ERROR);
     store.dispatch(
         ShowSnackBarAction.message("Kunde inte hämta tabell från servern"));
@@ -68,13 +89,20 @@ Future _readTeamFromREST(Store<AppStore> store, ReadTeamFromRESTAction action,
   }
 }
 
+Future _saveTableInfoToFile(Store<AppStore> store, SaveTableDataAction action,
+    NextDispatcher next) async {
+  Log.doLog("Teams/Middleware/_saveTableInfoToFile", logLevel.DEBUG);
+  next(action);
+  TableHandler().saveTableInfoToFile(action.team, action.tableInfos);
+}
+
 Future _saveTeamToFile(Store<AppStore> store, SaveTeamToFileAction action,
     NextDispatcher next) async {
   Log.doLog("Teams/Middleware/_saveToFile", logLevel.DEBUG);
   next(action);
   try {
-    TableHandler().saveToFile(
-        action.team, store.state.teamState.table.teamTable[action.team]);
+//    TableHandler().saveToFile(
+//        action.team, store.state.teamState.table.tables[action.team]);
   } catch (e, s) {
     Log.doLog(
         "Error in Teams/Middleware/_saveToFile: ${e.toString()} \n${s.toString()}",

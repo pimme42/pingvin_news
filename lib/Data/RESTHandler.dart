@@ -14,8 +14,9 @@ class RESTHandler {
 
   RESTHandler._internal();
 
-  Future<String> getJsonFromApi(String url, String endPoint) async {
+  Future<String> getJsonAsStringFromApi(String url, String endPoint) async {
     try {
+//      throw Exception("FEL FEL FEL");
       var httpClient = new HttpClient();
       var uri;
       if (Constants.useHttps)
@@ -26,6 +27,7 @@ class RESTHandler {
       var request = await httpClient.getUrl(uri);
       var response = await request.close();
       var responseBody = await response.transform(utf8.decoder).join();
+//      await Future.delayed(Duration(seconds: 5));
       Log.doLog("Times up in _getJsonFromApi", logLevel.DEBUG);
       return responseBody;
     } catch (e) {
