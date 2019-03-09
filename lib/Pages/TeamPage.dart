@@ -7,70 +7,98 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:redux/redux.dart';
 
-class TeamPage extends StatefulWidget {
-  @override
-  State createState() => _TeamPageState();
-}
-
-class _TeamPageState extends State<TeamPage> {
-  Function() _dispose;
-  @override
-  void dispose() {
-    this._dispose();
-    super.dispose();
-  }
-
+//class TeamPage extends StatefulWidget {
+//  @override
+//  State createState() => _TeamPageState();
+//}
+//
+//class _TeamPageState extends State<TeamPage> {
+//  Function() _dispose;
+//  @override
+//  void dispose() {
+////    this._dispose();
+//    super.dispose();
+//  }
+class TeamPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarPage(),
-      drawer: AppDrawer(),
-      body: StoreConnector<AppStore, TeamPageViewModel>(
+    return StoreConnector<AppStore, TeamPageViewModel>(
 //        onInit: (store) {
 //          store.dispatch(ReadTeamFromFileAction(store.state.teamState.team));
 //          store.dispatch(ReadTeamFromRESTAction(store.state.teamState.team));
 //        },
-        converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
-        builder: (BuildContext context, TeamPageViewModel viewModel) {
-          this._dispose = viewModel.dispose;
-//          return _buildTable(context, viewModel.tableRows);
-          return RefreshIndicator(
+      converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
+      builder: (BuildContext context, TeamPageViewModel viewModel) {
+        List<Widget> tables =
+            viewModel.tableInfoItems?.map((TableInfoItem tableInfoItem) {
+          return _buildTable(
+            context,
+            tableInfoItem,
+            viewModel.header,
+            viewModel.tableRows[tableInfoItem.leagueId],
+          );
+        })?.toList();
+        if (tables.length == 0) {
+          tables = [
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Center(
+                child: Text(
+                  "Kan tyvärr inte visa några tabeller",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+                ),
+              ),
+            ),
+          ];
+        }
+
+        return Scaffold(
+          appBar: AppBarPage(),
+          drawer: AppDrawer(),
+          body: RefreshIndicator(
             onRefresh: viewModel.onRefresh,
             displacement: 50.0,
             color: Colors.black,
             child: ListView(
-              children: _buildTable(
-                  context, viewModel.tableInfo, viewModel.tableRows),
+              children: tables,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
-  List<Widget> _buildTable(
-      BuildContext context, TableInfo tableInfo, List<TableRowItem> rows) {
-    List<Widget> retVals = List();
-    if (tableInfo.name != null) {
-      retVals = [
+  Widget _buildTable(BuildContext context, TableInfoItem tableInfo,
+      TableRowItem header, List<TableRowItem> rows) {
+    int rowNum = 1;
+    return Column(
+      children: <Widget>[
         Center(
           child: Padding(
             padding: EdgeInsets.all(10.0),
             child: Text(
-              "${tableInfo.name} (${tableInfo.year})",
+              "${tableInfo.parentName}/${tableInfo.name}",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
             ),
           ),
         ),
         Center(
           child: Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
             child: Table(
               defaultColumnWidth: FlexColumnWidth(),
               defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: rows
-                  .map((TableRowItem item) => _createTableRow(item))
-                  .toList(),
+              children: <TableRow>[
+                _createTableRow(
+                  0,
+                  header,
+                ),
+              ]..addAll(
+                  rows
+                      .map((TableRowItem item) =>
+                          _createTableRow(rowNum++, item))
+                      .toList(),
+                ),
               border: TableBorder(
                 horizontalInside: BorderSide(),
                 bottom: BorderSide(),
@@ -99,36 +127,23 @@ class _TeamPageState extends State<TeamPage> {
             ),
           ),
         ),
-      ];
-    } else {
-      retVals = [
-        Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Center(
-            child: Text(
-              "Laddar tabell",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-            ),
-          ),
-        )
-      ];
-    }
-    return retVals;
+      ],
+    );
   }
 
-  TableRow _createTableRow(TableRowItem row) {
+  TableRow _createTableRow(int rowNum, TableRowItem row) {
     return TableRow(
       decoration: BoxDecoration(
-          color: (row.rowNum % 2 == 0) ? Colors.black12 : Colors.black26),
+          color: (rowNum % 2 == 0) ? Colors.black12 : Colors.black26),
       children: [
-        _createTableCell(row.pos, row.rowNum == 0),
-        _createTableCell(row.team, row.rowNum == 0),
-        _createTableCell(row.played, row.rowNum == 0),
-        _createTableCell(row.W, row.rowNum == 0),
-        _createTableCell(row.D, row.rowNum == 0),
-        _createTableCell(row.L, row.rowNum == 0),
-        _createTableCell(row.pDiff, row.rowNum == 0),
-        _createTableCell(row.points, row.rowNum == 0),
+        _createTableCell(row.pos, rowNum == 0),
+        _createTableCell(row.team, rowNum == 0),
+        _createTableCell(row.played, rowNum == 0),
+        _createTableCell(row.W, rowNum == 0),
+        _createTableCell(row.D, rowNum == 0),
+        _createTableCell(row.L, rowNum == 0),
+        _createTableCell(row.pDiff, rowNum == 0),
+        _createTableCell(row.points, rowNum == 0),
       ],
     );
   }

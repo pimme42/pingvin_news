@@ -1,7 +1,8 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Data/Teams/TeamTable.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
+import 'package:pingvin_news/Data/Teams/TableInfo.dart';
+import 'package:pingvin_news/Data/Teams/TableRow.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
@@ -9,37 +10,55 @@ import 'package:flutter/material.dart';
 @immutable
 class TeamPageViewModel {
   final String team;
-  final TableInfo tableInfo;
-  final List<TableRowItem> tableRows;
+  final List<TableInfoItem> tableInfoItems;
+  final Map<int, List<TableRowItem>> tableRows;
+  final TableRowItem header;
   final Function() onRefresh;
   final Function() pop;
   final Function() dispose;
 
   TeamPageViewModel({
     this.team,
-    this.tableInfo,
+    this.tableInfoItems,
     this.tableRows,
+    this.header,
     this.onRefresh,
     this.pop,
     this.dispose,
   });
 
   factory TeamPageViewModel.create(Store<AppStore> store) {
-    int rowNum = 1;
     teams team = store.state.teamState.team;
+
+    /// LeagueIds som är associerade med det valda laget
+    List<int> leagueIds =
+        store.state.teamState.table.teamsLeagueId[store.state.teamState.team];
+    List<TableInfoItem> tableInfoItems = List();
+    Map<int, List<TableRowItem>> tableRows = {};
+
+    leagueIds?.forEach((int leagueId) {
+      TableInfo tableInfo = store.state.teamState.table[leagueId];
+      tableInfoItems.add(TableInfoItem(
+        leagueId,
+        tableInfo.name,
+        tableInfo.year.toString(),
+        tableInfo.parentInfo?.name ?? "",
+      ));
+      tableRows[leagueId] = List();
+      tableInfo.data?.rows?.forEach((TableRowData row) {
+        tableRows[leagueId].add(TableRowItem.fromTableRow(row));
+      });
+    });
     List<TableRowItem> rows = new List();
     rows.add(TableRowItem.header());
-    store.state.teamState.table.teamTable[team]?.rows
-        ?.forEach((TeamTableRow ttr) {
-      rows.add(TableRowItem.fromTableRow(rowNum++, ttr));
-    });
+//    store.state.teamState.table.tables[team]?.rows?.forEach((TeamTableRow ttr) {
+//      rows.add(TableRowItem.fromTableRow(rowNum++, ttr));
+//    });
     return TeamPageViewModel(
       team: team.toString(),
-      tableInfo: TableInfo(
-        store.state.teamState.table.teamTable[team]?.info?.name,
-        store.state.teamState.table.teamTable[team]?.info?.year.toString(),
-      ),
-      tableRows: rows,
+      tableInfoItems: tableInfoItems,
+      tableRows: tableRows,
+      header: TableRowItem.header(),
       onRefresh: () async => store.dispatch(ReadTeamFromRESTAction(team)),
       pop: () {},
       dispose: () => store.dispatch(ViewTeamAction.none()),
@@ -48,16 +67,18 @@ class TeamPageViewModel {
 }
 
 @immutable
-class TableInfo {
+class TableInfoItem {
+  final int leagueId;
   final String name;
   final String year;
+  final String parentName;
 
-  TableInfo(this.name, this.year);
+  TableInfoItem(this.leagueId, this.name, this.year, this.parentName);
 }
 
 @immutable
 class TableRowItem {
-  final int rowNum;
+//  final int rowNum;
   final String pos;
   final String team;
   final String played;
@@ -67,23 +88,21 @@ class TableRowItem {
   final String pDiff;
   final String points;
 
-  TableRowItem(this.rowNum, this.pos, this.team, this.played, this.W, this.D,
-      this.L, this.pDiff, this.points);
+  TableRowItem(this.pos, this.team, this.played, this.W, this.D, this.L,
+      this.pDiff, this.points);
 
   factory TableRowItem.header() =>
-      TableRowItem(0, "Pos", "Lag", "S", "V", "O", "F", "Mål", "P");
+      TableRowItem("Pos", "Lag", "S", "V", "O", "F", "Mål", "P");
 
-  factory TableRowItem.fromTableRow(int rowNum, TeamTableRow ttr) =>
-      TableRowItem(
-        rowNum,
-        ttr.pos.toString(),
-        ttr.team,
-        ttr.played.toString(),
-        ttr.W.toString(),
-        ttr.D.toString(),
-        ttr.L.toString(),
-        "${ttr.pFor.toString()} - ${ttr.pAgainst.toString()}",
-        ttr.points.toString(),
+  factory TableRowItem.fromTableRow(TableRowData tableRow) => TableRowItem(
+        tableRow.pos.toString(),
+        tableRow.team,
+        tableRow.played.toString(),
+        tableRow.W.toString(),
+        tableRow.D.toString(),
+        tableRow.L.toString(),
+        "${tableRow.pFor.toString()} - ${tableRow.pAgainst.toString()}",
+        tableRow.points.toString(),
       );
 
   @override

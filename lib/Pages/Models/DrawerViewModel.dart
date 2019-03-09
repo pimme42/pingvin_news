@@ -67,9 +67,7 @@ class DrawerViewModel {
           (BuildContext context) {
             ///This pops the Drawer and navigates to the page
             store.dispatch(ViewTeamAction.none());
-            Navigator.of(context).popAndPushNamed(
-              '/',
-            );
+            Navigator.of(context).pushReplacementNamed('/');
           },
           Constants.drawerPageTextStyle,
           "\u{1F5DE}",
@@ -77,14 +75,14 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Herrar',
           (BuildContext context) {
-            if (store.state.teamState.team != teams.MENS &&
-                store.state.teamState.team != teams.WOMENS) {
-              Navigator.of(context).popAndPushNamed(Constants.teamPageRoute);
-            } else if (store.state.teamState.team != teams.MENS) {
-              Navigator.of(context).pop();
-            } else {
-              Navigator.of(context).pop();
-            }
+//            if (store.state.teamState.team != teams.MENS &&
+//                store.state.teamState.team != teams.WOMENS) {
+            Navigator.of(context).pushReplacementNamed(Constants.teamPageRoute);
+//            } else if (store.state.teamState.team != teams.MENS) {
+//              Navigator.of(context).pop();
+//            } else {
+//              Navigator.of(context).pop();
+//            }
             store.dispatch(ViewTeamAction.mens());
           },
           Constants.drawerPageTextStyle,
@@ -93,14 +91,16 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Damer',
           (BuildContext context) {
-            if (store.state.teamState.team != teams.MENS &&
-                store.state.teamState.team != teams.WOMENS) {
-              Navigator.of(context).popAndPushNamed(Constants.teamPageRoute);
-            } else if (store.state.teamState.team != teams.WOMENS) {
-              Navigator.of(context).pop();
-            } else {
-              Navigator.of(context).pop();
-            }
+            Navigator.of(context).pushReplacementNamed(Constants.teamPageRoute);
+
+//            if (store.state.teamState.team != teams.MENS &&
+//                store.state.teamState.team != teams.WOMENS) {
+//              Navigator.of(context).popAndPushNamed(Constants.teamPageRoute);
+//            } else if (store.state.teamState.team != teams.WOMENS) {
+//              Navigator.of(context).pop();
+//            } else {
+//              Navigator.of(context).pop();
+//            }
             store.dispatch(ViewTeamAction.womens());
           },
           Constants.drawerPageTextStyle,

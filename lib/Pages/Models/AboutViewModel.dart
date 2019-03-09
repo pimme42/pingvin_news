@@ -10,6 +10,9 @@ class AboutViewModel {
   final String contactText;
   final String contactEmail;
   final Function() contactOnTap;
+  final String codeText;
+  final String codeLink;
+  final Function() codeOnTap;
   final String legalese;
 
   AboutViewModel(
@@ -19,6 +22,9 @@ class AboutViewModel {
     this.contactText,
     this.contactEmail,
     this.contactOnTap,
+    this.codeText,
+    this.codeLink,
+    this.codeOnTap,
     this.legalese,
   );
 //      {this.appName, this.packageName, this.version, this.buildNumber});
@@ -37,6 +43,9 @@ class AboutViewModel {
         "pingvin_app@pimme.org",
         () => _launchUrl(
             'mailto:"pingvin_app@pimme.org"?subject=Appen Pingvin Rugby Club'),
+        "Koden för appen är tillgänglig på: ",
+        "https://gitlab.com/pingvin/pingvinapp",
+        () => _launchUrl('https://gitlab.com/pingvin/pingvinapp'),
         "Den här appen används på eget bevåg",
       );
 

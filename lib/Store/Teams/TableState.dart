@@ -1,12 +1,27 @@
 import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Data/Teams/TeamTable.dart';
+import 'package:pingvin_news/Data/Teams/TableInfo.dart';
 
 class TableState {
-  Map<teams, TeamTable> teamTable;
+//  final Map<teams, List<TableInfo>> tables;
+  /// Containts a list of leagueId assosiated with a team
+  final Map<teams, List<int>> teamsLeagueId;
 
-  TableState({this.teamTable});
+  /// Maps a leagueId to a TableInfo
+  final Map<int, TableInfo> tables;
+
+  TableState({this.tables, this.teamsLeagueId});
 
   factory TableState.initial() => TableState(
-        teamTable: {},
+        tables: {},
+        teamsLeagueId: {},
       );
+
+  TableInfo operator [](int leagueId) {
+    try {
+      return this.tables[leagueId];
+    } catch (e) {
+      throw IndexError(leagueId, tables);
+    }
+  }
+//  operator []=(int i, int value) => _list[i] = value; // set
 }
