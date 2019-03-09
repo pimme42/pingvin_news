@@ -24,7 +24,7 @@ class NewsHandler {
   Future<NewsPaper> getNewsFromREST() async => NewsPaper.fromRestApi(
         await this
             ._rh
-            ?.getJsonFromApi(Constants.apiURL, Constants.newsEndPoint),
+            ?.getJsonAsStringFromApi(Constants.apiURL, Constants.newsEndPoint),
       );
 
   Future<NewsPaper> getNewsFromFile() async => NewsPaper.fromFile(

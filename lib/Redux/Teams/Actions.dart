@@ -1,5 +1,5 @@
-import 'package:pingvin_news/Data/Teams/TeamTable.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Data/Teams/TableInfo.dart';
 
 class ViewTeamAction {
   final teams team;
@@ -25,10 +25,15 @@ class SaveTeamToFileAction {
   SaveTeamToFileAction(this.team);
 }
 
-class SetTeamData {
+class SetTableInfoAction {
   final teams team;
-  final TeamTable teamTable;
-  SetTeamData(this.team, this.teamTable);
+  final List<TableInfo> list;
+  SetTableInfoAction(this.team, this.list) : assert(list != null);
 }
 
-class ClearTeamDataAction {}
+class SaveTableDataAction {
+  final teams team;
+  final List<TableInfo> tableInfos;
+
+  SaveTableDataAction(this.team, this.tableInfos);
+}

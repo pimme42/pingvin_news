@@ -22,12 +22,19 @@ class Constants {
 
   static const String newsFile = '/news.json';
 
+  static const String leagueEndPoint = '/tables/league/';
+
   static const Map<teams, String> teamEndPoints = {
-    teams.MENS: '/tables/current/team/mens',
-    teams.WOMENS: '/tables/current/team/womens',
+    teams.MENS: '/tables/search/herr/pingvin/',
+    teams.WOMENS: '/tables/search/dam/pingvin/',
   };
 
-  static const Map<teams, String> teamFiles = {
+//  static const Map<teams, String> teamEndPoints = {
+//    teams.MENS: '/tables/current/team/mens',
+//    teams.WOMENS: '/tables/current/team/womens',
+//  };
+
+  static const Map<teams, String> teamPaths = {
     teams.MENS: '/mens.json',
     teams.WOMENS: '/womens.json',
   };
