@@ -1,4 +1,4 @@
-package rorstam.se.pingvinnews;
+package se.rorstam.pingvinnews;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
