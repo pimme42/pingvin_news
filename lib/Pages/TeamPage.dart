@@ -23,10 +23,6 @@ class TeamPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, TeamPageViewModel>(
-//        onInit: (store) {
-//          store.dispatch(ReadTeamFromFileAction(store.state.teamState.team));
-//          store.dispatch(ReadTeamFromRESTAction(store.state.teamState.team));
-//        },
       converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
       builder: (BuildContext context, TeamPageViewModel viewModel) {
         List<Widget> tables =

@@ -1,4 +1,4 @@
-import 'package:pingvin_news/Store/Teams/TableState.dart';
+import 'package:pingvin_news/Store/Teams/LeagueState.dart';
 import 'package:pingvin_news/Store/Teams/TeamState.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
@@ -17,11 +17,11 @@ final Reducer<teams> teamSelectionReducer = combineReducers([
 
 teams _viewTeam(teams team, ViewTeamAction action) => action.team;
 
-final Reducer<TableState> tableReducers = combineReducers([
-  TypedReducer<TableState, SetTableInfoAction>(_setTableInfo),
+final Reducer<LeagueState> tableReducers = combineReducers([
+  TypedReducer<LeagueState, SetTableInfoAction>(_setTableInfo),
 ]);
 
-TableState _setTableInfo(TableState table, SetTableInfoAction action) {
+LeagueState _setTableInfo(LeagueState table, SetTableInfoAction action) {
   /// Här associerar vi leagueId med vilket lag de tillhör
   Map<teams, List<int>> leagueIds = {
     action.team: action.list.map((TableInfo info) => info.id).toList()
@@ -34,7 +34,7 @@ TableState _setTableInfo(TableState table, SetTableInfoAction action) {
 
   Map.unmodifiable(oldIds..addAll(leagueIds));
 
-  return TableState(
+  return LeagueState(
     teamsLeagueId: leagueIds,
     tables: Map.unmodifiable(
       Map.fromEntries(
