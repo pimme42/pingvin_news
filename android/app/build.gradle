@@ -60,6 +60,12 @@ android {
         release {
             signingConfig signingConfigs.release
         }
+//        This block adds .debug to the build-version allowing for
+//        having both debug and release-version on the device
+//        at the same time.
+        debug {
+            applicationIdSuffix ".debug"
+        }
     }
 }
 

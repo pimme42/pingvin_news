@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 enum teams { MENS, WOMENS, NONE }
 
 class Constants {
+  static const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
   static const String logoPath = "images/pingvinlogo_transp.png";
   static const String logoPathEllipse =
       "images/pingvinlogo_transp_with_ellipse.png";
@@ -16,25 +18,26 @@ class Constants {
 
   static const String title = 'Pingvin Rugby Club';
 
-  static const String apiURL = "pingvinapi.rorstam.se";
+  static const String apiVersion = "/api/v2";
 
-  static const String newsEndPoint = "/news/168643/";
+  static const String apiURL =
+      isProduction ? "pingvinapi.rorstam.se" : "pingvinapid.rorstam.se";
+//  static const String apiURL = "pingvinapi.rorstam.se";
+
+  static const String newsEndPoint = apiVersion + "/news/168643/";
 
   static const String newsFile = '/news.json';
 
-  static const String leagueEndPoint = '/tables/league/';
+  static const String tableEndPoint = apiVersion + '/tables/league/';
+
+  static const String fixtureEndPoint = apiVersion + '/fixtures/league/';
 
   static const Map<teams, String> teamEndPoints = {
-    teams.MENS: '/tables/search/herr/pingvin/',
-    teams.WOMENS: '/tables/search/dam/pingvin/',
+    teams.MENS: apiVersion + '/tables/search/herr/pingvin/',
+    teams.WOMENS: apiVersion + '/tables/search/dam/pingvin/',
   };
 
-//  static const Map<teams, String> teamEndPoints = {
-//    teams.MENS: '/tables/current/team/mens',
-//    teams.WOMENS: '/tables/current/team/womens',
-//  };
-
-  static const Map<teams, String> teamPaths = {
+  static const Map<teams, String> leaguePaths = {
     teams.MENS: '/mens.json',
     teams.WOMENS: '/womens.json',
   };
@@ -43,6 +46,7 @@ class Constants {
 
   static const String emptyString = "";
 
+//  static const bool useHttps = isProduction;
   static const bool useHttps = true;
 
   static const TextStyle drawerTextStyle =

@@ -1,4 +1,5 @@
 import 'package:pingvin_news/Data/Teams/TableData.dart';
+import 'package:pingvin_news/Data/Teams/FixtureData.dart';
 import 'package:pingvin_news/Data/DataHandler.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 
@@ -9,16 +10,19 @@ class TableInfo {
   final TableInfo parentInfo;
   final int year;
   final String link;
-  final TableData data;
+  final TableData tableData;
+  final FixtureData fixtureData;
 
-  TableInfo(
-      {this.id,
-      this.name,
-      this.parentId,
-      this.parentInfo,
-      this.year,
-      this.link,
-      this.data});
+  TableInfo({
+    this.id,
+    this.name,
+    this.parentId,
+    this.parentInfo,
+    this.year,
+    this.link,
+    this.tableData,
+    this.fixtureData,
+  });
 
   factory TableInfo.fromJson(Map<String, dynamic> json) {
     try {
@@ -47,10 +51,12 @@ class TableInfo {
         year: DataHandler.parseInt(json['year']),
         link: json['link'],
         parentInfo: TableInfo.fromJson(json['parentInfo']),
-        data: TableData.fromJson(json['data']),
+        tableData: TableData.fromJson(json['tableData']),
+        fixtureData: FixtureData.fromJson(json['fixtures']),
       );
       return tableInfo;
     } catch (e, s) {
+      print(json.toString());
       Log.doLog(
           "Error in TableInfo.fromJsonFile: ${e.toString()}\nStackTrace: ${s.toString()}",
           logLevel.ERROR);
@@ -62,7 +68,7 @@ class TableInfo {
   /// and alter some data. The new data will probably by
   /// parent and data.
   factory TableInfo.copy(TableInfo original,
-      {id, name, parentId, parent, year, link, data}) {
+      {id, name, parentId, parent, year, link, tableData, fixtureData}) {
     return TableInfo(
       id: id ?? original?.id,
       name: name ?? original?.name,
@@ -70,7 +76,8 @@ class TableInfo {
       parentInfo: parent ?? original?.parentInfo,
       year: year ?? original?.year,
       link: link ?? original?.link,
-      data: data ?? original?.data,
+      tableData: tableData ?? original?.tableData,
+      fixtureData: fixtureData ?? original?.fixtureData,
     );
   }
 
@@ -81,8 +88,9 @@ class TableInfo {
         'parent': this.parentId,
         'year': this.year,
         'link': this.link,
-        'parentInfo': this.parentInfo?.toJson() ?? "",
-        'data': this.data?.toJson() ?? "",
+        'parentInfo': this.parentInfo?.toJson() ?? {},
+        'tableData': this.tableData?.toJson() ?? {},
+        'fixtures': this.fixtureData?.toJson() ?? {},
       };
 
   @override

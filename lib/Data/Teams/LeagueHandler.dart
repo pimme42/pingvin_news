@@ -3,23 +3,24 @@ import 'package:pingvin_news/Data/RESTHandler.dart';
 import 'package:pingvin_news/Data/Teams/TeamTable.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Misc/Log.dart';
-import 'package:pingvin_news/Data/Teams/TableInfo.dart';
+import 'package:pingvin_news/Data/Teams/LeagueInfo.dart';
 import 'package:pingvin_news/Data/Teams/TableData.dart';
 import 'package:pingvin_news/Data/Teams/TableRow.dart';
+import 'package:pingvin_news/Data/Teams/FixtureData.dart';
 
 import 'dart:convert';
 
-class TableHandler {
+class LeagueHandler {
   FileHandler _fh;
   RESTHandler _rh;
 
-  static final TableHandler _singleton = new TableHandler._internal();
+  static final LeagueHandler _singleton = new LeagueHandler._internal();
 
-  factory TableHandler() {
+  factory LeagueHandler() {
     return _singleton;
   }
 
-  TableHandler._internal() {
+  LeagueHandler._internal() {
     this._fh = new FileHandler();
     this._rh = new RESTHandler();
   }
@@ -41,35 +42,25 @@ class TableHandler {
 
   Future<TableInfo> getTableInfoFromREST(int leagueId) async {
     String jsonString = await this._rh?.getJsonAsStringFromApi(
-        Constants.apiURL, Constants.leagueEndPoint + leagueId.toString());
+        Constants.apiURL, Constants.tableEndPoint + leagueId.toString());
     Map<String, dynamic> json = jsonDecode(jsonString)['League'];
     TableInfo tableInfo = TableInfo.fromJson(json);
-
-//    print(tableInfo.toString());
     return tableInfo;
   }
 
   Future<TableData> getTableDataFromREST(int leagueId) async {
     String jsonString = await this._rh?.getJsonAsStringFromApi(
-        Constants.apiURL, Constants.leagueEndPoint + leagueId.toString());
+        Constants.apiURL, Constants.tableEndPoint + leagueId.toString());
     List<dynamic> json = jsonDecode(jsonString)['Table'];
     TableData tableData = TableData(json.map((dynamic entry) {
       return TableRowData.fromJson(entry);
     }).toList());
-
-//    print(tableData.toString());
     return tableData;
   }
 
-  //  Future<TeamTable> getTableFromREST(teams team) async => TeamTable.fromRestApi(
-//        await this
-//            ._rh
-//            ?.getJsonFromApi(Constants.apiURL, Constants.teamEndPoints[team]),
-//      );
-
   Future<List<TableInfo>> getTableDataFromFile(teams team) async {
     String jsonString =
-        await this._fh?.getJsonFromFile(Constants.teamPaths[team]);
+        await this._fh?.getJsonFromFile(Constants.leaguePaths[team]);
 //    print(jsonDecode(jsonString));
     if (jsonString != null && jsonString.length > 0) {
       List jsonList = jsonDecode(jsonString);
@@ -83,23 +74,31 @@ class TableHandler {
     return null;
   }
 
+  Future<FixtureData> getFixtureDataFromREST(int leagueId) async {
+    String jsonString = await this._rh?.getJsonAsStringFromApi(
+        Constants.apiURL, Constants.fixtureEndPoint + leagueId.toString());
+    List<dynamic> json = jsonDecode(jsonString)['Fixtures'];
+    FixtureData fixtureData = FixtureData(json.map((dynamic entry) {
+      return Fixture.fromJson(entry);
+    }).toList());
+    return fixtureData;
+  }
+
   void saveTableInfoToFile(teams team, List<TableInfo> tableInfos) async {
     Log.doLog("TableHandler/saveTableInfoToFile", logLevel.DEBUG);
-//    print(tableInfo.toJson());
-//    Log.doLog("Json: ${jsonEncode(tableInfo.toJson())}", logLevel.DEBUG);
     this._fh?.writeToFile(
-          Constants.teamPaths[team],
+          Constants.leaguePaths[team],
           jsonEncode(tableInfos),
         );
   }
 
   void saveLeagueIdsToFile(teams team, List<int> leagueIds) {
     this._fh?.writeToFile(
-        "${Constants.teamPaths[team]}.json", jsonEncode(leagueIds));
+        "${Constants.leaguePaths[team]}.json", jsonEncode(leagueIds));
   }
 
   void saveToFile(teams team, TeamTable tt) async {
     Log.doLog("TableHandler/saveToFile: team: $team", logLevel.DEBUG);
-    this._fh?.writeToFile(Constants.teamPaths[team], jsonEncode(tt.toJson()));
+    this._fh?.writeToFile(Constants.leaguePaths[team], jsonEncode(tt.toJson()));
   }
 }
