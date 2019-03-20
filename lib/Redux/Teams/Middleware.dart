@@ -2,10 +2,11 @@ import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
-import 'package:pingvin_news/Data/Teams/TableHandler.dart';
+import 'package:pingvin_news/Data/Teams/LeagueHandler.dart';
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
-import 'package:pingvin_news/Data/Teams/TableInfo.dart';
+import 'package:pingvin_news/Data/Teams/LeagueInfo.dart';
 import 'package:pingvin_news/Data/Teams/TableData.dart';
+import 'package:pingvin_news/Data/Teams/FixtureData.dart';
 
 import 'dart:async';
 import 'package:redux/redux.dart';
@@ -36,7 +37,7 @@ Future _readTeamFromFile(Store<AppStore> store, ReadTeamFromFileAction action,
   next(action);
   try {
     List<TableInfo> tableInfos =
-        await TableHandler().getTableDataFromFile(action.team);
+        await LeagueHandler().getTableDataFromFile(action.team);
     List<int> leagueIds = List();
     if (tableInfos != null) {
       tableInfos.forEach((TableInfo tableInfo) {
@@ -61,17 +62,25 @@ Future _readTeamFromREST(Store<AppStore> store, ReadTeamFromRESTAction action,
   next(action);
   try {
     List<TableInfo> tableInfos =
-        await TableHandler().getTableInfoForTeamFromREST(action.team);
+        await LeagueHandler().getTableInfoForTeamFromREST(action.team);
     if (tableInfos != null) {
       for (int i = 0; i < tableInfos.length; i++) {
         TableInfo tableInfo = tableInfos[i];
         TableData tableData =
-            await TableHandler().getTableDataFromREST(tableInfo.id);
+            await LeagueHandler().getTableDataFromREST(tableInfo.id);
 
         TableInfo parent =
-            await TableHandler().getTableInfoFromREST(tableInfo.parentId);
-        tableInfos[i] =
-            TableInfo.copy(tableInfo, parent: parent, data: tableData);
+            await LeagueHandler().getTableInfoFromREST(tableInfo.parentId);
+
+        FixtureData fixtureData =
+            await LeagueHandler().getFixtureDataFromREST(tableInfo.id);
+
+        tableInfos[i] = TableInfo.copy(
+          tableInfo,
+          parent: parent,
+          tableData: tableData,
+          fixtureData: fixtureData,
+        );
       }
       store.dispatch(SetTableInfoAction(action.team, tableInfos));
       store.dispatch(SaveTableDataAction(action.team, tableInfos));
@@ -93,7 +102,7 @@ Future _saveTableInfoToFile(Store<AppStore> store, SaveTableDataAction action,
     NextDispatcher next) async {
   Log.doLog("Teams/Middleware/_saveTableInfoToFile", logLevel.DEBUG);
   next(action);
-  TableHandler().saveTableInfoToFile(action.team, action.tableInfos);
+  LeagueHandler().saveTableInfoToFile(action.team, action.tableInfos);
 }
 
 Future _saveTeamToFile(Store<AppStore> store, SaveTeamToFileAction action,

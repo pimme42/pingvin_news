@@ -16,7 +16,7 @@ class TableData {
     try {
       List<TableRowData> tableRowData = List();
       List<dynamic> jsonList = json['Tabell'];
-      jsonList.forEach((dynamic element) {
+      jsonList?.forEach((dynamic element) {
         tableRowData.add(TableRowData.fromJson(element));
       });
       return TableData(List.unmodifiable(tableRowData));

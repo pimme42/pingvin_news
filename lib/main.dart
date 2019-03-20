@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
+//        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           // Define the default Brightness and Colors
           brightness: Brightness.light,
