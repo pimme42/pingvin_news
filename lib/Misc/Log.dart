@@ -1,9 +1,9 @@
-const bool isProduction = bool.fromEnvironment('dart.vm.product');
+import 'package:pingvin_news/Misc/Constants.dart';
 
 enum logLevel { DEBUG, ERROR }
 
 class Log {
   static doLog(String text, logLevel level) {
-    if (!isProduction) print("Level: $level => log: $text");
+    if (!Constants.isProduction) print("Level: $level => log: $text");
   }
 }
