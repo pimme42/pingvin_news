@@ -2,7 +2,7 @@ import 'package:pingvin_news/Store/Teams/LeagueState.dart';
 import 'package:pingvin_news/Store/Teams/TeamState.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Data/Teams/TableInfo.dart';
+import 'package:pingvin_news/Data/Teams/LeagueInfo.dart';
 
 import 'package:redux/redux.dart';
 

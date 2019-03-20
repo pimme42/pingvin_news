@@ -1,5 +1,5 @@
 import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Data/Teams/TableInfo.dart';
+import 'package:pingvin_news/Data/Teams/LeagueInfo.dart';
 
 class LeagueState {
   /// Containts a list of leagueId assosiated with a team

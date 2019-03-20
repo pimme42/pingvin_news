@@ -15,52 +15,52 @@ class AppDrawer extends StatelessWidget {
       builder: (BuildContext context, DrawerViewModel viewModel) {
         return Drawer(
           child: ListView(
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: ExactAssetImage(viewModel.headerImage)),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    Center(
-                      child: Text(
-                        viewModel.headerTitle,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+              children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: ExactAssetImage(viewModel.headerImage)),
               ),
-            ]
-              ..add(
-                _createHeader(
-                  context,
-                  "Sidor",
-                ),
-              )
-              ..addAll(
-                viewModel.pages.map((DrawerPageViewModel page) =>
-                    _createPageItemWidget(context, page)),
-              )
-              ..add(_createDivider(context))
-              ..add(
-                _createHeader(
-                  context,
-                  "Notifikationer",
-                ),
-              )
-              ..addAll(viewModel.subItems.map((DrawerSubscribeItemView item) =>
-                  _createSubscriptionWidget(context, item)))
-              ..add(_createDivider(context))
-              ..add(_createAboutCard(context, viewModel.aboutBoxViewModel))
-              ..add(_createDivider(context)),
-          ),
+              child: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      viewModel.headerTitle,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ]
+                ..add(
+                  _createHeader(
+                    context,
+                    "Sidor",
+                  ),
+                )
+                ..addAll(
+                  viewModel.pages.map((DrawerPageViewModel page) =>
+                      _createPageItemWidget(context, page)),
+                )
+                ..add(Divider())
+                ..add(
+                  _createHeader(
+                    context,
+                    "Notifikationer",
+                  ),
+                )
+                ..addAll(viewModel.subItems.map(
+                    (DrawerSubscribeItemView item) =>
+                        _createSubscriptionWidget(context, item)))
+                ..add(Divider())
+                ..add(_createAboutCard(context, viewModel.aboutBoxViewModel))
+                ..add(Divider())),
         );
       },
     );
@@ -146,19 +146,6 @@ class AppDrawer extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black45),
-        ),
-      );
-
-  Widget _createDivider(BuildContext context) => Container(
-        margin: EdgeInsets.only(
-          bottom: 5.0,
-          top: 5.0,
-        ),
-        decoration: BoxDecoration(
-          color: Colors.black26,
-        ),
-        child: Container(
-          height: 1.5,
         ),
       );
 }

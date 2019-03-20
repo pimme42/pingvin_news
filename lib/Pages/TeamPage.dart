@@ -6,36 +6,24 @@ import 'package:pingvin_news/Pages/Models/TeamPageModels.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:redux/redux.dart';
+import 'dart:math';
 
-//class TeamPage extends StatefulWidget {
-//  @override
-//  State createState() => _TeamPageState();
-//}
-//
-//class _TeamPageState extends State<TeamPage> {
-//  Function() _dispose;
-//  @override
-//  void dispose() {
-////    this._dispose();
-//    super.dispose();
-//  }
 class TeamPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, TeamPageViewModel>(
       converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
       builder: (BuildContext context, TeamPageViewModel viewModel) {
-        List<Widget> tables =
+        List<Widget> leagues =
             viewModel.tableInfoItems?.map((TableInfoItem tableInfoItem) {
-          return _buildTable(
+          return _buildLeague(
             context,
             tableInfoItem,
-            viewModel.header,
-            viewModel.tableRows[tableInfoItem.leagueId],
+            viewModel,
           );
         })?.toList();
-        if (tables.length == 0) {
-          tables = [
+        if (leagues.length == 0) {
+          leagues = [
             Padding(
               padding: EdgeInsets.all(10.0),
               child: Center(
@@ -56,7 +44,7 @@ class TeamPage extends StatelessWidget {
             displacement: 50.0,
             color: Colors.black,
             child: ListView(
-              children: tables,
+              children: leagues,
             ),
           ),
         );
@@ -64,73 +52,88 @@ class TeamPage extends StatelessWidget {
     );
   }
 
+  Widget _buildLeague(BuildContext context, TableInfoItem tableInfo,
+      TeamPageViewModel viewModel) {
+    return Card(
+      elevation: 4,
+      child: ExpansionTile(
+        key: Key(tableInfo.leagueId.toString()),
+//        leading: Icon(Icons.star_border),
+        title: Center(
+          child: Text(
+            "${tableInfo.parentName}/${tableInfo.name}",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+          ),
+        ),
+        children: <Widget>[
+          _buildTable(context, tableInfo, viewModel.header,
+              viewModel.tableRows[tableInfo.leagueId]),
+          _buildFixtureList(
+              context,
+              viewModel.fixtureRounds[tableInfo.leagueId],
+              viewModel.fixtures[tableInfo.leagueId]),
+        ],
+      ),
+    );
+  }
+
   Widget _buildTable(BuildContext context, TableInfoItem tableInfo,
       TableRowItem header, List<TableRowItem> rows) {
+    if (rows.length == 0) return Container();
     int rowNum = 1;
-    return Column(
-      children: <Widget>[
-        Center(
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Text(
-              "${tableInfo.parentName}/${tableInfo.name}",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+        child: Table(
+          defaultColumnWidth: FlexColumnWidth(),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: <TableRow>[
+            _createTableRow(
+              0,
+              header,
             ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
-            child: Table(
-              defaultColumnWidth: FlexColumnWidth(),
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: <TableRow>[
-                _createTableRow(
-                  0,
-                  header,
-                ),
-              ]..addAll(
-                  rows
-                      .map((TableRowItem item) =>
-                          _createTableRow(rowNum++, item))
-                      .toList(),
-                ),
-              border: TableBorder(
-                horizontalInside: BorderSide(),
-                bottom: BorderSide(),
-              ),
-              textBaseline: TextBaseline.alphabetic,
-              columnWidths: {
-                0: FixedColumnWidth(30.0),
-                /*
-                 Tar fram bredden för kolumnen med lagnamn. Det gör att tabellen
-                 inte tar upp hela bredden när man lägger telefonen/plattan ner. -20 i första
-                 argumentet är kopplat till att vi har padding: 10 på både höger och vänster sida.
-                */
-                1: MinColumnWidth(
-                  FixedColumnWidth(MediaQuery.of(context).size.width -
-                      (30 + 20 * 4 + 75 + 50) -
-                      20),
-                  FixedColumnWidth(225),
-                ),
-                2: FixedColumnWidth(20.0),
-                3: FixedColumnWidth(20.0),
-                4: FixedColumnWidth(20.0),
-                5: FixedColumnWidth(20.0),
-                6: FixedColumnWidth(75.0),
-                7: FixedColumnWidth(50.0),
-              },
+          ]..addAll(
+              rows
+                  .map((TableRowItem item) => _createTableRow(rowNum++, item))
+                  .toList(),
             ),
+          border: TableBorder(
+            horizontalInside: BorderSide(),
+            bottom: BorderSide(),
           ),
+          textBaseline: TextBaseline.alphabetic,
+          columnWidths: {
+            0: FixedColumnWidth(30.0),
+            /**
+                 * Tar fram bredden för kolumnen med lagnamn. Det gör att tabellen
+                 * inte tar upp hela bredden när man lägger telefonen/plattan ner. -20 i första
+                 * argumentet är kopplat till att vi har padding: 10 på både höger och vänster sida.
+                 */
+            1: MinColumnWidth(
+              FixedColumnWidth(MediaQuery.of(context).size.width -
+                  (30 + 20 * 4 + 75 + 50) -
+                  20),
+              FixedColumnWidth(225),
+            ),
+            2: FixedColumnWidth(20.0),
+            3: FixedColumnWidth(20.0),
+            4: FixedColumnWidth(20.0),
+            5: FixedColumnWidth(20.0),
+            6: FixedColumnWidth(75.0),
+            7: FixedColumnWidth(50.0),
+          },
         ),
-      ],
+      ),
     );
   }
 
   TableRow _createTableRow(int rowNum, TableRowItem row) {
     return TableRow(
-      decoration: BoxDecoration(
-          color: (rowNum % 2 == 0) ? Colors.black12 : Colors.black26),
+      /// Fick ta bort detta p.g.a. en bugg i Flutter som gör att
+      /// tabellen försvinner när man klickade på den.
+//      decoration: BoxDecoration(
+//        color: (rowNum % 2 == 0) ? Colors.black12 : Colors.black26,
+//      ),
       children: [
         _createTableCell(row.pos, rowNum == 0),
         _createTableCell(row.team, rowNum == 0),
@@ -144,7 +147,7 @@ class TeamPage extends StatelessWidget {
     );
   }
 
-  Widget _createTableCell(String item, bool topRow) {
+  Widget _createTableCell(String item, [bool topRow = false]) {
     return TableCell(
       child: Container(
         margin:
@@ -156,6 +159,125 @@ class TeamPage extends StatelessWidget {
             fontWeight: topRow ? FontWeight.bold : FontWeight.normal,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildFixtureList(
+      BuildContext context, bool fixtureRounds, List<FixtureItem> fixtures) {
+    if (fixtures.length == 0) return Container();
+    List<Widget> rows = List();
+    String prevRound = "";
+    String prevDate = "";
+    FixtureItem fixture;
+    for (int i = 0; i < fixtures.length; i++) {
+      fixture = fixtures[i];
+      if (fixtureRounds && prevRound != fixture.round) {
+        /// New round
+        prevRound = fixture.round;
+        rows.add(
+          Padding(
+            padding: EdgeInsets.only(top: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  "Omgång ${fixture.round}",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+      if (fixture.date != prevDate) {
+        /// New date
+        prevDate = fixture.date;
+        rows.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                fixture.date,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.black45),
+              ),
+            ],
+          ),
+        );
+      }
+
+      double width = min(
+          MediaQuery.of(context).size.width - (50 + 10 * 2 + 30 * 2) - 20, 300);
+
+//      BoxDecoration rowDecor = BoxDecoration(
+//          color: ((n % 2 == 0) ? Colors.black12 : Colors.black26));
+
+      rows.add(
+        Container(
+//          decoration: rowDecor,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 50.0,
+                child: Center(
+                  child: Text(fixture.time ?? ""),
+                ),
+              ),
+              Container(
+                width: width / 2,
+                child: Text(fixture.homeTeam ?? ""),
+              ),
+              Container(
+                width: 10.0,
+//              decoration: BoxDecoration(color: Colors.black45),
+                child: Center(
+                  child: Text('-'),
+                ),
+              ),
+              Container(
+                width: width / 2,
+                child: Text(fixture.awayTeam ?? ""),
+              ),
+              Container(
+                width: 30.0,
+                child: Align(
+                  alignment: Alignment(0, 0),
+                  child: Text(fixture.homeScore ?? ""),
+                ),
+              ),
+              Container(
+                width: 10.0,
+                child: Center(
+                  child: Text('-'),
+                ),
+              ),
+              Container(
+                width: 30.0,
+                child: Align(
+                  alignment: Alignment(0, 0),
+                  child: Text(fixture.awayScore ?? ""),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      rows.add(Divider(
+        color: Colors.black,
+      ));
+    }
+
+    return Container(
+      width: min(MediaQuery.of(context).size.width, 480),
+      child: ListView(
+        padding: EdgeInsets.all(6.0),
+
+        /// Should be 10.0, but Card adds 4.0px
+        shrinkWrap: true,
+        primary: false,
+        children: rows,
       ),
     );
   }
