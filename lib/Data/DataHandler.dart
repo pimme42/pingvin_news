@@ -1,5 +1,6 @@
 class DataHandler {
   static int parseInt(dynamic value) {
+    if (value == null) return null;
 //    print("parseInt: ${value.toString()} : ${value.runtimeType}");
     dynamic retVal = value;
     if (value is String) {

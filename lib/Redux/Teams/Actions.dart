@@ -1,5 +1,5 @@
 import 'package:pingvin_news/Misc/Constants.dart';
-import 'package:pingvin_news/Data/Teams/TableInfo.dart';
+import 'package:pingvin_news/Data/Teams/LeagueInfo.dart';
 
 class ViewTeamAction {
   final teams team;
