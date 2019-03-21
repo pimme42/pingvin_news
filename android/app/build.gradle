@@ -32,6 +32,7 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+
 android {
     compileSdkVersion 28
 
@@ -41,7 +42,7 @@ android {
 
     defaultConfig {
         applicationId "se.rorstam.pingvinnews"
-        minSdkVersion 16
+        minSdkVersion 20
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -63,10 +64,22 @@ android {
 //        This block adds .debug to the build-version allowing for
 //        having both debug and release-version on the device
 //        at the same time.
-        debug {
-            applicationIdSuffix ".debug"
+//        debug {
+//            applicationIdSuffix ".debug"
+//        }
+    }
+    flavorDimensions "flavors"
+    productFlavors {
+        dev {
+            dimension "flavors"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+        prod {
+            dimension "flavors"
         }
     }
+
 }
 
 flutter {

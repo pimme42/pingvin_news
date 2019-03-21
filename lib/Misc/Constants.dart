@@ -21,7 +21,7 @@ class Constants {
   static const String apiVersion = "/api/v2";
 
   static const String apiURL =
-      isProduction ? "pingvinapi.rorstam.se" : "pingvinapid.rorstam.se";
+      isProduction ? "pingvinapi.rorstam.se" : "pingvinapi.rorstam.se";
 //  static const String apiURL = "pingvinapi.rorstam.se";
 
   static const String newsEndPoint = apiVersion + "/news/168643/";
