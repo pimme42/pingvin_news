@@ -8,6 +8,7 @@ import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Pages/NewsPage.dart';
 import 'package:pingvin_news/Pages/TeamPage.dart';
 import 'package:pingvin_news/Pages/SyncErrorProvider.dart';
+import 'package:pingvin_news/flavor_config.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
