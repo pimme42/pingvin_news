@@ -1,7 +1,7 @@
 import 'package:pingvin_news/Pages/Models/AppBarViewModel.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Pages/LoadIndicator.dart';
-
+import 'package:pingvin_news/flavor_config.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 
 import 'package:flutter/material.dart';
@@ -27,6 +27,7 @@ class _AppBarPageState extends State<AppBarPage> {
         converter: (Store<AppStore> store) => AppBarViewModel.create(store),
         builder: (BuildContext context, AppBarViewModel viewModel) {
           return AppBar(
+            backgroundColor: FlavorConfig.instance.color,
             title: new Text(viewModel.title),
             automaticallyImplyLeading: true,
             leading: _displayLeading(context, viewModel),

@@ -57,21 +57,21 @@ class TeamPage extends StatelessWidget {
     return Card(
       elevation: 4,
       child: ExpansionTile(
-        key: Key(tableInfo.leagueId.toString()),
+        key: Key(tableInfo?.name),
 //        leading: Icon(Icons.star_border),
         title: Center(
           child: Text(
-            "${tableInfo.parentName}/${tableInfo.name}",
+            "${tableInfo?.parentName ?? 'Seriesystem'}/${tableInfo?.name ?? 'Division'}",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
           ),
         ),
         children: <Widget>[
           _buildTable(context, tableInfo, viewModel.header,
-              viewModel.tableRows[tableInfo.leagueId]),
+              viewModel?.tableRows[tableInfo.leagueId]),
           _buildFixtureList(
               context,
-              viewModel.fixtureRounds[tableInfo.leagueId],
-              viewModel.fixtures[tableInfo.leagueId]),
+              viewModel?.fixtureRounds[tableInfo.leagueId],
+              viewModel?.fixtures[tableInfo.leagueId]),
         ],
       ),
     );
@@ -165,7 +165,7 @@ class TeamPage extends StatelessWidget {
 
   Widget _buildFixtureList(
       BuildContext context, bool fixtureRounds, List<FixtureItem> fixtures) {
-    if (fixtures.length == 0) return Container();
+    if (fixtures != null && fixtures.length == 0) return Container();
     List<Widget> rows = List();
     String prevRound = "";
     String prevDate = "";
