@@ -18,9 +18,14 @@ class FirebaseHandler {
       onResume: (Map<String, dynamic> message) => this._onResume(message),
       onLaunch: (Map<String, dynamic> message) => this._onLaunch(message),
     );
-
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      Log.doLog("Settings registered: $settings", logLevel.DEBUG);
+    });
+//    _firebaseMessaging.requestNotificationPermissions(
+//        const IosNotificationSettings(sound: true, badge: true, alert: true));
 
     _firebaseMessaging.getToken().then((token) {
       Log.doLog("FirebaseMessaging Token: $token", logLevel.DEBUG);
