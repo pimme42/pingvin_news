@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 enum teams { MENS, WOMENS, NONE }
 
@@ -55,5 +56,7 @@ class Constants {
   static const TextStyle drawerPageTextStyle =
       TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold);
 
-  static const teamPageRoute = '/TeamPage';
+  static const String teamPageRoute = '/TeamPage';
+
+  static const double maxWidth = 500.0; // Max width for tables/fixture list
 }

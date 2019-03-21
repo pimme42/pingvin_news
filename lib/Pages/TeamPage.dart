@@ -4,6 +4,7 @@ import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Pages/Models/TeamPageModels.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Misc/Constants.dart';
 
 import 'package:redux/redux.dart';
 import 'dart:math';
@@ -208,7 +209,8 @@ class TeamPage extends StatelessWidget {
       }
 
       double width = min(
-          MediaQuery.of(context).size.width - (50 + 10 * 2 + 30 * 2) - 20, 300);
+          MediaQuery.of(context).size.width - (50 + 10 * 2 + 30 * 2) - 20,
+          300.0);
 
 //      BoxDecoration rowDecor = BoxDecoration(
 //          color: ((n % 2 == 0) ? Colors.black12 : Colors.black26));
@@ -231,7 +233,6 @@ class TeamPage extends StatelessWidget {
               ),
               Container(
                 width: 10.0,
-//              decoration: BoxDecoration(color: Colors.black45),
                 child: Center(
                   child: Text('-'),
                 ),
@@ -270,7 +271,8 @@ class TeamPage extends StatelessWidget {
     }
 
     return Container(
-      width: min(MediaQuery.of(context).size.width, 480),
+      width: min(MediaQuery.of(context).size.width,
+          Constants.maxWidth - 20), // -20 pga padding
       child: ListView(
         padding: EdgeInsets.all(6.0),
 
