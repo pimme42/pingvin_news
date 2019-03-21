@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Firebase Cloud Messaging</string>
+    <string name="app_name">Pingvin Rugby Club</string>
     <string name="default_notification_channel_id" translatable="false">se.rorstam.pingvinnews.NEWS</string>
     <!--
         This is the name that users will see when interacting with this channel.
