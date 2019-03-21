@@ -58,7 +58,7 @@ class TeamPageViewModel {
       });
 
       fixtures[leagueId] = List();
-      tableInfo.fixtureData.fixtures.forEach((Fixture fixture) {
+      tableInfo.fixtureData?.fixtures?.forEach((Fixture fixture) {
         if (fixture.round != null && fixture.round > 0)
           fixtureRounds[leagueId] = true;
         else
