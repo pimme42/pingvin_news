@@ -209,7 +209,8 @@ class TeamPage extends StatelessWidget {
       }
 
       double width = min(
-          MediaQuery.of(context).size.width - (50 + 10 * 2 + 30 * 2) - 20, 300.0);
+          MediaQuery.of(context).size.width - (50 + 10 * 2 + 30 * 2) - 20,
+          300.0);
 
 //      BoxDecoration rowDecor = BoxDecoration(
 //          color: ((n % 2 == 0) ? Colors.black12 : Colors.black26));
