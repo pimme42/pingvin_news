@@ -21,6 +21,9 @@ class TeamPageViewModel {
   final Function() dispose;
   final Map<int, bool> fixtureRounds;
 
+  /// This team will be highlighted
+  final String teamOfInterest;
+
   TeamPageViewModel({
     this.team,
     this.tableInfoItems,
@@ -31,6 +34,7 @@ class TeamPageViewModel {
     this.pop,
     this.dispose,
     this.fixtureRounds, // Is true if there is a round for that league, if false, it is probably play off games
+    this.teamOfInterest,
   });
 
   factory TeamPageViewModel.create(Store<AppStore> store) {
@@ -89,6 +93,7 @@ class TeamPageViewModel {
       pop: () {},
       dispose: () => store.dispatch(ViewTeamAction.none()),
       fixtureRounds: fixtureRounds,
+      teamOfInterest: "Pingvin",
     );
   }
 }

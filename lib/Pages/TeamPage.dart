@@ -10,11 +10,13 @@ import 'package:redux/redux.dart';
 import 'dart:math';
 
 class TeamPage extends StatelessWidget {
+  TeamPageViewModel _viewModel;
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, TeamPageViewModel>(
       converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
       builder: (BuildContext context, TeamPageViewModel viewModel) {
+        this._viewModel = viewModel;
         List<Widget> leagues =
             viewModel.tableInfoItems?.map((TableInfoItem tableInfoItem) {
           return _buildLeague(
@@ -137,7 +139,8 @@ class TeamPage extends StatelessWidget {
 //      ),
       children: [
         _createTableCell(row.pos, rowNum == 0),
-        _createTableCell(row.team, rowNum == 0),
+        _createTableCell(row.team,
+            rowNum == 0 || row.team.contains(this._viewModel?.teamOfInterest)),
         _createTableCell(row.played, rowNum == 0),
         _createTableCell(row.W, rowNum == 0),
         _createTableCell(row.D, rowNum == 0),
@@ -229,7 +232,14 @@ class TeamPage extends StatelessWidget {
               ),
               Container(
                 width: width / 2,
-                child: Text(fixture.homeTeam ?? ""),
+                child: Text(
+                  fixture.homeTeam ?? "",
+                  style: TextStyle(
+                      fontWeight: (fixture.homeTeam
+                              .contains(this._viewModel?.teamOfInterest)
+                          ? FontWeight.bold
+                          : FontWeight.normal)),
+                ),
               ),
               Container(
                 width: 10.0,
@@ -239,7 +249,14 @@ class TeamPage extends StatelessWidget {
               ),
               Container(
                 width: width / 2,
-                child: Text(fixture.awayTeam ?? ""),
+                child: Text(
+                  fixture.awayTeam ?? "",
+                  style: TextStyle(
+                      fontWeight: (fixture.awayTeam
+                              .contains(this._viewModel?.teamOfInterest)
+                          ? FontWeight.bold
+                          : FontWeight.normal)),
+                ),
               ),
               Container(
                 width: 30.0,
