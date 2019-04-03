@@ -66,3 +66,17 @@ class SetVersionInfoAction {
   SetVersionInfoAction(
       this.appName, this.packageName, this.version, this.buildNumber);
 }
+
+/// Actions on SharedPrefs
+
+class AddLeagueToFavourite {
+  final String leagueName;
+
+  AddLeagueToFavourite(this.leagueName);
+}
+
+class RemoveLeagueToFavourite {
+  final String leagueName;
+
+  RemoveLeagueToFavourite(this.leagueName);
+}

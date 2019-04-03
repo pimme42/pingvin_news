@@ -4,6 +4,7 @@ import 'package:pingvin_news/Store/AppState/SubscriptionsManager.dart';
 import 'package:pingvin_news/Store/AppState/Status.dart';
 import 'package:pingvin_news/Store/AppState/VersionInfo.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Store/AppState/SharedPrefs.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Redux/Teams/Reducers.dart';
 
@@ -18,6 +19,7 @@ AppStore appReducer(AppStore state, action) {
     subManager: subscriptionsReducer(state.subManager, action),
     teamState: teamReducer(state.teamState, action),
     versionInfo: versionReducer(state.versionInfo, action),
+    sharedPrefs: sharedPrefsReducer(state.sharedPrefs, action),
   );
 }
 
@@ -86,3 +88,20 @@ VersionInfo _setVersionInfo(
       buildNumber: action.buildNumber,
       appName: action.appName,
     );
+
+final Reducer<SharedPrefs> sharedPrefsReducer = combineReducers([
+  TypedReducer<SharedPrefs, AddLeagueToFavourite>(_addLeague),
+  TypedReducer<SharedPrefs, RemoveLeagueToFavourite>(_removeLeague),
+]);
+
+/// ..toSet()..ToList() removes duplicates from the list
+SharedPrefs _addLeague(SharedPrefs sharedPrefs, AddLeagueToFavourite action) =>
+    SharedPrefs(List.unmodifiable(List.from(sharedPrefs.favouriteLeagues)
+      ..add(action.leagueName)
+      ..toSet()
+      ..toList()));
+
+SharedPrefs _removeLeague(
+        SharedPrefs sharedPrefs, RemoveLeagueToFavourite action) =>
+    SharedPrefs(List.unmodifiable(
+        List.from(sharedPrefs.favouriteLeagues)..remove(action.leagueName)));

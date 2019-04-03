@@ -14,6 +14,9 @@ List<Middleware<AppStore>> appStoreMiddleware() => [
       TypedMiddleware<AppStore, SaveSubscriptionsToPrefsAction>(
           _saveSubscriptionsPrefs),
       TypedMiddleware<AppStore, UpdateVersionInfoAction>(_updateVersionInfo),
+      TypedMiddleware<AppStore, AddLeagueToFavourite>(_addLeagueToFavourite),
+      TypedMiddleware<AppStore, RemoveLeagueToFavourite>(
+          _removeLeagueToFavourite),
     ];
 
 Future _showSnackBar(Store<AppStore> store, ShowSnackBarAction action,
@@ -56,4 +59,24 @@ Future _updateVersionInfo(Store<AppStore> store, UpdateVersionInfoAction action,
       packageInfo.buildNumber,
     ));
   });
+}
+
+Future _addLeagueToFavourite(Store<AppStore> store, AddLeagueToFavourite action,
+    NextDispatcher next) async {
+  /// First execute the action, thus adding the league to the
+  /// state, then save it to Shared preferences
+  next(action);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setStringList(
+      'favouriteLeagues', store.state.sharedPrefs.favouriteLeagues);
+}
+
+Future _removeLeagueToFavourite(Store<AppStore> store,
+    RemoveLeagueToFavourite action, NextDispatcher next) async {
+  /// First execute the action, thus removing the league from the
+  /// state, then save it to Shared preferences
+  next(action);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setStringList(
+      'favouriteLeagues', store.state.sharedPrefs.favouriteLeagues);
 }

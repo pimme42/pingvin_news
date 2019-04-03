@@ -2,6 +2,7 @@ import 'package:pingvin_news/Store/News/NewsStore.dart';
 import 'package:pingvin_news/Store/AppState/SubscriptionsManager.dart';
 import 'package:pingvin_news/Store/AppState/Status.dart';
 import 'package:pingvin_news/Store/AppState/VersionInfo.dart';
+import 'package:pingvin_news/Store/AppState/SharedPrefs.dart';
 import 'package:pingvin_news/Store/Teams/TeamState.dart';
 
 class AppStore {
@@ -10,6 +11,7 @@ class AppStore {
   final Status status;
   final TeamState teamState;
   final VersionInfo versionInfo;
+  final SharedPrefs sharedPrefs;
 
   AppStore({
     this.newsStore,
@@ -17,6 +19,7 @@ class AppStore {
     this.subManager,
     this.teamState,
     this.versionInfo,
+    this.sharedPrefs,
   });
 
   factory AppStore.initial() => AppStore(
@@ -25,5 +28,6 @@ class AppStore {
         subManager: SubscriptionsManager.initial(),
         teamState: TeamState.initial(),
         versionInfo: VersionInfo.initial(),
+        sharedPrefs: SharedPrefs.initial(),
       );
 }

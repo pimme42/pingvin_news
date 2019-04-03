@@ -9,8 +9,14 @@ import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:redux/redux.dart';
 import 'dart:math';
 
-class TeamPage extends StatelessWidget {
+class TeamPage extends StatefulWidget {
+  @override
+  _TeamPageState createState() => _TeamPageState();
+}
+
+class _TeamPageState extends State<TeamPage> {
   TeamPageViewModel _viewModel;
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, TeamPageViewModel>(
@@ -60,13 +66,15 @@ class TeamPage extends StatelessWidget {
     return Card(
       elevation: 4,
       child: ExpansionTile(
+        initiallyExpanded: true,
         key: Key(tableInfo?.name),
 //        leading: Icon(Icons.star_border),
-        title: Center(
-          child: Text(
+        title: ListTile(
+          title: Text(
             "${tableInfo?.parentName ?? 'Seriesystem'}/${tableInfo?.name ?? 'Division'}",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
           ),
+          leading: IconButton(icon: Icon(Icons.star_border), onPressed: () {}),
         ),
         children: <Widget>[
           _buildTable(context, tableInfo, viewModel.header,
