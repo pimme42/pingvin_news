@@ -4,6 +4,7 @@ import 'package:pingvin_news/Store/AppState/SubscriptionsManager.dart';
 import 'package:pingvin_news/Store/AppState/Status.dart';
 import 'package:pingvin_news/Store/AppState/VersionInfo.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Store/AppState/SharedPrefs.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Redux/Teams/Reducers.dart';
 
@@ -18,6 +19,7 @@ AppStore appReducer(AppStore state, action) {
     subManager: subscriptionsReducer(state.subManager, action),
     teamState: teamReducer(state.teamState, action),
     versionInfo: versionReducer(state.versionInfo, action),
+    sharedPrefs: sharedPrefsReducer(state.sharedPrefs, action),
   );
 }
 
@@ -86,3 +88,24 @@ VersionInfo _setVersionInfo(
       buildNumber: action.buildNumber,
       appName: action.appName,
     );
+
+final Reducer<SharedPrefs> sharedPrefsReducer = combineReducers([
+  TypedReducer<SharedPrefs, PopulateSharedPrefs>(_populateSharedPrefs),
+  TypedReducer<SharedPrefs, ToggleFavouriteLeague>(_toggleLeagueFavourite),
+]);
+
+SharedPrefs _toggleLeagueFavourite(
+    SharedPrefs sharedPrefs, ToggleFavouriteLeague action) {
+  /// if sharedPrefs is null, make a new list.
+  List old = (List.from(sharedPrefs.favouriteLeagues) ?? List());
+  if (old.contains(action.leagueName))
+    old.remove(action.leagueName);
+  else
+    old.add(action.leagueName);
+
+  return SharedPrefs(List.unmodifiable(List.from(old)));
+}
+
+SharedPrefs _populateSharedPrefs(
+        SharedPrefs sharedPrefs, PopulateSharedPrefs action) =>
+    action.sharedPrefs;
