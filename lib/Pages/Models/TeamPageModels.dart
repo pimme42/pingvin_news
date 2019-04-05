@@ -1,5 +1,6 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
+import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Data/Teams/LeagueInfo.dart';
 import 'package:pingvin_news/Data/Teams/TableRow.dart';
@@ -20,6 +21,10 @@ class TeamPageViewModel {
   final Function() pop;
   final Function() dispose;
   final Map<int, bool> fixtureRounds;
+  final String year;
+
+  /// This team will be highlighted
+  final String teamOfInterest;
 
   TeamPageViewModel({
     this.team,
@@ -31,10 +36,13 @@ class TeamPageViewModel {
     this.pop,
     this.dispose,
     this.fixtureRounds, // Is true if there is a round for that league, if false, it is probably play off games
+    this.teamOfInterest,
+    this.year,
   });
 
   factory TeamPageViewModel.create(Store<AppStore> store) {
     teams team = store.state.teamState.team;
+    String year = "";
 
     /// LeagueIds som är associerade med det valda laget
     List<int> leagueIds =
@@ -46,12 +54,22 @@ class TeamPageViewModel {
 
     leagueIds?.forEach((int leagueId) {
       TableInfo tableInfo = store.state.teamState.table[leagueId];
-      tableInfoItems.add(TableInfoItem(
-        leagueId,
-        tableInfo.name,
-        tableInfo.year.toString(),
-        tableInfo.parentInfo?.name ?? "",
-      ));
+      String favouriteName = team.toString() +
+          ": " +
+          (tableInfo.parentInfo?.name ?? "") +
+          "/${tableInfo.name} (${tableInfo.year.toString()})";
+      year = tableInfo.year.toString();
+      tableInfoItems.add(
+        TableInfoItem(
+          leagueId,
+          tableInfo.name,
+          tableInfo.year.toString(),
+          tableInfo.parentInfo?.name ?? "",
+          store.state.sharedPrefs?.favouriteLeagues?.contains(favouriteName) ??
+              false,
+          () => store.dispatch(ToggleFavouriteLeague(favouriteName)),
+        ),
+      );
       tableRows[leagueId] = List();
       tableInfo.tableData?.rows?.forEach((TableRowData row) {
         tableRows[leagueId].add(TableRowItem.fromTableRow(row));
@@ -89,6 +107,8 @@ class TeamPageViewModel {
       pop: () {},
       dispose: () => store.dispatch(ViewTeamAction.none()),
       fixtureRounds: fixtureRounds,
+      teamOfInterest: "Pingvin",
+      year: year,
     );
   }
 }
@@ -99,8 +119,11 @@ class TableInfoItem {
   final String name;
   final String year;
   final String parentName;
+  final bool isFavourite;
+  final Function() toggleFavourite;
 
-  TableInfoItem(this.leagueId, this.name, this.year, this.parentName);
+  TableInfoItem(this.leagueId, this.name, this.year, this.parentName,
+      this.isFavourite, this.toggleFavourite);
 }
 
 @immutable

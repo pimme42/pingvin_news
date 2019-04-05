@@ -1,6 +1,7 @@
 import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Store/AppState/SharedPrefs.dart';
 
 import 'dart:async';
 import 'package:redux/redux.dart';
@@ -14,6 +15,9 @@ List<Middleware<AppStore>> appStoreMiddleware() => [
       TypedMiddleware<AppStore, SaveSubscriptionsToPrefsAction>(
           _saveSubscriptionsPrefs),
       TypedMiddleware<AppStore, UpdateVersionInfoAction>(_updateVersionInfo),
+      TypedMiddleware<AppStore, ReadSharedPrefs>(_readSharedPrefs),
+      TypedMiddleware<AppStore, ToggleFavouriteLeague>(
+          _toggleLeagueToFavourite),
     ];
 
 Future _showSnackBar(Store<AppStore> store, ShowSnackBarAction action,
@@ -56,4 +60,25 @@ Future _updateVersionInfo(Store<AppStore> store, UpdateVersionInfoAction action,
       packageInfo.buildNumber,
     ));
   });
+}
+
+Future _toggleLeagueToFavourite(Store<AppStore> store,
+    ToggleFavouriteLeague action, NextDispatcher next) async {
+  Log.doLog(
+      "_toggleLeagueToFavourite; Toggle ${action.leagueName}", logLevel.DEBUG);
+
+  /// First execute the action, thus adding or removing the league to the
+  /// state, then save it to Shared preferences
+  next(action);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setStringList(
+      'favouriteLeagues', store.state.sharedPrefs.favouriteLeagues);
+}
+
+Future _readSharedPrefs(
+    Store<AppStore> store, ReadSharedPrefs action, NextDispatcher next) async {
+  next(action);
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  next(PopulateSharedPrefs(
+      SharedPrefs(prefs.getStringList('favouriteLeagues') ?? List<String>())));
 }
