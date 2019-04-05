@@ -8,6 +8,7 @@ import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Pages/NewsPage.dart';
 import 'package:pingvin_news/Pages/TeamPage.dart';
 import 'package:pingvin_news/Pages/SyncErrorProvider.dart';
+import 'package:pingvin_news/Pages/ContactPage.dart';
 import 'package:pingvin_news/flavor_config.dart';
 
 import 'package:flutter/material.dart';
@@ -66,10 +67,12 @@ class MyApp extends StatelessWidget {
   Route _getRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':
-//        return _buildRoute(settings, AboutPage());
+//        return _buildRoute(settings, ContactPage());
         return _buildRoute(settings, NewsPage());
       case Constants.teamPageRoute:
         return _buildRoute(settings, TeamPage());
+      case Constants.contactRoute:
+        return _buildRoute(settings, ContactPage());
       default:
         return _buildRoute(settings, NewsPage());
     }

@@ -75,14 +75,7 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Herrar',
           (BuildContext context) {
-//            if (store.state.teamState.team != teams.MENS &&
-//                store.state.teamState.team != teams.WOMENS) {
             Navigator.of(context).pushReplacementNamed(Constants.teamPageRoute);
-//            } else if (store.state.teamState.team != teams.MENS) {
-//              Navigator.of(context).pop();
-//            } else {
-//              Navigator.of(context).pop();
-//            }
             store.dispatch(ViewTeamAction.mens());
           },
           Constants.drawerPageTextStyle,
@@ -93,18 +86,19 @@ class DrawerViewModel {
           (BuildContext context) {
             Navigator.of(context).pushReplacementNamed(Constants.teamPageRoute);
 
-//            if (store.state.teamState.team != teams.MENS &&
-//                store.state.teamState.team != teams.WOMENS) {
-//              Navigator.of(context).popAndPushNamed(Constants.teamPageRoute);
-//            } else if (store.state.teamState.team != teams.WOMENS) {
-//              Navigator.of(context).pop();
-//            } else {
-//              Navigator.of(context).pop();
-//            }
             store.dispatch(ViewTeamAction.womens());
           },
           Constants.drawerPageTextStyle,
           "\u{2640}",
+        ),
+        DrawerPageViewModel(
+          'Kontakt/Hitta oss',
+          (BuildContext context) {
+            store.dispatch(ViewTeamAction.none());
+            Navigator.of(context).pushReplacementNamed(Constants.contactRoute);
+          },
+          Constants.drawerPageTextStyle,
+          Icon(Icons.map),
         ),
       ],
       DrawerPageViewModel(

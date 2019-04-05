@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:latlong/latlong.dart';
 
 enum teams { MENS, WOMENS, NONE }
 
@@ -59,4 +59,8 @@ class Constants {
   static const String teamPageRoute = '/TeamPage';
 
   static const double maxWidth = 500.0; // Max width for tables/fixture list
+
+  static const String contactRoute = '/contact';
+
+  static LatLng coordinates = LatLng(55.375460, 13.185478);
 }
