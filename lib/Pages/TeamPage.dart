@@ -89,12 +89,6 @@ class _TeamPageState extends State<TeamPage> {
                 icon: tableInfo.isFavourite
                     ? Icon(Icons.star, color: Colors.yellow[800])
                     : Icon(Icons.star_border, color: Colors.black54),
-//                icon: Icon(
-//                  tableInfo.isFavourite ? Icons.star : Icons.star_border,
-//                  color: tableInfo.isFavourite
-//                      ? Colors.yellow[800]
-//                      : Colors.black54,
-//                ),
                 onPressed: () => tableInfo.toggleFavourite()),
             Text(
               "Favorit",

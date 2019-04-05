@@ -42,7 +42,7 @@ android {
 
     defaultConfig {
         applicationId "se.rorstam.pingvinnews"
-        minSdkVersion 20
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
