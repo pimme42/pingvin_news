@@ -1,3 +1,5 @@
+import 'package:pingvin_news/Store/AppState/SharedPrefs.dart';
+
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:flutter/material.dart';
 
@@ -69,14 +71,27 @@ class SetVersionInfoAction {
 
 /// Actions on SharedPrefs
 
-class AddLeagueToFavourite {
-  final String leagueName;
+class ReadSharedPrefs {}
 
-  AddLeagueToFavourite(this.leagueName);
+class PopulateSharedPrefs {
+  SharedPrefs sharedPrefs;
+  PopulateSharedPrefs(this.sharedPrefs);
 }
 
-class RemoveLeagueToFavourite {
+class ToggleFavouriteLeague {
   final String leagueName;
 
-  RemoveLeagueToFavourite(this.leagueName);
+  ToggleFavouriteLeague(this.leagueName);
 }
+
+//class AddLeagueToFavourite {
+//  final String leagueName;
+//
+//  AddLeagueToFavourite(this.leagueName);
+//}
+//
+//class RemoveLeagueToFavourite {
+//  final String leagueName;
+//
+//  RemoveLeagueToFavourite(this.leagueName);
+//}

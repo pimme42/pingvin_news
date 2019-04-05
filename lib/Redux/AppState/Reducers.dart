@@ -90,18 +90,22 @@ VersionInfo _setVersionInfo(
     );
 
 final Reducer<SharedPrefs> sharedPrefsReducer = combineReducers([
-  TypedReducer<SharedPrefs, AddLeagueToFavourite>(_addLeague),
-  TypedReducer<SharedPrefs, RemoveLeagueToFavourite>(_removeLeague),
+  TypedReducer<SharedPrefs, PopulateSharedPrefs>(_populateSharedPrefs),
+  TypedReducer<SharedPrefs, ToggleFavouriteLeague>(_toggleLeagueFavourite),
 ]);
 
-/// ..toSet()..ToList() removes duplicates from the list
-SharedPrefs _addLeague(SharedPrefs sharedPrefs, AddLeagueToFavourite action) =>
-    SharedPrefs(List.unmodifiable(List.from(sharedPrefs.favouriteLeagues)
-      ..add(action.leagueName)
-      ..toSet()
-      ..toList()));
+SharedPrefs _toggleLeagueFavourite(
+    SharedPrefs sharedPrefs, ToggleFavouriteLeague action) {
+  /// if sharedPrefs is null, make a new list.
+  List old = (List.from(sharedPrefs.favouriteLeagues) ?? List());
+  if (old.contains(action.leagueName))
+    old.remove(action.leagueName);
+  else
+    old.add(action.leagueName);
 
-SharedPrefs _removeLeague(
-        SharedPrefs sharedPrefs, RemoveLeagueToFavourite action) =>
-    SharedPrefs(List.unmodifiable(
-        List.from(sharedPrefs.favouriteLeagues)..remove(action.leagueName)));
+  return SharedPrefs(List.unmodifiable(List.from(old)));
+}
+
+SharedPrefs _populateSharedPrefs(
+        SharedPrefs sharedPrefs, PopulateSharedPrefs action) =>
+    action.sharedPrefs;

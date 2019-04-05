@@ -4,6 +4,7 @@ import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
 import 'package:pingvin_news/Pages/Models/TeamPageModels.dart';
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 
 import 'package:redux/redux.dart';
@@ -20,6 +21,7 @@ class _TeamPageState extends State<TeamPage> {
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, TeamPageViewModel>(
+      onInit: (Store<AppStore> store) => store.dispatch(ReadSharedPrefs()),
       converter: (Store<AppStore> store) => TeamPageViewModel.create(store),
       builder: (BuildContext context, TeamPageViewModel viewModel) {
         this._viewModel = viewModel;
@@ -53,7 +55,19 @@ class _TeamPageState extends State<TeamPage> {
             displacement: 50.0,
             color: Colors.black,
             child: ListView(
-              children: leagues,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Text(
+                      "Säsong: ${viewModel.year}",
+                      style: DefaultTextStyle.of(context)
+                          .style
+                          .apply(fontSizeFactor: 1.7, fontWeightDelta: 2),
+                    ),
+                  ),
+                ),
+              ]..addAll(leagues),
             ),
           ),
         );
@@ -66,15 +80,33 @@ class _TeamPageState extends State<TeamPage> {
     return Card(
       elevation: 4,
       child: ExpansionTile(
-        initiallyExpanded: true,
-        key: Key(tableInfo?.name),
-//        leading: Icon(Icons.star_border),
+        initiallyExpanded: tableInfo.isFavourite,
+        key: Key("${tableInfo.parentName}/${tableInfo.name}_${tableInfo.year}"),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+                icon: tableInfo.isFavourite
+                    ? Icon(Icons.star, color: Colors.yellow[800])
+                    : Icon(Icons.star_border, color: Colors.black54),
+//                icon: Icon(
+//                  tableInfo.isFavourite ? Icons.star : Icons.star_border,
+//                  color: tableInfo.isFavourite
+//                      ? Colors.yellow[800]
+//                      : Colors.black54,
+//                ),
+                onPressed: () => tableInfo.toggleFavourite()),
+            Text(
+              "Favorit",
+              style: TextStyle(fontSize: 12.0),
+            ),
+          ],
+        ),
         title: ListTile(
           title: Text(
             "${tableInfo?.parentName ?? 'Seriesystem'}/${tableInfo?.name ?? 'Division'}",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
           ),
-          leading: IconButton(icon: Icon(Icons.star_border), onPressed: () {}),
         ),
         children: <Widget>[
           _buildTable(context, tableInfo, viewModel.header,
