@@ -11,6 +11,7 @@ import 'package:redux/redux.dart';
 import 'dart:math';
 
 class TeamPage extends StatefulWidget {
+  static const String route = '/TeamPage';
   @override
   _TeamPageState createState() => _TeamPageState();
 }

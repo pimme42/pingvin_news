@@ -1,7 +1,7 @@
 import 'package:pingvin_news/Store/AppState/AppStore.dart';
+import 'package:pingvin_news/Misc/LauncherUtils.dart';
 
 import 'package:redux/redux.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AboutViewModel {
   final Map<String, String> packageInfo;
@@ -41,19 +41,11 @@ class AboutViewModel {
             "app utan är skapad för att jag vill lära mig hur man bygger appar.",
         "Kontakt: ",
         "pingvin_app@pimme.org",
-        () => _launchUrl(
+        () => LauncherUtils.launchUrl(
             'mailto:"pingvin_app@pimme.org"?subject=Appen Pingvin Rugby Club'),
         "Koden för appen är tillgänglig på: ",
         "https://gitlab.com/pingvin/pingvinapp",
-        () => _launchUrl('https://gitlab.com/pingvin/pingvinapp'),
+        () => LauncherUtils.launchUrl('https://gitlab.com/pingvin/pingvinapp'),
         "Den här appen används på eget bevåg",
       );
-
-  static void _launchUrl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 }

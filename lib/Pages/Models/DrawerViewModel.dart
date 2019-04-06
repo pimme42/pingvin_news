@@ -3,6 +3,9 @@ import 'package:pingvin_news/Redux/AppState/Actions.dart';
 import 'package:pingvin_news/Misc/Constants.dart';
 import 'package:pingvin_news/Redux/Teams/Actions.dart';
 import 'package:pingvin_news/Pages/AboutPage.dart';
+import 'package:pingvin_news/Pages/NewsPage.dart';
+import 'package:pingvin_news/Pages/TeamPage.dart';
+import 'package:pingvin_news/Pages/ContactPage.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +70,7 @@ class DrawerViewModel {
           (BuildContext context) {
             ///This pops the Drawer and navigates to the page
             store.dispatch(ViewTeamAction.none());
-            Navigator.of(context).pushReplacementNamed('/');
+            Navigator.of(context).pushReplacementNamed(NewsPage.route);
           },
           Constants.drawerPageTextStyle,
           "\u{1F5DE}",
@@ -75,8 +78,8 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Herrar',
           (BuildContext context) {
-            Navigator.of(context).pushReplacementNamed(Constants.teamPageRoute);
             store.dispatch(ViewTeamAction.mens());
+            Navigator.of(context).pushReplacementNamed(TeamPage.route);
           },
           Constants.drawerPageTextStyle,
           "\u{2642}",
@@ -84,9 +87,8 @@ class DrawerViewModel {
         DrawerPageViewModel(
           'Damer',
           (BuildContext context) {
-            Navigator.of(context).pushReplacementNamed(Constants.teamPageRoute);
-
             store.dispatch(ViewTeamAction.womens());
+            Navigator.of(context).pushReplacementNamed(TeamPage.route);
           },
           Constants.drawerPageTextStyle,
           "\u{2640}",
@@ -95,7 +97,7 @@ class DrawerViewModel {
           'Kontakt/Hitta oss',
           (BuildContext context) {
             store.dispatch(ViewTeamAction.none());
-            Navigator.of(context).pushReplacementNamed(Constants.contactRoute);
+            Navigator.of(context).pushReplacementNamed(ContactPage.route);
           },
           Constants.drawerPageTextStyle,
           Icon(Icons.map),
