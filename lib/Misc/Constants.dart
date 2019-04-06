@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:latlong/latlong.dart';
 
 enum teams { MENS, WOMENS, NONE }
 
@@ -22,6 +22,7 @@ class Constants {
   static const String apiVersion = "/api/v2";
 
   static const String apiURL =
+//      isProduction ? "pingvinapi.rorstam.se" : "pingvinapi.rorstam.se";
       isProduction ? "pingvinapi.rorstam.se" : "pingvinapid.rorstam.se";
 //  static const String apiURL = "pingvinapi.rorstam.se";
 
@@ -47,7 +48,6 @@ class Constants {
 
   static const String emptyString = "";
 
-//  static const bool useHttps = isProduction;
   static const bool useHttps = true;
 
   static const TextStyle drawerTextStyle =
@@ -56,7 +56,9 @@ class Constants {
   static const TextStyle drawerPageTextStyle =
       TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold);
 
-  static const String teamPageRoute = '/TeamPage';
-
   static const double maxWidth = 500.0; // Max width for tables/fixture list
+
+  static LatLng coordinates = LatLng(55.375460, 13.185478);
+
+  static const double mapZoom = 15.0;
 }

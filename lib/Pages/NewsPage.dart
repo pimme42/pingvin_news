@@ -14,8 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-//class NewsPage extends StatelessWidget {
 class NewsPage extends StatelessWidget {
+  static const String route = '/NewsPage';
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<AppStore, NewsPageViewModel>(
