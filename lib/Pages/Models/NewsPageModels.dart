@@ -5,6 +5,7 @@ import 'package:pingvin_news/Data/News/NewsEntry.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter/material.dart';
+import 'package:fluri/fluri.dart';
 
 @immutable
 class NewsPageViewModel {
@@ -29,7 +30,10 @@ class NewsPageViewModel {
   factory NewsPageViewModel.create(Store<AppStore> store) {
     List<NewsPageItemViewModel> items =
         store.state.newsStore.paper.entries.map((NewsEntry item) {
-      bool isSrf = item.link.contains("https://www.rugby.se");
+      Fluri fluri = Fluri(item.link);
+      String domain = fluri.host;
+      String URL = fluri.scheme + "://" + domain;
+      bool isSrf = (domain == "www.rugby.se");
       return NewsPageItemViewModel(
 //            ImageIcon(ExactAssetImage(Constants.logoPath)),
         isSrf
@@ -45,6 +49,7 @@ class NewsPageViewModel {
         (BuildContext context) {
           store.dispatch(SelectUrlToShowAction(item.link));
         },
+        item.link,
         item.title,
         item.summary,
         (BuildContext context, bool opening) {
@@ -56,6 +61,10 @@ class NewsPageViewModel {
         store.state.newsStore.newsStatus.isNewsItemSelected(item.nid),
         isSrf ? Color(0xff060f78) : Colors.white,
         isSrf ? Color(0xfffce704) : Colors.black,
+        URL,
+        (BuildContext context) {
+          store.dispatch(SelectUrlToShowAction(URL));
+        },
       );
     }).toList();
     return NewsPageViewModel(
@@ -76,13 +85,27 @@ class NewsPageViewModel {
 class NewsPageItemViewModel {
   final Widget leadingIcon;
   final Function(BuildContext) onPressed;
+  final String link;
   final String title;
   final String summary;
   final Function(BuildContext, bool) selectNews;
   final bool selected;
   final Color bgColor;
   final Color fgColor;
+  final String URL;
+  final Function(BuildContext) onURLPressed;
 
-  NewsPageItemViewModel(this.leadingIcon, this.onPressed, this.title,
-      this.summary, this.selectNews, this.selected, this.bgColor, this.fgColor);
+  NewsPageItemViewModel(
+    this.leadingIcon,
+    this.onPressed,
+    this.link,
+    this.title,
+    this.summary,
+    this.selectNews,
+    this.selected,
+    this.bgColor,
+    this.fgColor,
+    this.URL,
+    this.onURLPressed,
+  );
 }
