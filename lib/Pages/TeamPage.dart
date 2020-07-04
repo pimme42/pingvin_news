@@ -206,6 +206,7 @@ class _TeamPageState extends State<TeamPage> {
           textAlign: TextAlign.center,
           style: TextStyle(
             fontWeight: topRow ? FontWeight.bold : FontWeight.normal,
+            fontSize: 14.0,
           ),
         ),
       ),
@@ -232,7 +233,10 @@ class _TeamPageState extends State<TeamPage> {
               children: <Widget>[
                 Text(
                   "Omgång ${fixture.round}",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15.0,
+                  ),
                 ),
               ],
             ),
@@ -249,7 +253,10 @@ class _TeamPageState extends State<TeamPage> {
               Text(
                 fixture.date,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.black45),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black45,
+                  fontSize: 12.0,
+                ),
               ),
             ],
           ),
@@ -272,7 +279,12 @@ class _TeamPageState extends State<TeamPage> {
               Container(
                 width: 50.0,
                 child: Center(
-                  child: Text(fixture.time ?? ""),
+                  child: Text(
+                    fixture.time ?? "",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
                 ),
               ),
               Container(
@@ -280,16 +292,23 @@ class _TeamPageState extends State<TeamPage> {
                 child: Text(
                   fixture.homeTeam ?? "",
                   style: TextStyle(
-                      fontWeight: (fixture.homeTeam
-                              .contains(this._viewModel?.teamOfInterest)
-                          ? FontWeight.bold
-                          : FontWeight.normal)),
+                    fontWeight: (fixture.homeTeam
+                            .contains(this._viewModel?.teamOfInterest)
+                        ? FontWeight.bold
+                        : FontWeight.normal),
+                    fontSize: 14.0,
+                  ),
                 ),
               ),
               Container(
                 width: 10.0,
                 child: Center(
-                  child: Text('-'),
+                  child: Text(
+                    '-',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
                 ),
               ),
               Container(
@@ -297,10 +316,12 @@ class _TeamPageState extends State<TeamPage> {
                 child: Text(
                   fixture.awayTeam ?? "",
                   style: TextStyle(
-                      fontWeight: (fixture.awayTeam
-                              .contains(this._viewModel?.teamOfInterest)
-                          ? FontWeight.bold
-                          : FontWeight.normal)),
+                    fontWeight: (fixture.awayTeam
+                            .contains(this._viewModel?.teamOfInterest)
+                        ? FontWeight.bold
+                        : FontWeight.normal),
+                    fontSize: 14.0,
+                  ),
                 ),
               ),
               Container(
