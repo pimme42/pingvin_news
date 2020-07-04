@@ -113,27 +113,45 @@ class NewsPage extends StatelessWidget {
   Widget _createListItemWidget(
           NewsPageItemViewModel item, BuildContext context) =>
       Card(
-        child: ExpansionTile(
-          key: ObjectKey(item.summary),
-          onExpansionChanged: (bool opening) =>
-              item.selectNews(context, opening),
-          initiallyExpanded: item.selected,
-          leading: IconButton(
-            icon: item.leadingIcon,
-            onPressed: () => item.onPressed(context),
+        color: item.bgColor,
+        child: Theme(
+          data: ThemeData(
+            unselectedWidgetColor: item.fgColor,
+            accentColor: item.fgColor,
           ),
-          title: Text(item.title),
-          children: <Widget>[
-            InkWell(
-              child: Container(
-                child: Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: Text(item.summary),
-                ),
-              ),
-              onTap: () => item.onPressed(context),
+          child: ExpansionTile(
+            key: ObjectKey(item.summary),
+            backgroundColor: item.bgColor,
+            onExpansionChanged: (bool opening) =>
+                item.selectNews(context, opening),
+            initiallyExpanded: item.selected,
+            leading: IconButton(
+              icon: item.leadingIcon,
+              onPressed: () => item.onPressed(context),
             ),
-          ],
+            title: Text(
+              item.title,
+              style: TextStyle(color: item.fgColor),
+            ),
+            children: <Widget>[
+              InkWell(
+                child: Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.all(5.0),
+                    child: Text(
+                      item.summary,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                      ),
+                    ),
+                  ),
+                ),
+                onTap: () => item.onPressed(context),
+              ),
+            ],
+          ),
         ),
       );
 }
