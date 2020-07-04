@@ -7,27 +7,26 @@ description: An application to view news from pingvin.nu
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.4.1+22
+version: 0.5.1+25
 
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^0.3.1+1  # add dependency for Firebase Core
-#  firebase_messaging: ^3.0.0
-  firebase_messaging: ^4.0.0
+#  firebase_core: ^0.4.5  # add dependency for Firebase Core
+  firebase_messaging: ^6.0.16
   flutter_webview_plugin: ^0.3.0+2  # Used for displaying webpage in news
-  path_provider: ^0.4.1 # Used for FileHandler
-  redux: ^3.0.0  # Used for redux-pattern
-  flutter_redux: ^0.5.0 # Used for redux-pattern
-  shared_preferences: ^0.4.0  # Used for saving of subscription-preferenses
+  path_provider: ^1.6.11 # Used for FileHandler
+  redux: ^4.0.0  # Used for redux-pattern
+  flutter_redux: ^0.6.0 # Used for redux-pattern
+  shared_preferences: ^0.5.7  # Used for saving of subscription-preferenses
   url_launcher: ^5.0.1  # Launches mailto and web in the "About"-dialog
   package_info: ^0.4.0+1  # Used for reading the app version info
-  intl: ^0.15.7  # Used for date-formatting
-  flutter_map: ^0.5.0
+  intl: ^0.16.0  # Used for date-formatting
+  flutter_map: ^0.9.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -63,10 +62,13 @@ flutter:
   #  - images/a_dot_ham.jpeg
 
   assets:
-  - images/pingvinlogo_transp.png
-  - images/drawer_background2.jpg
-  - images/pingvinlogo_transp_with_ellipse.png
-  - images/Icons/pingvinlogo_notif.png
+    - images/srf_logo.png
+    - images/srf_logo_bw.png
+    - images/srf_logo_bw_transp.png
+    - images/pingvinlogo_transp.png
+    - images/drawer_background2.jpg
+    - images/pingvinlogo_transp_with_ellipse.png
+    - images/Icons/pingvinlogo_notif.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
