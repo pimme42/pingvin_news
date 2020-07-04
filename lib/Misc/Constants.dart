@@ -6,6 +6,7 @@ enum teams { MENS, WOMENS, NONE }
 class Constants {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
+  static const String srfLogoPath = "images/srf_logo_bw_transp.png";
   static const String logoPath = "images/pingvinlogo_transp.png";
   static const String logoPathEllipse =
       "images/pingvinlogo_transp_with_ellipse.png";
@@ -22,11 +23,11 @@ class Constants {
   static const String apiVersion = "/api/v2";
 
   static const String apiURL =
-//      isProduction ? "pingvinapi.rorstam.se" : "pingvinapi.rorstam.se";
-      isProduction ? "pingvinapi.rorstam.se" : "pingvinapid.rorstam.se";
+      isProduction ? "pingvinapi.rorstam.se" : "pingvinapi.rorstam.se";
+//      isProduction ? "pingvinapi.rorstam.se" : "pingvinapid.rorstam.se";
 //  static const String apiURL = "pingvinapi.rorstam.se";
 
-  static const String newsEndPoint = apiVersion + "/news/168643/";
+  static const String newsEndPoint = apiVersion + "/news2/168643/1";
 
   static const String newsFile = '/news.json';
 
