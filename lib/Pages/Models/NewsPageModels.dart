@@ -27,25 +27,37 @@ class NewsPageViewModel {
   );
 
   factory NewsPageViewModel.create(Store<AppStore> store) {
-    List<NewsPageItemViewModel> items = store.state.newsStore.paper.entries
-        .map(
-          (NewsEntry item) => NewsPageItemViewModel(
-                Icon(Icons.web),
-                (BuildContext context) {
-                  store.dispatch(SelectUrlToShowAction(item.link));
-                },
-                item.title,
-                item.summary,
-                (BuildContext context, bool opening) {
-                  if (opening)
-                    store.dispatch(SelectNewsItemAction(item.nid));
-                  else
-                    store.dispatch(DeSelectNewsItemAction(item.nid));
-                },
-                store.state.newsStore.newsStatus.isNewsItemSelected(item.nid),
+    List<NewsPageItemViewModel> items =
+        store.state.newsStore.paper.entries.map((NewsEntry item) {
+      bool isSrf = item.link.contains("https://www.rugby.se");
+      return NewsPageItemViewModel(
+//            ImageIcon(ExactAssetImage(Constants.logoPath)),
+        isSrf
+            ? ImageIcon(
+                ExactAssetImage(Constants.srfLogoPath),
+                color: Color(0xfffce704),
+              )
+            : ImageIcon(
+                ExactAssetImage(Constants.logoPath),
+                color: Colors.black,
               ),
-        )
-        .toList();
+//            Icon(Icons.web),
+        (BuildContext context) {
+          store.dispatch(SelectUrlToShowAction(item.link));
+        },
+        item.title,
+        item.summary,
+        (BuildContext context, bool opening) {
+          if (opening)
+            store.dispatch(SelectNewsItemAction(item.nid));
+          else
+            store.dispatch(DeSelectNewsItemAction(item.nid));
+        },
+        store.state.newsStore.newsStatus.isNewsItemSelected(item.nid),
+        isSrf ? Color(0xff060f78) : Colors.white,
+        isSrf ? Color(0xfffce704) : Colors.black,
+      );
+    }).toList();
     return NewsPageViewModel(
       items,
       () async {
@@ -68,7 +80,9 @@ class NewsPageItemViewModel {
   final String summary;
   final Function(BuildContext, bool) selectNews;
   final bool selected;
+  final Color bgColor;
+  final Color fgColor;
 
   NewsPageItemViewModel(this.leadingIcon, this.onPressed, this.title,
-      this.summary, this.selectNews, this.selected);
+      this.summary, this.selectNews, this.selected, this.bgColor, this.fgColor);
 }
