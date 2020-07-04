@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:pingvin_news/Pages/AppBarPage.dart';
 import 'package:pingvin_news/Pages/AppDrawer.dart';
@@ -84,13 +85,22 @@ class _TeamPageState extends State<TeamPage> {
         initiallyExpanded: tableInfo.isFavourite,
         key: Key("${tableInfo.parentName}/${tableInfo.name}_${tableInfo.year}"),
         leading: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            IconButton(
+            Flexible(
+              child: IconButton(
                 icon: tableInfo.isFavourite
-                    ? Icon(Icons.star, color: Colors.yellow[800])
-                    : Icon(Icons.star_border, color: Colors.black54),
-                onPressed: () => tableInfo.toggleFavourite()),
+                    ? Icon(
+                        Icons.star,
+                        color: Colors.yellow[800],
+                      )
+                    : Icon(
+                        Icons.star_border,
+                        color: Colors.black54,
+                      ),
+                onPressed: () => tableInfo.toggleFavourite(),
+              ),
+            ),
             Text(
               "Favorit",
               style: TextStyle(fontSize: 12.0),

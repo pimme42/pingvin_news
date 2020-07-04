@@ -113,8 +113,10 @@ class NewsPage extends StatelessWidget {
   Widget _createListItemWidget(
           NewsPageItemViewModel item, BuildContext context) =>
       Card(
+        color: item.bgColor,
         child: ExpansionTile(
           key: ObjectKey(item.summary),
+          backgroundColor: item.bgColor,
           onExpansionChanged: (bool opening) =>
               item.selectNews(context, opening),
           initiallyExpanded: item.selected,
@@ -122,13 +124,19 @@ class NewsPage extends StatelessWidget {
             icon: item.leadingIcon,
             onPressed: () => item.onPressed(context),
           ),
-          title: Text(item.title),
+          title: Text(
+            item.title,
+            style: TextStyle(color: item.fgColor),
+          ),
           children: <Widget>[
             InkWell(
               child: Container(
                 child: Padding(
                   padding: EdgeInsets.all(5.0),
-                  child: Text(item.summary),
+                  child: Text(
+                    item.summary,
+                    style: TextStyle(color: item.fgColor),
+                  ),
                 ),
               ),
               onTap: () => item.onPressed(context),
