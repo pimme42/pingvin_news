@@ -134,6 +134,23 @@ class NewsPage extends StatelessWidget {
               style: TextStyle(color: item.fgColor),
             ),
             children: <Widget>[
+              Container(
+//                color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: InkWell(
+                    onTap: () => item.onURLPressed(context),
+                    child: Text(
+                      "Nyheten hämtad från ${item.URL}",
+                      style: TextStyle(
+                        color: item.fgColor,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               InkWell(
                 child: Container(
                   color: Colors.white,
