@@ -150,7 +150,6 @@ class NewsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                onTap: () => item.onPressed(context),
               ),
               InkWell(
                 child: Container(
