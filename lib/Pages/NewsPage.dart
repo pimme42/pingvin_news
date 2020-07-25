@@ -13,6 +13,8 @@ import 'package:pingvin_news/Pages/WebViewPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsPage extends StatelessWidget {
   static const String route = '/NewsPage';
@@ -139,7 +141,7 @@ class NewsPage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: InkWell(
-                    onTap: () => item.onURLPressed(context),
+                    onTap: () => item.onURLPressed(context, item.URL),
                     child: Text(
                       "Nyheten hämtad från ${item.URL}",
                       style: TextStyle(
@@ -150,15 +152,16 @@ class NewsPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                onTap: () => item.onPressed(context),
               ),
               InkWell(
                 child: Container(
                   color: Colors.white,
                   child: Padding(
                     padding: EdgeInsets.all(5.0),
-                    child: Text(
-                      item.summary,
+                    child: SelectableLinkify(
+                      onOpen: (LinkableElement link) =>
+                          _onOpen(context, item.onURLPressed, link),
+                      text: item.summary,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 15.0,
@@ -172,4 +175,16 @@ class NewsPage extends StatelessWidget {
           ),
         ),
       );
+
+  Future<void> _onOpen(context, urlHandler, LinkableElement link) async {
+    if (link is UrlElement) {
+      urlHandler(context, link.url);
+    } else {
+      if (await canLaunch(link.url)) {
+        await launch(link.url);
+      } else {
+        throw 'Could not launch $link';
+      }
+    }
+  }
 }
