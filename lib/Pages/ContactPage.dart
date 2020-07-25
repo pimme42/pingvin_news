@@ -67,12 +67,16 @@ class _ContactPageState extends State<ContactPage> {
                 ),
                 layers: [
                   TileLayerOptions(
-                    urlTemplate: "https://api.mapbox.com/v4/"
-                        "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+//                    urlTemplate: "https://api.mapbox.com/v4/"
+//                        "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+                    urlTemplate:
+                        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    subdomains: ['a', 'b', 'c'],
                     additionalOptions: {
                       'accessToken': ContactPage._API_KEY,
                       'id': 'mapbox.streets',
                     },
+                    tileProvider: CachedNetworkTileProvider(),
                   ),
                   MarkerLayerOptions(
                     markers: [
@@ -81,12 +85,12 @@ class _ContactPageState extends State<ContactPage> {
                         height: 50.0,
                         point: Constants.coordinates,
                         builder: (ctx) => new Container(
-                                child: new GestureDetector(
-                              onTap: () => LauncherUtils.openMap(
-                                  Constants.coordinates.latitude,
-                                  Constants.coordinates.longitude),
-                              child: Constants.logo,
-                            )),
+                            child: new GestureDetector(
+                          onTap: () => LauncherUtils.openMap(
+                              Constants.coordinates.latitude,
+                              Constants.coordinates.longitude),
+                          child: Constants.logo,
+                        )),
 //                      Container(
 //                            child: Constants.logo,
 //                          ),
