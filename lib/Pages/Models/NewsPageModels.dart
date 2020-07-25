@@ -62,8 +62,8 @@ class NewsPageViewModel {
         isSrf ? Color(0xff060f78) : Colors.white,
         isSrf ? Color(0xfffce704) : Colors.black,
         URL,
-        (BuildContext context) {
-          store.dispatch(SelectUrlToShowAction(URL));
+        (BuildContext context, String URLtoLaunch) {
+          store.dispatch(SelectUrlToShowAction(URLtoLaunch));
         },
       );
     }).toList();
@@ -93,7 +93,7 @@ class NewsPageItemViewModel {
   final Color bgColor;
   final Color fgColor;
   final String URL;
-  final Function(BuildContext) onURLPressed;
+  final Function(BuildContext, String) onURLPressed;
 
   NewsPageItemViewModel(
     this.leadingIcon,
