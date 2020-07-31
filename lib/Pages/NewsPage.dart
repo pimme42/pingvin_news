@@ -1,3 +1,4 @@
+import 'package:flutter/painting.dart';
 import 'package:pingvin_news/Data/FirebaseHandler.dart';
 import 'package:pingvin_news/Misc/Log.dart';
 import 'package:pingvin_news/Misc/NotificationDecoder.dart';
@@ -142,34 +143,67 @@ class NewsPage extends StatelessWidget {
                   padding: EdgeInsets.all(5.0),
                   child: InkWell(
                     onTap: () => item.onURLPressed(context, item.URL),
-                    child: Text(
-                      "Nyheten hämtad från ${item.URL}",
-                      style: TextStyle(
-                        color: item.fgColor,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Nyheten hämtad från ${item.URL}",
+                          style: TextStyle(
+                            color: item.fgColor,
+                            fontSize: 12.0,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5.0),
+                          child: IconButton(
+                            constraints: BoxConstraints(),
+                            icon: Icon(
+                              Icons.open_in_browser,
+                            ),
+                            padding: EdgeInsets.all(0.0),
+                            color: item.fgColor,
+                            onPressed: () =>
+                                item.onURLPressed(context, item.link),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              InkWell(
-                child: Container(
-                  color: Colors.white,
-                  child: Padding(
-                    padding: EdgeInsets.all(5.0),
-                    child: SelectableLinkify(
-                      onOpen: (LinkableElement link) =>
-                          _onOpen(context, item.onURLPressed, link),
-                      text: item.summary,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                      ),
+//              Container(
+//                  color: Colors.white,
+//                  width: MediaQuery.of(context).size.width,
+//                  child: Padding(
+//                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+//                    child: Row(
+//                      mainAxisAlignment: MainAxisAlignment.end,
+//                      children: [
+//                        Text("Öppna nyheten i webläsare"),
+//                        IconButton(
+//                          icon: Icon(Icons.open_in_browser),
+//                          onPressed: () =>
+//                              item.onURLPressed(context, item.link),
+//                        ),
+//                      ],
+//                    ),
+//                  )),
+
+              Container(
+                color: Colors.white,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: EdgeInsets.all(5.0),
+                  child: SelectableLinkify(
+                    onOpen: (LinkableElement link) =>
+                        _onOpen(context, item.onURLPressed, link),
+                    text: item.summary,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15.0,
                     ),
                   ),
                 ),
-                onTap: () => item.onPressed(context),
               ),
             ],
           ),
