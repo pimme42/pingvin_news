@@ -16,7 +16,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:drop_cap_text/drop_cap_text.dart';
 
 class NewsPage extends StatelessWidget {
   static const String route = '/NewsPage';
