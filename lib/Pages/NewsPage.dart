@@ -142,7 +142,7 @@ class NewsPage extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.all(5.0),
                   child: InkWell(
-                    onTap: () => item.onURLPressed(context, item.URL),
+                    onTap: () => item.onURLPressed(context, item.link),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
